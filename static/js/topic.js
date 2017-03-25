@@ -28,7 +28,7 @@ var Vue_App = new Vue({
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
     ip: "", //用于服务器
-    ip: "http://192.168.31.82", //用于测试
+    // ip: "http://192.168.31.82", //用于测试
   },
   created: function() {
     if (this.usrId === "" || typeof this.usrId === "undefined") {
