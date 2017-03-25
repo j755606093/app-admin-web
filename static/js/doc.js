@@ -23,7 +23,7 @@ var Vue_App = new Vue({
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
     ip: "", //用于服务器
-    ip: "http://192.168.31.82", //用于测试
+    // ip: "http://192.168.31.82", //用于测试
   },
   created: function() {
     if (this.usrId === "" || typeof this.usrId === "undefined") {
@@ -356,7 +356,7 @@ var Vue_App = new Vue({
   filters: {
     // 给过长的字符串中间加上省略号
     subStr: function(str) {
-      if (str && str !== "") {
+      if (str !== null && str !== "") {
         var length = str.length;
         if (length > 20) {
           str = str.slice(0, 8) + ". . ." + str.slice(length - 3, length);
@@ -365,7 +365,7 @@ var Vue_App = new Vue({
       return str;
     },
     subUrl: function(url) {
-      if (url && url !== "") {
+      if (url !== null && url !== "") {
         var length = url.length;
         if (length > 15) {
           url = url.slice(0, 8) + ". . ." + url.slice(length - 3, length);
@@ -374,7 +374,7 @@ var Vue_App = new Vue({
       return url;
     },
     subTitle: function(title) {
-      if (title && title !== "") {
+      if (title !== null && title !== "") {
         var length = title.length;
         if (length > 10) {
           title = title.slice(0, 5) + ". . ." + title.slice(length - 3, length);
@@ -383,7 +383,7 @@ var Vue_App = new Vue({
       return title;
     },
     subContent: function(content) {
-      if (content && content !== "") {
+      if (content !== null && content !== "") {
         var length = content.length;
         if (length > 20) {
           content = content.slice(0, 5) + ". . ." + content.slice(length - 3, length);
