@@ -1,0 +1,211 @@
+﻿<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+  <link rel="stylesheet" type="text/css" href="dist/css/nav.css" />
+  <title>导航管理</title>
+</head>
+<script>
+var style = document.createElement("link");
+style.setAttribute("rel", "stylesheet");
+style.setAttribute("href", "dist/css/nav.css?hash=" + Date.now());
+document.getElementsByTagName("head")[0].appendChild(style);
+</script>
+
+<body id="app">
+  <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 导航管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+  <div class="page-container" id="isget" style="visibility: hidden">
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" data-title="添加列表" _href="article-add.html" v-on:click="add()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加导航</a></span>
+      <span class="r lh">本页数据:
+        <select v-model="displayCount" @change="getData($event)">
+          <option value="{{displayCount}}">{{displayCount}}</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select> 条
+        <span> &nbsp;共{{TotalCount}}条</span>
+      </span>
+    </div>
+    <div class="mt-20">
+      <table class="table table-border table-bordered table-bg table-hover table-sort">
+        <thead>
+          <tr class="text-c">
+            <th>ID</th>
+            <th>标题</th>
+            <th>Url</th>
+            <th>图片链接</th>
+            <th>展示顺序</th>
+            <th>介绍</th>
+            <th>创建时间</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-c" v-for="item in items">
+            <td>{{item.Id}}</td>
+            <td>{{item.Title}}</td>
+            <td><a href="{{item.Url}}" title="{{item.Url}}" target="_blank">{{item.Url | subStr}}</a></td>
+            <td><a href="{{item.Purl}}" title="{{item.Purl}}" target="_blank">{{item.Purl | subStr}}</a></td>
+            <td>{{item.Sort}}</td>
+            <td><a title="{{item.Remark}}" href="javascript:;" style="text-decoration:none">{{item.Remark | subRemark}}</a></td>
+            <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
+            <td v-if="item.Status == 1" style="color:green">启用</td>
+            <td v-else style="color:red">禁用</td>
+            <td class="td-manage">
+              <a style="text-decoration:none" class="ml-5" href="javascript:;" v-on:click="edit($index,item.Id)" title="编辑"> <i class="Hui-iconfont">&#xe6df;</i>
+              </a>
+            </td>
+          </tr>
+          <tr class="text-c" v-if="displayCount === 0">
+            <td colspan="9">抱歉，暂无相关数据</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 分页 -->
+    <div id="page"></div>
+  </div>
+  <!-- 修改弹出框 -->
+  <div id="editnav">
+    <form enctype="multipart/form-data" id="editform">
+      <div style="display: none">
+        <input type="text" v-model="editItem.Id" name="Id">
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" @keyup.enter="layer_submit_edit" @keyup="checkEditItem('edit_title',5)" class="input-text" v-model="editItem.Title" placeholder="字数不少于5" id="edit_title" name="Title" autofocus>
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>URL:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" @keyup.enter="layer_submit_edit" @keyup="checkEditItem('edit_url',1)" class="input-text" v-model="editItem.Url" placeholder="链接或者一段数据" id="edit_url" name="Url">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>展示顺序:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="number" @keyup.enter="layer_submit_edit" @keyup="checkEditItem('edit_sort',1)" class="input-text" v-model="editItem.Sort" placeholder="整数" id="edit_sort" name="Sort">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">介绍:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" class="input-text" v-model="editItem.Remark" id="edit_remark" name="Remark">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">状态:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <select name="Status" v-model="editItem.Status" class="input-text">
+            <option value="1" selected>启用</option>
+            <option value="0">禁用</option>
+          </select>
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">图片上传:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <div class="uploader-thum-container">
+            <input v-model="editItem.File" @change="checkEditFile()" id="editfile" accept="image/*" type="file" name="File">
+          </div>
+          <span class="totalSize" :style="{'color':overSize?'red':'#333'}">大小不超过1M</span>
+        </div>
+      </div>
+      <div class="row cl">
+        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+          <button id="submit_edit" v-on:click="layer_submit_edit" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交修改</button>
+          <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- 增加弹出框 -->
+  <div id="addnav">
+    <form enctype="multipart/form-data" id="addform">
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" @keyup.enter="layer_submit_add" @keyup="checkAddItem('add_name',1)" class="input-text" placeholder="" id="add_name" name="Title" autofocus>
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>URL/数据:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="url" @keyup.enter="layer_submit_add" @keyup="checkAddItem('add_url',1)" class="input-text" placeholder="链接或者一段数据" id="add_url" name="Url">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>展示顺序:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="number" @keyup.enter="layer_submit_add" @keyup="checkAddItem('add_sort',1)" class="input-text" placeholder="整数" id="add_sort" name="Sort">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">介绍:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" class="input-text" placeholder="" id="add_remark" name="Remark">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">状态:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <select name="Status" class="input-text">
+            <option value="1" selected>启用</option>
+            <option value="0">禁用</option>
+          </select>
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图片上传:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <div class="uploader-thum-container">
+            <input id="addfile" @keyup.enter="layer_submit_add" @change="checkedAddFile" accept="image/*" type="file" name="File">
+          </div>
+          <span class="totalSize" :style="{'color':overSize?'red':'#333'}">大小不超过1M</span>
+        </div>
+      </div>
+      <div class="row cl">
+        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+          <button id="submit_add" @click="layer_submit_add" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交新增</button>
+          <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- 页面加载提示 -->
+  <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
+  <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="lib/layui/layui.js"></script>
+  <script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+  <script src="static/h-ui/js/H-ui.js"></script>
+  <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  <div id="js"></div>
+  <script>
+  var script = document.createElement("script");
+  script.setAttribute("src", "static/js/nav.js?hash=" + Date.now());
+  document.getElementById("js").appendChild(script);
+  </script>
+</body>
+
+</html>

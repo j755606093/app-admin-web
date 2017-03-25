@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+  <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+  <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="dist/css/wechat.css" />
+  <title>公众号列表</title>
+</head>
+<script>
+var style = document.createElement("link");
+style.setAttribute("rel", "stylesheet");
+style.setAttribute("href", "dist/css/wechat.css?hash=" + Date.now());
+document.getElementsByTagName("head")[0].appendChild(style);
+</script>
+
+<body id="app">
+  <nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 公众号管理
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+  <div class="page-container" id="isget" style="visibility: hidden">
+    <div class="cl pd-5 bg-1 bk-gray mt-20 center">
+      <span>
+      <select @change="changeList" id="searchList" style="border-radius: 0px;" v-model="searchType" class="input-text">
+        <option value="WeChatName" selected>名 称</option>
+        <option value="ClassName">类 别</option>
+        <option value="Intro">简 介</option>
+      </select>
+    </span>
+      <span>
+      <input id="searchKey" v-model="searchKey" @keyup.enter="search" class="input-text" type="search" placeholder="名称、类别、简介" autofocus><a id="searchBtn" class="btn btn-success radius" @click="search" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
+    </span>
+      <span class="r lh">本页数据:
+        <select v-model="displayCount" @change="getData($event)">
+          <option value="{{displayCount}}">{{displayCount}}</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select> 条
+        <span> &nbsp;共{{TotalCount}}条</span>
+      </span>
+    </div>
+    <div class="mt-20">
+      <table class="table table-border table-bordered table-bg table-hover table-sort">
+        <thead>
+          <tr class="text-c">
+            <th>ID</th>
+            <th>名称</th>
+            <th>公众号</th>
+            <th>类别</th>
+            <th>简介</th>
+            <th>抓取时间</th>
+            <th>创建时间</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-c" v-for="item in items">
+            <td>{{item.Id}}</td>
+            <td>{{item.Name}}</td>
+            <td>{{item.WeChatId}}</td>
+            <td>{{item.ClassName}}</td>
+            <td><a @click="lookIntro(item.Intro)" href="javascript:;">{{item.Intro | subStr}}</a></td>
+            <td>{{item.NetCrawlTime.replace("T"," ").slice(0,19)}}</td>
+            <td>{{item.Create_Time.replace("T"," ").slice(0,19)}}</td>
+            <td>
+              <a v-if="item.Status == 0" style="background-color:#00B271" class="ml-5 manage-btn enable-btn" id="id{{item.Id}}" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" href="javascript:;" v-on:click="edit(item.Id, item.Status)">已启用
+              </a>
+              <a v-else style="background-color:#707070" id="id{{item.Id}}" class="ml-5 manage-btn disable-btn" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" v-on:click="edit(item.Id, item.Status)" href="javascript:;">已禁用
+              </a>
+            </td>
+          </tr>
+          <tr class="text-c" v-if="displayCount === 0">
+            <td colspan="8">暂无数据</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 分页 -->
+    <div id="page"></div>
+  </div>
+  <!-- 查看简介 -->
+  <div id="lookIntro" :style="{'text-align': isIndent?'left':'center'}">
+    <p :style="{'text-indent': isIndent?'2em':'0'}">{{Intro}}</p>
+  </div>
+  <!-- 页面加载提示 -->
+  <div id="loading" :class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
+  <script src="lib/jquery/1.9.1/jquery.min.js"></script>
+  <script src="lib/layer/2.1/layer.js"></script>
+  <script src="lib/layui/layui.js"></script>
+  <script src="lib/My97DatePicker/WdatePicker.js"></script>
+  <script src="static/h-ui/js/H-ui.js"></script>
+  <script src="static/h-ui.admin/js/H-ui.admin.js "></script>
+  <script src="lib/webuploader/0.1.5/webuploader.min.js"></script>
+  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
+  <div id="js"></div>
+  <script>
+  var script = document.createElement("script");
+  script.setAttribute("src", "static/js/wechat.js?hash=" + Date.now());
+  document.getElementById("js").appendChild(script);
+  </script>
+</body>
+
+</html>

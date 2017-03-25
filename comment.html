@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+  <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+  <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="dist/css/comment.css" />
+  <title>评论列表</title>
+</head>
+<script>
+var style = document.createElement("link");
+style.setAttribute("rel", "stylesheet");
+style.setAttribute("href", "dist/css/comment.css?hash=" + Date.now());
+document.getElementsByTagName("head")[0].appendChild(style);
+</script>
+
+<body id="app">
+  <nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 评论管理
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+  <div class="page-container" id="isget" style="visibility: hidden">
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+      <span class="l">
+    </span>
+      <span class="r lh">本页数据:
+        <select v-model="displayCount" @change="getData($event)">
+          <option value="{{displayCount}}">{{displayCount}}</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select> 条
+        <span> &nbsp;共{{TotalCount}}条</span>
+      </span>
+    </div>
+    <div class="mt-20">
+      <table class="table table-border table-bordered table-bg table-hover table-sort">
+        <thead>
+          <tr class="text-c">
+            <th>ID</th>
+            <th>用户ID</th>
+            <th>帖子ID</th>
+            <th>内容</th>
+            <th>回复楼层ID</th>
+            <th>点赞数</th>
+            <th>创建时间</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-c" v-for="item in items">
+            <td>{{item.Id}}</td>
+            <td>{{item.UsrId}}</td>
+            <!-- <td>{{item.DocId}}</td> -->
+            <td><a style="text-decoration:underline;" title="查看详情" class="ml-5" href="javascript:;" @click="postDetail(item.DocId)">{{item.DocId}}</a></td>
+            <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
+            <td>{{item.PId}}</td>
+            <td>{{item.LikeCount}}</td>
+            <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
+            <td>
+              <a v-if="item.Status == 1" style="background-color:#00B271" class="ml-5 manage-btn enable-btn" id="id{{item.Id}}" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" href="javascript:;" v-on:click="edit(item.Id, item.Status)">已启用
+              </a>
+              <a v-else style="background-color:#707070" id="id{{item.Id}}" class="ml-5 manage-btn disable-btn" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" v-on:click="edit(item.Id, item.Status)" href="javascript:;">已禁用
+              </a>
+            </td>
+          </tr>
+          <tr class="text-c" v-if="displayCount === 0">
+            <td colspan="10">暂无数据</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 分页 -->
+    <div id="page"></div>
+  </div>
+  <!-- 帖子详情 -->
+  <div id="PostDetail">
+    <table class="table table-border table-bordered table-bg table-hover table-sort">
+      <tbody>
+        <tr>
+          <td>发帖人</td>
+          <td>{{PostItem.UsrName}}</td>
+        </tr>
+        <tr>
+          <td>社区名称</td>
+          <td>{{PostItem.BoardName}}</td>
+        </tr>
+        <tr>
+          <td>标题</td>
+          <td>{{PostItem.Title}}</td>
+        </tr>
+        <tr>
+          <td>话题</td>
+          <td>{{PostItem.Topic}}</td>
+        </tr>
+        <tr>
+          <td>内容</td>
+          <td>{{PostItem.Content}}</td>
+        </tr>
+        <tr>
+          <td>点赞数</td>
+          <td>{{PostItem.LikeCount}}</td>
+        </tr>
+        <tr>
+          <td>管理员发帖</td>
+          <td v-if="PostItem.IsAdmin == 1">是</td>
+          <td v-else>否</td>
+        </tr>
+        <tr>
+          <td>发帖时间</td>
+          <td>{{PostItem.CTime.replace("T"," ").slice(0,19)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- 查看简介 -->
+  <div id="lookIntro" :style="{'text-align': isIndent?'left':'center'}">
+    <p :style="{'text-indent': isIndent?'2em':'0'}">{{Intro}}</p>
+  </div>
+  <!-- 页面加载提示 -->
+  <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
+  <iframe id="id_iframe" name="id_iframe" style="display:none;"></iframe>
+  <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="lib/layui/layui.js"></script>
+  <script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+  <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+  <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+  <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
+  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
+  <script src="//cdn.bootcss.com/fetch/2.0.1/fetch.min.js"></script>
+  <script src="static/js/comment.js"></script>
+</body>
+
+</html>

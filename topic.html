@@ -1,0 +1,227 @@
+﻿<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="editor/dist/css/wangEditor.min.css">
+  <link rel="stylesheet" type="text/css" href="dist/css/topic.css" />
+  <title>微信文章管理</title>
+</head>
+<script>
+var style = document.createElement("link");
+style.setAttribute("rel", "stylesheet");
+style.setAttribute("href", "dist/css/topic.css?hash=" + Date.now());
+document.getElementsByTagName("head")[0].appendChild(style);
+</script>
+
+<body id="app">
+  <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 微信文章管理 <a id="refresh" class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+  <div class="page-container" id="isget" style="visibility: hidden">
+    <div class="cl pd-5 bg-1 bk-gray mt-20 center">
+      <span class="l">
+      <a class="btn btn-primary radius" v-on:click="add()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加文章</a>
+    </span>
+      <span>
+      <select id="searchList" v-model="searchType" @change="changeType" class="input-text">
+        <option value="Title" selected>&nbsp;&nbsp;标&nbsp;&nbsp;&nbsp;题</option>
+        <option value="WeChatName">&nbsp;&nbsp;来&nbsp;&nbsp;&nbsp;源</option>
+        <option value="ViewType">文章类型</option>
+      </select>
+      </span>
+      <span>
+        <input v-if="searchType != 'ViewType'" id="searchKey" v-model="searchKey" @keyup.enter="search" class="input-text" type="text">
+        <select v-else @change="search" v-model="searchKey" class="input-text viewtype">
+          <option value="1">无 &nbsp;&nbsp; 图</option>
+          <option value="2" selected>一张图</option>
+          <option value="3">三张图</option>
+          <option value="4">广 &nbsp;&nbsp; 告</option>
+          <option value="5">视 &nbsp;&nbsp; 频</option>
+        </select>
+        <a id="searchBtn" class="btn btn-success radius" @click="search" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
+      </span>
+      <span class="r lh">本页数据:
+        <select v-model="displayCount" @change="getData($event)">
+          <option value="{{displayCount}}">{{displayCount}}</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select> 条
+        <span> &nbsp;共{{TotalCount}}条</span>
+      </span>
+    </div>
+    <div class="mt-20">
+      <table class="table table-border table-bordered table-bg table-hover table-sort">
+        <thead>
+          <tr class="text-c">
+            <th>ID</th>
+            <th>标题</th>
+            <th>作者</th>
+            <th>缩略图</th>
+            <th>导读</th>
+            <th>Web专用</th>
+            <th>App专用</th>
+            <!-- <th width="80">浏览次数</th> -->
+            <!-- <th width="80">评论次数</th> -->
+            <th>文章类型</th>
+            <th>创建时间</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-c" v-for="item in items">
+            <!-- <td data-clipboard-text="{{item.Id}}" v-on:click="clickCopy(item.Id)" id="id{{item.Id}}"><a style="text-decoration:underline" onmouseover="addTips({{item.Id}})" href="javascript:;">{{item.Id}}</a></td> -->
+            <td>{{item.Id}}</td>
+            <td id="title{{item.Id}}"><a onmouseover="lookTitle({{item.Id}},'title','{{item.Title}}')" href="javascript:;">{{item.Title | subTitle}}</a></td>
+            <td>{{item.Author}}</td>
+            <td><a title="{{item.PUrl}}" href="{{item.PUrl}}" target="_blank">{{item.PUrl | subPurl}}</a></td>
+            <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
+            <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td>
+            <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td>
+            <!-- <td>{{item.ReadCount}}</td> -->
+            <!-- <td>{{item.CmtCount}}</td> -->
+            <td v-if="item.ViewType == 0"></td>
+            <td v-if="item.ViewType == 1">无图</td>
+            <td v-if="item.ViewType == 2">一张图</td>
+            <td v-if="item.ViewType == 3">三张图</td>
+            <td v-if="item.ViewType == 4">广告</td>
+            <td v-if="item.ViewType == 5">视频</td>
+            <td v-if="item.ViewType == ''"></td>
+            <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
+            <td v-if="item.Status == 1" style="color:green">启用</td>
+            <td v-else style="color:red">禁用</td>
+            <td class="td-manage">
+              <a style="background-color:#148cf1;padding: 2px 6px" class="ml-5 edit-btn" href="javascript:;" v-on:click="getDoc(item.Id)"> 详情
+              </a>
+              <a style="background-color:#148cf1;padding: 2px 6px" class="ml-5 edit-btn" href="javascript:;" v-on:click="edit($index,item.Id)"> 编辑
+              </a>
+              <a v-if="item.IsPushed == 1" style="width: 48px;background-color:#707070" class="ml-5 manage-btn disable-btn" href="javascript:;" v-on:click="isHot(item.Id)">已推送
+              </a>
+              <a v-else style="width: 48px;background-color:#5eb95e" class="ml-5 manage-btn sethot" v-on:click="setHot(item.Id)" href="javascript:;">推至首页
+              </a>
+            </td>
+          </tr>
+          <tr class="text-c" v-if="displayCount === 0">
+            <td colspan="11">抱歉，暂无相关数据 </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 分页 -->
+    <div id="page"></div>
+  </div>
+  <!-- 添加文章广告 -->
+  <div id="adddoc">
+    <form enctype="multipart/form-data" id="addform">
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" @keyup="checkAddItem('add_name')" @keyup.enter="layer_submit_add" class="input-text" id="add_name" name="Title" autofocus>
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章链接:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" @keyup="checkAddItem('add_url')" @keyup.enter="layer_submit_add" class="input-text" placeholder="" id="add_url" name="Url">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">状态:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <select name="Status" class="input-text">
+            <option value="1" selected>启用</option>
+            <option value="0">禁用</option>
+          </select>
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图片上传:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <div class="uploader-thum-container">
+            <input id="addfile" accept="image/*" multiple type="file" name="File">
+          </div>
+        </div>
+      </div>
+      <div class="row cl">
+        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+          <button id="submit_adddoc" v-on:click="layer_submit_add" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交增加</button>
+          <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- 修改文章 -->
+  <div id="editdoc">
+    <form enctype="multipart/form-data" id="editform">
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" @keyup="checkAddItem('edit_name')" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Title" id="edit_name" name="Title" autofocus>
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章链接:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" @keyup="checkAddItem('edit_url')" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Url" id="edit_url" name="Url">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">状态:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <select v-model="editItem.Status" name="Status" class="input-text">
+            <option value="1" selected>启用</option>
+            <option value="0">禁用</option>
+          </select>
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">图片上传:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <div class="uploader-thum-container">
+            <input id="editfile" accept="image/*" multiple type="file" name="File">
+          </div>
+        </div>
+      </div>
+      <div class="row cl">
+        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+          <button id="submit_adddoc" v-on:click="layer_submit_edit" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交修改</button>
+          <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- 查看简介 -->
+  <div id="lookIntro" :style="{'text-align': isIndent?'left':'center'}">
+    <p :style="{'text-indent': isIndent?'2em':'0'}">{{Intro}}</p>
+  </div>
+  <!-- 页面加载提示 -->
+  <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
+  <!-- 富文本编辑器 -->
+  <div id="editTopic">
+    <div id="editor"></div>
+    <button id="submit_edit" class="btn btn-primary radius" type="button" v-on:click="updateTopicDetail"><i class="Hui-iconfont">&#xe632;</i> 提交修改</button>
+    <button id="submit_close" v-on:click="layerClose" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+  </div>
+  <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="lib/layui/layui.js"></script>
+  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
+  <script type="text/javascript" src="editor/dist/js/wangEditor.js"></script>
+  <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  <script src="lib/clipboard.min.js"></script>
+  <div id="js"></div>
+  <script>
+  var script = document.createElement("script");
+  script.setAttribute("src", "static/js/topic.js?hash=" + Date.now());
+  document.getElementById("js").appendChild(script);
+  </script>
+</body>
+
+</html>

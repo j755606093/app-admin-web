@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+  <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+  <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="dist/css/post.css" />
+  <title>帖子列表</title>
+</head>
+<script>
+var style = document.createElement("link");
+style.setAttribute("rel", "stylesheet");
+style.setAttribute("href", "dist/css/post.css?hash=" + Date.now());
+document.getElementsByTagName("head")[0].appendChild(style);
+</script>
+
+<body id="app">
+  <nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 帖子管理
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+  <div class="page-container" id="isget" style="visibility: hidden">
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+      <span class="l">
+          <a class="btn btn-primary radius" v-on:click="add()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加帖子</a>
+        </span>
+      <span class="r lh">本页数据:
+          <select v-model="displayCount" @change="getData($event)">
+            <option value="{{displayCount}}">{{displayCount}}</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+          </select> 条
+        <span> &nbsp;共{{TotalCount}}条</span>
+      </span>
+    </div>
+    <div class="mt-20">
+      <table class="table table-border table-bordered table-bg table-hover table-sort">
+        <thead>
+          <tr class="text-c">
+            <!-- <th width="40"><input name="" type="checkbox" value=""></th> -->
+            <!-- <th>ID</th> -->
+            <!-- <th width="120">用户ID</th> -->
+            <th>发帖人</th>
+            <!-- <th width="80">区域Id</th>
+            <th width="80">版块Id</th> -->
+            <th>社区名称</th>
+            <th>标题</th>
+            <th>话题</th>
+            <th>内容</th>
+            <th>Web专用</th>
+            <th>App专用</th>
+            <!-- <th width="100">阅读数</th> -->
+            <!-- <th width="100">评论数</th> -->
+            <th>点赞数</th>
+            <th>管理员发帖</th>
+            <!-- <th>创建时间</th> -->
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-c" v-for="item in items">
+            <!-- <td><input name="" type="checkbox" value=""></td> -->
+            <!-- <td style="text-decoration:underline" data-clipboard-text="{{item.Id}}" v-on:click="clickCopy(item.Id)" id="id{{item.Id}}"><a onmouseover="addTips({{item.Id}})" href="javascript:;">{{item.Id}}</a></td> -->
+            <!-- <td>{{item.Id}}</td> -->
+            <!-- <td>{{item.UsrId}}</td> -->
+            <td>{{item.UsrName}}</td>
+            <!-- <td>{{item.AreaId}}</td>
+            <td>{{item.BoardId}}</td> -->
+            <td>{{item.BoardName}}</td>
+            <td id="title{{item.Id}}"><a onmouseover="lookDetail({{item.Id}},'title','{{item.Title}}')" href="javascript:;">{{item.Title | subTitle}}</a></td>
+            <td>{{item.Topic}}</td>
+            <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
+            <!-- <td>{{item.ReadCount}}</td> -->
+            <!-- <td>{{item.CmtCount}}</td> -->
+            <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td>
+            <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td>
+            <td>{{item.LikeCount}}</td>
+            <td v-if="item.IsAdmin == 1" style="color:green">是</td>
+            <td v-if="item.IsAdmin == 0" style="color:red">否</td>
+            <!-- <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td> -->
+            <td v-if="item.Status == 1" style="color:green">启用</td>
+            <td v-if="item.Status == 0" style="color:red">禁用</td>
+            <td class="td-manage">
+              <a style="background-color:#5a98de;padding: 2px 6px" class="ml-5 edit-btn" href="javascript:;" v-on:click="edit($index,item.Id)"> 编辑
+              </a>
+              <a v-if="item.IsPushed == 1" style="background-color:#707070;width: 48px;" class="ml-5 manage-btn disable-btn" href="javascript:;" v-on:click="isHot(item.Id)">已推送
+              </a>
+              <a v-else style="background-color:#5eb95e;width: 48px;" class="ml-5 manage-btn sethot" v-on:click="setHot(item.Id)" href="javascript:;">推至首页
+              </a>
+            </td>
+          </tr>
+          <tr class="text-c" v-if="displayCount === 0">
+            <td colspan="11">抱歉，暂无相关数据 </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 分页 -->
+    <div id="page"></div>
+  </div>
+  <!-- 修改弹出框 -->
+  <div id="editpost">
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>发帖人:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" v-model="editItem.UsrName" class="input-text gray" readonly>
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>社区名称:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="editItem.BoardId" id="add_boardid" class="input-text">
+          <option v-for="item in CommItem" value="{{item.Value}}">{{item.Name}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input @keyup="checkEditItem('edit_title')" type="text" class="input-text" @keyup.enter="layer_submit" v-model="editItem.Title" placeholder="" id="edit_title" name="Title">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>话题:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" @keyup="checkEditItem('edit_topic')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.Topic" placeholder="" id="edit_topic" name="Topic">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" @keyup="checkEditItem('edit_content')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.Content" placeholder="" id="edit_content" name="Content">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>点赞数:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="number" @keyup="checkEditItem('edit_likecount')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.LikeCount" placeholder="" id="edit_likecount" name="LikeCount">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">状态:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="editItem.Status" name="Status" class="input-text">
+          <option value="1">启用</option>
+          <option value="0">禁用</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+        <button id="submit_edit" class="btn btn-primary radius" type="submit" v-on:click="layer_submit"><i class="Hui-iconfont">&#xe632;</i> 提交修改</button>
+        <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+      </div>
+    </div>
+  </div>
+  <!-- 增加弹出框 -->
+  <div id="addpost">
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>社区名称:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="addItem.BoardId" id="add_boardid" class="input-text">
+          <option v-for="item in CommItem" value="{{item.Value}}">{{item.Name}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input @keyup.enter="layer_submit_add" @keyup="checkAddItem('add_title')" type="text" class="input-text" v-model="addItem.Title" placeholder="" id="add_title" name="Title">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>话题:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" @keyup="checkAddItem('add_topic')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Topic" placeholder="" id="add_topic" name="Topic">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" @keyup="checkAddItem('add_content')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Content" placeholder="" id="add_content" name="Content">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>点赞数:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="number" @keyup="checkAddItem('add_likecount')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.LikeCount" placeholder="" id="add_likecount" name="LikeCount">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">状态:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="addItem.Status" name="Status" class="input-text">
+          <option value="1" selected>启用</option>
+          <option value="0">禁用</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+        <button id="submit_add" v-on:click="layer_submit_add" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交增加</button>
+        <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+      </div>
+    </div>
+  </div>
+  <!-- 查看简介 -->
+  <div id="lookIntro" :style="{'text-align': isIndent?'left':'center'}">
+    <p :style="{'text-indent': isIndent?'2em':'0'}">{{Intro}}</p>
+  </div>
+  <!-- 页面加载提示 -->
+  <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
+  <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="lib/layui/layui.js"></script>
+  <script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+  <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+  <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+  <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
+  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  <script src="lib/clipboard.min.js"></script>
+  <div id="js"></div>
+  <script>
+  var script = document.createElement("script");
+  script.setAttribute("src", "static/js/post.js?hash=" + Date.now());
+  document.getElementById("js").appendChild(script);
+  </script>
+</body>
+
+</html>

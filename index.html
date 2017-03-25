@@ -1,0 +1,170 @@
+﻿<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link href="lib/favicon.ico" rel="shortcut icon">
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/blue/skin.css" id="skin" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+  <link rel="stylesheet" type="text/css" href="dist/css/index.css" />
+  <title>admin</title>
+</head>
+<script>
+var style = document.createElement("link");
+style.setAttribute("rel", "stylesheet");
+style.setAttribute("href", "dist/css/index.css?hash=" + Date.now());
+document.getElementsByTagName("head")[0].appendChild(style);
+</script>
+
+<body id="app">
+  <header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top">
+      <div class="container-fluid cl" id="isget" style="visibility: hidden"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/index.html">后台管理系统</a>
+        <span id="noRemember">操作剩余时长：{{ Duration }}{{Type}}</span>
+        <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
+          <ul class="cl">
+            <li>欢迎您~</li>
+            <li class="dropDown dropDown_hover" v-show="isLogin"> <a href="#" class="dropDown_A">{{ username }} <i class="Hui-iconfont">&#xe6d5;</i></a>
+              <ul class="dropDown-menu menu radius box-shadow">
+                <li><a @click="updatePassword" href="javascript:;">修改密码</a></li>
+                <li><a @click="changeAccount" href="javascript:;">切换账户</a></li>
+                <li><a @click="changeAccount" href="javascript:;">退出</a></li>
+              </ul>
+            </li>
+            <li v-show="!isLogin"><a href="login.html">请登录</a></li>
+            <li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
+              <ul class="dropDown-menu menu radius box-shadow">
+                <li><a href="javascript:;" data-val="blue" title="默认(蓝色)">默认(蓝色)</a></li>
+                <li><a href="javascript:;" data-val="default" title="黑色">黑色</a></li>
+                <li><a href="javascript:;" data-val="green" title="绿色">绿色</a></li>
+                <li><a href="javascript:;" data-val="red" title="红色">红色</a></li>
+                <li><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></li>
+                <li><a href="javascript:;" data-val="orange" title="绿色">橙色</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <aside class="Hui-aside">
+    <input runat="server" id="divScrollValue" type="hidden" value="" />
+    <div class="menu_dropdown bk_2">
+      <dl id="menu-default" v-show="childHomeModule.length !== 0">
+        <dt><i class="Hui-iconfont">&#xe625;</i> 首页<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+          <ul>
+            <li v-for="item in childHomeModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+          </ul>
+        </dd>
+      </dl>
+      <dl id="menu-community" v-show="childCommunityModule.length !== 0">
+        <dt><i class="Hui-iconfont">&#xe62b;</i> 社区<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+          <ul>
+            <li v-for="item in childCommunityModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+          </ul>
+        </dd>
+      </dl>
+      <dl id="menu-authority" v-show="childAuthorityModule.length !== 0">
+        <dt><i class="Hui-iconfont">&#xe63f;</i> 权限<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+          <ul>
+            <li v-for="item in childAuthorityModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+          </ul>
+        </dd>
+      </dl>
+      <dl id="menu-wechat" v-show="childWechatModule.length !== 0">
+        <dt><i class="Hui-iconfont">&#xe694;</i> 微信<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+          <ul>
+            <li v-for="item in childWechatModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+          </ul>
+        </dd>
+      </dl>
+      <dl id="menu-side" v-show="childSideModule.length !== 0">
+        <dt><i class="Hui-iconfont">&#xe69d;</i> 身边圈<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+          <ul>
+            <li v-for="item in childSideModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+          </ul>
+        </dd>
+      </dl>
+      <dl id="menu-comment" v-show="childCommentModule.length !== 0">
+        <dt><i class="Hui-iconfont">&#xe622;</i> 评论<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+          <ul>
+            <li v-for="item in childCommentModule"><a _href="{{item.Value | addHash }}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+          </ul>
+        </dd>
+      </dl>
+    </div>
+  </aside>
+  <div class="dislpayArrow hidden-xs">
+    <a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a>
+  </div>
+  <section class="Hui-article-box">
+    <div id="Hui-tabNav" class="Hui-tabNav hidden-xs">
+      <div class="Hui-tabNav-wp">
+        <ul id="min_title_list" class="acrossTab cl">
+          <li class="active"><span title="我的桌面" data-href="welcome.html">我的桌面</span><em></em></li>
+        </ul>
+      </div>
+      <div class="Hui-tabNav-more btn-group"><a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d4;</i></a><a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d7;</i></a></div>
+    </div>
+    <div id="iframe_box" class="Hui-article">
+      <div class="show_iframe">
+        <iframe scrolling="yes" frameborder="0" src="welcome.html"></iframe>
+      </div>
+    </div>
+  </section>
+  <!-- 修改密码 -->
+  <div id="updatePassword">
+    <div class="form-margin">
+      <label><span class="c-red">*</span>旧密码:</label>
+      <input type="password" class="input-text" v-model="updateItem.OldPassword" @keyup.enter="save" @keyup="checkOriginalPwd" id="update_original" autofocus>
+    </div>
+    <p :style="{'visibility': isShowOld?'visible':'hidden'}" class="error">{{inforOld}}</p>
+    <div class="form-margin">
+      <label><span class="c-red">*</span>新密码:</label>
+      <input type="password" class="input-text" placeholder="密码长度为6-16" v-model="updateItem.NewPassword" @keyup.enter="save" @keyup="checkNewPwd" id="update_new">
+    </div>
+    <p :style="{'visibility': isShowNew?'visible':'hidden'}" class="error">{{inforNew}}</p>
+    <div class="form-margin">
+      <label><span class="c-red">*</span>确认新密码:</label>
+      <input type="password" class="input-text" v-model="updateItem.confirmPwd" @keyup.enter="save" @keyup="checkConfirmPwd" id="update_confirm">
+    </div>
+    <p :style="{'visibility': isShowConfirm?'visible':'hidden'}" class="error">{{inforConfirm}}</p>
+    <div class="form-margin form-button">
+      <button v-on:click="save" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+      <button v-on:click="close" class="btn btn-default radius" type="button">取消</button>
+    </div>
+  </div>
+  <!-- 页面加载提示 -->
+  <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
+  <div style="visibility: hidden">
+    <audio id="audioTip" src="lib/order.mp3" controls>
+  </div>
+  <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+  <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//cdn.bootcss.com/axios/0.15.3/axios.min.js"></script>
+  <script src="static/js/api.js"></script>
+  <script src="static/js/Barrett.js"></script>
+  <script src="static/js/RSA.js"></script>
+  <script src="static/js/BigInt.js"></script>
+  <div id="js"></div>
+  <script>
+  var script = document.createElement("script");
+  script.setAttribute("src", "static/js/index.js?hash=" + Date.now());
+  document.getElementById("js").appendChild(script);
+  </script>
+</body>
+
+</html>

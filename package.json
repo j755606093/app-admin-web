@@ -1,0 +1,30 @@
+{
+  "name": "admin",
+  "version": "1.0.0",
+  "description": "管理后台",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://John:666666@192.168.31.86:3800/John/admin.git"
+  },
+  "keywords": [
+    "admin"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.0.2",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-rev-append": "^0.1.8",
+    "gulp-uglify": "^2.0.1"
+  },
+  "dependencies": {
+    "flex.css": "^1.1.6"
+  }
+}

@@ -1,0 +1,299 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+  <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+  <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="dist/css/notify.css" />
+  <title>推送列表</title>
+</head>
+<script>
+var style = document.createElement("link");
+style.setAttribute("rel", "stylesheet");
+style.setAttribute("href", "dist/css/notify.css?hash=" + Date.now());
+document.getElementsByTagName("head")[0].appendChild(style);
+</script>
+
+<body id="app">
+  <nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 推送管理
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+  <div class="page-container" id="isget" style="visibility: hidden">
+    <div class="cl pd-5 bg-1 bk-gray mt-20 center">
+      <span class="l">
+        <a class="btn btn-primary radius" v-on:click="pushNotify()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i>系统通知</a>
+        <a class="btn btn-primary radius" v-on:click="pushNews()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i>今日头条</a>
+      </span>
+      <span>
+        <input id="all" type="radio" value="-1" name="notifytype" @click="search">
+        <label for="all">所有</label> 
+        <input id="comment" type="radio" value="0" name="notifytype" @click="search">
+        <label for="comment">评论通知</label>        
+        <input id="like" type="radio" value="1" name="notifytype" @click="search">
+        <label for="like">点赞通知</label>        
+        <input id="system" type="radio" value="2" name="notifytype" @click="search">
+        <label for="system">系统通知</label> 
+        <input id="top" type="radio" value="3" name="notifytype" @click="search">
+        <label for="top">今日头条</label>                       
+        <select id="searchList" style="border-radius: 5px;" v-model="SeearchType" class="input-text">
+          <option value="Nick" selected>昵&nbsp;&nbsp;&nbsp;&nbsp;称</option>
+          <option value="Mobile">手&nbsp;&nbsp;&nbsp;&nbsp;机</option>
+          <option value="UsrId">用户ID</option>
+        </select>
+        <input v-model="SearchKey" @keyup.enter="search" class="input-text search" type="search" autofocus placeholder="昵称、手机、用户ID">
+        <a class="btn btn-success radius searchBtn" @click="search" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
+      </span>
+      <span class="r lh">本页数据:
+        <select v-model="displayCount" @change="getData($event)">
+          <option value="{{displayCount}}">{{displayCount}}</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select> 条
+        <span> &nbsp;共{{TotalCount}}条</span>
+      </span>
+    </div>
+    <div class="mt-20">
+      <table class="table table-border table-bordered table-bg table-hover table-sort">
+        <thead>
+          <tr class="text-c">
+            <th>ID</th>
+            <th>用户ID</th>
+            <th>昵称</th>
+            <th>手机</th>
+            <th>摘要</th>
+            <th>内容</th>
+            <th>来源</th>
+            <th>消息类型</th>
+            <th>推送类型</th>
+            <th>已查看</th>
+            <th>广播</th>
+            <th>创建时间</th>
+            <!-- <th>新增推送</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-c" v-for="item in items">
+            <td>{{item.Id}}</td>
+            <td>{{item.UsrId}}</td>
+            <td>{{item.Receiver}}</td>
+            <td>{{item.Mobile}}</td>
+            <td><a @click="lookIntro('abstract',item.Abstract)" href="javascript:;">{{item.Abstract | subContent}}</a></td>
+            <td><a @click="lookIntro('content',item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
+            <td v-if="item.SourceType == 0">朋友圈</td>
+            <td v-if="item.SourceType == 1">社区帖子</td>
+            <td v-if="item.SourceType == 2">身边视频</td>
+            <td v-if="item.SourceType == -1">其它</td>
+            <!-- <td v-if="item.SourceType == ''"></td> -->
+            <td v-if="item.MsgType == 0">消息通知</td>
+            <td v-if="item.MsgType == 1">我的</td>
+            <!-- <td v-if="item.MsgType == ''"></td> -->
+            <td v-if="item.NotifyType == 0">评论通知</td>
+            <td v-if="item.NotifyType == 1">点赞通知</td>
+            <td v-if="item.NotifyType == 2">系统通知</td>
+            <td v-if="item.NotifyType == 3">今日头条</td>
+            <td v-if="item.NotifyType == 4">关注通知</td>
+            <td v-if="item.NotifyType == 5">新粉丝通知</td>
+            <!-- <td v-if="item.NotifyType == ''"></td> -->
+            <td v-if="item.IsRead == 0" style="color:red">否</td>
+            <td v-if="item.IsRead == 1" style="color:green">是</td>
+            <td v-if="item.IsAllOwn == 0" style="color:red">否</td>
+            <td v-if="item.IsAllOwn == 1" style="color:green">是</td>
+            <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
+          </tr>
+          <tr class="text-c" v-if="displayCount === 0">
+            <td colspan="11">暂无数据</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 分页 -->
+    <div id="page"></div>
+  </div>
+  <!-- 推送系统通知 -->
+  <div id="addnotify">
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" v-model="Notify.Title" @keyup="checkNotifyTitle" @keyup.enter="addNotify" :class="{ error: notifyTitleValid }" class="input-text" autofocus>
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" @keyup="checkNotifyContent" @keyup.enter="addNotify" v-model="Notify.Content" :class="{ error: notifyContentValid }" class="input-text">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">平台:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="Notify.Target" class="input-text">
+          <option value="0" selected>所有</option>
+          <option value="1">安卓</option>
+          <option value="2">ios</option>
+          <!-- <option value="3">个人</option> -->
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态栏消息:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" @keyup="checkNotifyStatusBarMsg" @keyup.enter="addNotify" v-model="Notify.StatusBarMsg" :class="{ error: notifyStatusBarMsgValid }" class="input-text">
+      </div>
+    </div>
+    <div class="row cl">
+      <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+        <button id="submit_add" @click="addNotify" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交新增</button>
+        <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+      </div>
+    </div>
+  </div>
+  <!-- 推送今日头条 -->
+  <div id="addnews">
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" @keyup="checkNewsTitle" v-model="News.Title" :class="{ error: newsTitleValid }" class="input-text" autofocus>
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">平台:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="News.Target" class="input-text">
+          <option value="0" selected>所有</option>
+          <option value="1">安卓</option>
+          <option value="2">ios</option>
+          <!-- <option value="3">个人</option> -->
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态栏消息:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" @keyup="checkNewsStatusBarMsg" v-model="News.StatusBarMsg" :class="{ error: newsStatusBarMsgValid }" class="input-text">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>新闻:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" v-model="News.NewsId" :class="{ error: newsIdValid }" class="input-text" readonly>
+        <button id="openNews" @click="openNews"><i class="Hui-iconfont">&#xe6f9;</i></button>
+      </div>
+    </div>
+    <div class="row cl">
+      <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+        <button id="submit_add" v-on:click="addNews" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交新增</button>
+        <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+      </div>
+    </div>
+  </div>
+  <!-- 选择新闻列表窗口 -->
+  <div id="selectnews">
+    <div id="searchWrap">
+      <span class="leftWrap">
+        已选择 <button @click="lookCount">{{newsCount}}</button>
+      </span>
+      <span>
+        <select v-model="searchKeyList" @change="changeList" class="searchNewsList input-text">
+          <option value="Title" selected>标题</option>
+          <option value="Author">来源</option>
+          <option value="RealType">类别</option>
+          <option value="IsTop">置顶</option>
+        </select>
+      </span>
+      <span>
+        <select v-show="isType" v-model="searchKeyWord" class="searchNewsList input-text">
+          <option v-for="type in NewsType" @change="searchNews" value="{{type.Value}}">{{type.Name}}</option>
+        </select>
+        <select v-show="isTop" @change="searchNews" v-model="searchKeyWord" class="searchNewsList input-text">
+          <option value="1">是</option>
+          <option value="0">否</option>
+        </select>       
+        <input v-show="noTypeTop" id="searchNewsKey" v-model="searchKeyWord" @keyup.enter="searchNews" class="input-text" type="text"><a class="btn btn-success searchBtn radius" @click="searchNews" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
+      </span>
+    </div>
+    <table class="table table-border table-bordered table-bg table-hover table-sort" :class="{ marginBottom: isShow }">
+      <thead>
+        <th>
+          <!-- <input name="all" type="checkbox" @click="allNews" @change="allNews"> -->
+        </th>
+        <th>ID</th>
+        <th>标题</th>
+        <th>来源</th>
+        <th>类别</th>
+        <th>置顶</th>
+      </thead>
+      <tbody>
+        <tr v-for="item in newsItem">
+          <td>
+            <input name="news" @click="selectNews(item.Id,item.Title)" data-title="{{item.Title}}" value="{{item.Id}}" type="checkbox">
+          </td>
+          <td>{{item.Id}}</td>
+          <td>{{item.Title}}</td>
+          <td>{{item.Author}}</td>
+          <td>{{item.RealType}}</td>
+          <td v-if="item.IsTop == 1" style="color:green">是</td>
+          <td v-if="item.IsTop == 0" style="color:red">否</td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- 分页 -->
+    <div id="newsPage"></div>
+    <div id="confirmBtn">
+      <button @click="closeNews" class="btn btn-default radius" type="button">取消</button>
+      <button type="button" class="btn btn-success radius" @click="confirmSelect">确 定</button>
+    </div>
+  </div>
+  <!-- 查看被选中的新闻 -->
+  <div id="lookNews">
+    <table class="table table-border table-bordered table-bg table-hover table-sort">
+      <tbody>
+        <tr v-for="(index,news) in selectedNemsItem">
+          <td>{{index}}</td>
+          <td>{{news}}</td>
+          <td><i class="Hui-iconfont" @click="delNews(index)">&#xe609;</i></td>
+        </tr>
+        <tr v-if="selectedNemsItem.length == 0">
+          <td>暂无相关数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- 查看简介 -->
+  <div id="lookIntro" :style="{'text-align': isIndent?'left':'center'}">
+    <p :style="{'text-indent': isIndent?'2em':'0'}">{{Intro}}</p>
+  </div>
+  <!-- 页面加载提示 -->
+  <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
+  <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="lib/layui/layui.js"></script>
+  <script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+  <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+  <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+  <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
+  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  <div id="js"></div>
+  <script>
+  var script = document.createElement("script");
+  script.setAttribute("src", "static/js/notify.js?hash=" + Date.now());
+  document.getElementById("js").appendChild(script);
+  </script>
+</body>
+
+</html>
