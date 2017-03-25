@@ -323,7 +323,6 @@ var Vue_App = new Vue({
           $("#add_topic").removeClass("error");
         }
       });
-      $("#add_title").focus();
       this.getComm();
     },
     //设为热门文章
