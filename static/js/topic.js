@@ -568,7 +568,7 @@ var Vue_App = new Vue({
       return title;
     },
     subContent: function(content) {
-      if (!content) {
+      if (content != null) {
         var length = content.length;
         if (length > 15) {
           content = content.slice(0, 5) + ". . ." + content.slice(length - 5, length);
