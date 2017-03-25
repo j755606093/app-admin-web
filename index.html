@@ -102,6 +102,14 @@ document.getElementsByTagName("head")[0].appendChild(style);
           </ul>
         </dd>
       </dl>
+      <dl id="menu-comment" v-show="childMemberModule.length !== 0">
+        <dt><i class="Hui-iconfont">&#xe60d;</i> 用户<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+          <ul>
+            <li v-for="item in childMemberModule"><a _href="{{item.Value | addHash }}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+          </ul>
+        </dd>
+      </dl>
     </div>
   </aside>
   <div class="dislpayArrow hidden-xs">
@@ -146,9 +154,6 @@ document.getElementsByTagName("head")[0].appendChild(style);
   </div>
   <!-- 页面加载提示 -->
   <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
-  <div style="visibility: hidden">
-    <audio id="audioTip" src="lib/order.mp3" controls>
-  </div>
   <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
   <script type="text/javascript" src="lib/layer/2.1/layer.js"></script>
   <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>

@@ -1,0 +1,229 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+  <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+  <link rel="stylesheet" type="text/css" href="dist/css/module.css" />
+  <title>模块列表</title>
+</head>
+<script>
+var style = document.createElement("link");
+style.setAttribute("rel", "stylesheet");
+style.setAttribute("href", "dist/css/module.css?hash=" + Date.now());
+document.getElementsByTagName("head")[0].appendChild(style);
+</script>
+
+<body id="app">
+  <nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 模块管理
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+  <div class="page-container" id="isget" style="visibility: hidden">
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+      <span class="l">
+    <a class="btn btn-primary radius" v-on:click="add()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加模块</a>
+    </span>
+      <span class="r lh">本页数据:
+        <select v-model="displayCount" @change="getData($event)">
+          <option value="{{displayCount}}">{{displayCount}}</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select> 条
+        <span> &nbsp;共{{TotalCount}}条</span>
+      </span>
+    </div>
+    <div class="mt-20">
+      <table class="table table-border table-bordered table-bg table-hover table-sort">
+        <thead>
+          <tr class="text-c">
+            <th>ID</th>
+            <th>父级模块</th>
+            <th>名称</th>
+            <th>链接</th>
+            <!-- <th>图标</th> -->
+            <th>父级</th>
+            <th>顺序</th>
+            <th>创建时间</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-c" v-for="item in items">
+            <td>{{item.Id}}</td>
+            <td>{{item.PName}}</td>
+            <td>{{item.Name}}</td>
+            <td>{{item.Value}}</td>
+            <!-- <td>{{item.Icon}}</td> -->
+            <td v-if="item.IsParent == 1">是</td>
+            <td v-else>否</td>
+            <td>{{item.Sort}}</td>
+            <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
+            <td v-if="item.Status == 1" style="color:green">启用</td>
+            <td v-else style="color:red">禁用</td>
+            <td class="td-manage">
+              <a style="text-decoration:none" class="ml-5" href="javascript:;" v-on:click="edit($index,item.Id)" title="编辑"> <i class="Hui-iconfont">&#xe6df;</i>
+              </a>
+            </td>
+          </tr>
+          <tr class="text-c" v-if="displayCount === 0">
+            <td colspan="8">暂无数据 </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 分页 -->
+    <div id="page"></div>
+  </div>
+  <!-- 修改弹出框 -->
+  <div id="editmodule">
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">父级:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="editItem.IsParent" class="input-text">
+          <option value="1">是</option>
+          <option value="0">否</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl" v-if="editItem.IsParent == 0">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>父级模块:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="editItem.PId" class="input-text">
+          <option v-for="item in parentItem" value="{{ item.Value }}">{{ item.Name }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input @keyup="checkEditItem('edit_name')" @keyup.enter="layer_submit" type="text" class="input-text" v-model="editItem.Name" id="edit_name">
+      </div>
+    </div>
+    <div class="row cl" v-if="editItem.IsParent == 0">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>链接:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input @keyup="checkEditItem('edit_value')" @keyup.enter="layer_submit" type="text" class="input-text" v-model="editItem.Value" id="edit_value">
+      </div>
+    </div>
+    <!-- <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">图标:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" class="input-text" v-model="editItem.Icon" placeholder="" id="edit_icon" name="Icon">
+      </div>
+    </div> -->
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>顺序:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="number" @keyup.enter="layer_submit" class="input-text" @keyup="checkEditItem('edit_sort')" v-model="editItem.Sort" id="edit_sort">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">状态:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="editItem.Status" class="input-text">
+          <option value="1">启用</option>
+          <option value="0">禁用</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+        <button id="submit_edit" class="btn btn-primary radius" type="submit" v-on:click="layer_submit"><i class="Hui-iconfont">&#xe632;</i> 提交修改</button>
+        <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+      </div>
+    </div>
+  </div>
+  <!-- 增加弹出框 -->
+  <div id="addmodule">
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">父级:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="addItem.IsParent" class="input-text">
+          <option value="1">是</option>
+          <option value="0" selected>否</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl" v-if="addItem.IsParent == 0">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>父级模块:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="addItem.PId" class="input-text">
+          <option v-for="item in parentItem" value="{{ item.Value }}">{{ item.Name }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input @keyup="checkAddItem('add_name')" @keyup.enter="layer_submit_add" type="text" class="input-text" v-model="addItem.Name" id="add_name">
+      </div>
+    </div>
+    <div class="row cl" v-if="addItem.IsParent == 0">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>链接:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input @keyup="checkAddItem('add_value')" @keyup.enter="layer_submit_add" type="text" class="input-text" v-model="addItem.Value" id="add_value">
+      </div>
+    </div>
+    <!-- <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">图标:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="text" class="input-text" v-model="addItem.Icon" placeholder="" id="add_icon" name="Icon">
+      </div>
+    </div> -->
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>顺序:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="number" @keyup.enter="layer_submit_add" class="input-text" @keyup="checkAddItem('add_sort')" v-model="addItem.Sort" placeholder="" id="add_sort">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">状态:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="addItem.Status" class="input-text">
+          <option value="1" selected>启用</option>
+          <option value="0">禁用</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
+      <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+        <button id="submit_add" v-on:click="layer_submit_add" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交增加</button>
+        <button v-on:click="layer_close" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+      </div>
+    </div>
+    <!-- </form> -->
+  </div>
+  <!-- 页面加载提示 -->
+  <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
+  <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="lib/layui/layui.js"></script>
+  <script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+  <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+  <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+  <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
+  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
+  <div id="js"></div>
+  <script>
+  var script = document.createElement("script");
+  script.setAttribute("src", "static/js/module.js?hash=" + Date.now());
+  document.getElementById("js").appendChild(script);
+  </script>
+</body>
+
+</html>

@@ -107,6 +107,9 @@ var VM = new Vue({
             if (name == "评论") {
               _this.childCommentModule = modules;
             }
+            if (name == "用户") {
+              _this.childMemberModule = modules;
+            }
           }
           _this.isHide = true;
         } else if (res.data.Code == 401) {

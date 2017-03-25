@@ -11,6 +11,9 @@ var Vue_App = new Vue({
     isHide: false, //“加载中”  
     searchType: "",
     searchKey: "",
+    addValid: false,
+    firstLoad: true,
+    addItem: { Id: "", Nick: "", Sex: "", Mail: "", Mobile: "", Address: "", Status: "" },
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
     ip: "", //用于服务器
@@ -35,6 +38,10 @@ var Vue_App = new Vue({
       if (type == "Mail") {
         data.Mail = key;
       }
+      if (type == "UsrId") {
+        data.UsrId = key;
+      }
+      data = JSON.stringify(data);
       this.$http.post(this.ip + "/api/Member/List", data, {
         headers: {
           "Authorization": this.token
@@ -78,16 +85,19 @@ var Vue_App = new Vue({
             skin: '#148cf1', //自定义选中色值
             skip: true, //开启跳页
             jump: function(obj) {
-              _this.isHide = false;
-              //跳到下一页时清空上一页的数据
-              _this.items = [];
-              //记录当前页码
-              if (_this.isSearch) {
-                obj.curr = 1; //在进行搜索时，防止在当前页码不是1而导致获取不到数据
+              if (!_this.firstLoad) {
+                _this.isHide = false;
+                //跳到下一页时清空上一页的数据
+                _this.items = [];
+                //记录当前页码
+                if (_this.isSearch) {
+                  obj.curr = 1; //在进行搜索时，防止在当前页码不是1而导致获取不到数据
+                }
+                _this.currPage = obj.curr;
+                _this.getList(obj.curr, _this.currCount, _this.searchType, _this.searchKey);
+                _this.isSearch = false;
               }
-              _this.currPage = obj.curr;
-              _this.getList(obj.curr, _this.currCount, _this.searchType, _this.searchKey);
-              _this.isSearch = false;
+              _this.firstLoad = true;
             },
           })
         });
@@ -106,6 +116,60 @@ var Vue_App = new Vue({
       this.isHide = false;
       this.isSearch = true;
       this.getList(1, this.currCount, this.searchType, this.searchKey);
+    },
+    add() {
+      var _this = this;
+      this.layer = layer.open({
+        type: 1,
+        title: "新增会员",
+        content: $("#addmember"),
+        area: "600px",
+        skin: 'layui-layer-demo', //样式类名
+        anim: 2,
+        shadeClose: false, //开启遮罩关闭
+        end: function() {
+
+        }
+      });
+    },
+    checkAdd() {
+      for (var key in this.addItem) {
+        if (this.addItem[key] === "") {
+          this.addValid = false;
+        }
+      }
+    },
+    layer_submit_add() {
+      this.addValid = true;
+      // this.checkAdd();
+      if (this.addValid) {
+        this.isHide = false; //加载中
+        this.addItem.Id = this.usrId;
+        var data = JSON.stringify(this.addItem);
+        this.$http.post(this.ip + "/api/Member/Add", data, {
+          headers: {
+            "Authorization": this.token
+          }
+        }).then((res) => {
+          if (res.body.Code === 200) {
+            this.getList(this.currPage, 10, this.searchType, this.searchKey);
+            this.layer_close();
+            layer.msg('新增成功', { icon: 1, time: 2000 });
+            this.clearData();
+          } else if (res.body.Message !== "") {
+            layer.msg(res.body.Message, { icon: 0, time: 3000 });
+            this.isHide = true;
+          } else {
+            this.isHide = true;
+            layer.msg('服务器错误，请稍后再试', { icon: 0, time: 3000 });
+          }
+        }).catch((err) => {
+          console.log(err)
+          layer.msg('服务器错误，请稍后再试', { icon: 0, time: 3000 });
+        })
+      } else {
+        layer.msg("请完善表单内容");
+      }
     },
     //鼠标移上时，控制“状态”按钮文本的变化
     over(id, status) {
@@ -152,6 +216,7 @@ var Vue_App = new Vue({
           "Id": id,
           "Status": status
         };
+        data = JSON.stringify(data);
         _this.$http.post(_this.ip + "/api/Member/Modify", data, {
           headers: {
             "Authorization": _this.token
@@ -174,6 +239,15 @@ var Vue_App = new Vue({
         _this.layer_close();
       });
     },
+    clearData() {
+      for (var key in this.addItem) {
+        if (key === "Sex" || key === "Status") {
+          this.addItem[key] = 1;
+        } else {
+          this.addItem[key] = "";
+        }
+      }
+    },
     layer_close() {
       layer.close(this.layer);
     },
@@ -188,12 +262,12 @@ var Vue_App = new Vue({
   },
   filters: {
     //处理Avatar
-    handleData: function(value) {
-      if (value != null || value != undefined) {
-        var length = value.length;
-        var val = value.slice(0, 25) + "..." + value.slice(40, length);
-        return val;
-      }
-    },
+    // handleData: function(val) {
+    //   if (val !== "null" && val != "") {
+    //     var leng = val.length;
+    //     val = val.slice(0, 8) + "..." + val.slice(leng - 3, leng);
+    //   }
+    //   return val;
+    // },
   }
 })

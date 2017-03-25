@@ -5,7 +5,7 @@ var Vue_App = new Vue({
     items: {},
     editItem: {}, //要编辑的items中的数据
     layer: null, //弹出框,
-    addItem: { BoardId: "", UsrId: "" }, //增加图
+    addItem: { BoardId: "", UsrId: "", Content: "" }, //增加图
     TotalCount: 0, //总数
     displayCount: 15, //当前页要显示的数据量   
     currCount: 15, //当前数据量
@@ -16,7 +16,12 @@ var Vue_App = new Vue({
     AppUsage: null,
     isHide: false, //“加载中”
     isIndent: false, //是否缩进
+    isEdit: true,
     Intro: "", //文章内容    
+    falseLoad: true,
+    showItem: false,
+    UsrItem: [],
+    nick: "",
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
     ip: "", //用于服务器
@@ -29,6 +34,24 @@ var Vue_App = new Vue({
     } else {
       this.getList(1, 15);
       this.getComm();
+      //富文本编辑器初始化
+      window.editor = new wangEditor('editor');
+      editor.config.uploadImgUrl = this.ip + '/api/Default/UploadImg';
+      editor.config.uploadParams = {
+        token: this.token,
+      };
+      // 设置 headers（举例）
+      editor.config.uploadHeaders = {
+        'Accept': 'text/x-json'
+      };
+      //移除全屏
+      editor.config.menus = $.map(wangEditor.config.menus, function(item, key) {
+        if (item === 'fullscreen') {
+          return null;
+        }
+        return item;
+      });
+      editor.create();
     }
   },
   methods: {
@@ -43,6 +66,7 @@ var Vue_App = new Vue({
           this.displayCount = this.items.length;
           this.TotalCount = response.body.Data.TotalCount;
           this.isHide = true; //加载完毕
+          // console.log(this.items)
         } else {
           if (response.body.Code == 204) {
             this.items = [];
@@ -73,14 +97,17 @@ var Vue_App = new Vue({
             skin: '#148cf1', //自定义选中色值
             skip: true, //开启跳页
             jump: function(obj) {
-              _this.isHide = false;
-              //跳到下一页时清空上一页的数据
-              _this.items = [];
-              //记录当前页码
-              _this.currPage = obj.curr;
-              //获取当前页或指定页的数据
-              // console.log(obj.curr);
-              _this.getList(obj.curr, _this.currCount);
+              if (!_this.falseLoad) {
+                _this.isHide = false;
+                //跳到下一页时清空上一页的数据
+                _this.items = [];
+                //记录当前页码
+                _this.currPage = obj.curr;
+                //获取当前页或指定页的数据
+                // console.log(obj.curr);
+                _this.getList(obj.curr, _this.currCount);
+              }
+              _this.falseLoad = false;
             },
           })
         });
@@ -105,12 +132,58 @@ var Vue_App = new Vue({
         if (res.data.Code === 200) {
           this.CommItem = res.data.Data;
         } else {
-          layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
+          layer.msg(res.body.Message, { icon: 2, time: 3000 });
         }
-      }, function() {
+      }).catch((err) => {
         layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
         console.error()
-      })
+      });
+    },
+    //获取用户Id
+    getUsrid() {
+      var data = {
+        Index: 1,
+        Size: 10,
+        Nick: this.nick
+      };
+      data = JSON.stringify(data);
+      this.$http.post(this.ip + "/api/Member/VirtualManEnum", data, {
+        headers: {
+          "Authorization": this.token
+        }
+      }).then(function(res) {
+        if (res.data.Code === 200) {
+          this.UsrItem = res.data.Data.Content;
+        } else if (res.data.Code === 204) {
+          this.UsrItem = [];
+        } else {
+          layer.msg(res.body.Message, { icon: 2, time: 3000 });
+        }
+      }).catch((err) => {
+        this.UsrItem = [];
+        layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
+        console.log(err)
+      });
+      // console.log(this.UsrItem)
+      this.showItem = true;
+    },
+    //选择昵称
+    selectNick(val, name) {
+      this.nick = name;
+      if (this.isEdit) {
+        this.editItem.UsrId = val;
+      } else {
+        this.addItem.UsrId = val;
+      }
+      this.showItem = false;
+    },
+    //html转义
+    htmlEncode(html) {
+      var temp = document.createElement("div");
+      (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
+      var output = temp.innerHTML;
+      temp = null;
+      return output;
     },
     //复制Id
     clickCopy(id) {
@@ -160,7 +233,9 @@ var Vue_App = new Vue({
     },
     edit(index, id) {
       this.editItem = this.items[index];
-      // console.log(this.editItem)
+      editor.$txt.html(this.editItem.Content);
+      this.nick = this.editItem.UsrName;
+      this.isEdit = true;
       this.layer = layer.open({
         type: 1,
         title: "编辑帖子",
@@ -197,10 +272,18 @@ var Vue_App = new Vue({
       this.editValid = true;
       this.checkEditItem('edit_title');
       this.checkEditItem('edit_topic');
-      this.checkEditItem('edit_content');
+      if (this.editItem.Content === "") {
+        this.editValid = false;
+        layer.msg("帖子内容不能为空")
+      }
+      if (this.nick === "") {
+        this.addValid = false;
+        layer.msg("发帖人不能为空")
+      }
       this.checkEditItem('edit_likecount');
       if (this.editValid) {
         this.isHide = false; //加载中
+        // this.editItem.Content = this.htmlEncode(this.editItem.Content);
         var data = JSON.parse(JSON.stringify(this.editItem));
         this.$http.post(this.ip + "/api/Post/Update", data, {
           headers: {
@@ -213,14 +296,18 @@ var Vue_App = new Vue({
             layer.msg('修改成功!', { icon: 1, time: 2000 });
           } else {
             this.isHide = true;
-            layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 2000 });
+            layer.msg(res.body.Message, { icon: 2, time: 2000 });
           }
+        }).catch((err) => {
+          console.log(err)
+          layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
         })
       }
     },
     add() {
+      this.isEdit = false;
       this.addItem.BoardId = this.CommItem[0].Value;
-      this.getComm();
+      this.nick === "";
       this.layer = layer.open({
         type: 1,
         title: "新增帖子",
@@ -236,7 +323,8 @@ var Vue_App = new Vue({
           $("#add_topic").removeClass("error");
         }
       });
-      // $("#add_title").focus();
+      $("#add_title").focus();
+      this.getComm();
     },
     //设为热门文章
     setHot(id) {
@@ -294,17 +382,54 @@ var Vue_App = new Vue({
         el.classList.remove("error");
       }
     },
+    //打开富文本
+    openRichText() {
+      this.layer_text = layer.open({
+        type: 1,
+        title: "帖子内容",
+        content: $("#open-rich-text"),
+        area: ["700px", "600px"],
+        skin: 'layui-layer-demo', //样式类名
+        anim: 2,
+        shadeClose: true, //开启遮罩关闭
+        cancel: function() {
+          // location.replace(location.href);
+        },
+        end: function() {
+          // location.replace(location.href);
+        }
+      });
+    },
+    submit() {
+      var html = editor.$txt.html();
+      if (this.isEdit) {
+        this.editItem.Content = html;
+      } else {
+        this.addItem.Content = html;
+      }
+      this.close();
+    },
+    close() {
+      layer.close(this.layer_text);
+    },
     //添加帖子
     layer_submit_add() {
       var _this = this;
       this.addValid = true;
       this.checkAddItem('add_title');
       this.checkAddItem('add_topic');
-      this.checkAddItem('add_content');
+      if (this.addItem.Content === "") {
+        this.addValid = false;
+        layer.msg("帖子内容不能为空")
+      }
+      if (this.nick === "") {
+        this.addValid = false;
+        layer.msg("发帖人不能为空")
+      }
       this.checkAddItem('add_likecount');
       if (this.addValid) {
         this.isHide = false; //加载中
-        this.addItem.UsrId = this.usrId;
+        // this.addItem.Content = this.htmlEncode(this.addItem.Content);
         var data = JSON.parse(JSON.stringify(this.addItem));
         this.$http.post(this.ip + "/api/Post/Add", data, {
           headers: {
@@ -315,12 +440,16 @@ var Vue_App = new Vue({
             this.getList(this.currPage, this.currCount);
             this.clearData();
             this.layer_close();
+            this.nick = "";
             layer.msg('新增成功!', { icon: 1, time: 2000 });
           } else {
             this.isHide = true;
-            layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
+            layer.msg(res.body.Message, { icon: 2, time: 2000 });
           }
-        });
+        }).catch((err) => {
+          console.log(err)
+          layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
+        })
       }
     },
     formatData(data) {
@@ -331,6 +460,7 @@ var Vue_App = new Vue({
       $("#add_content").val("");
       $("#add_likecount").val("");
       $("#add_topic").val("");
+      editor.$txt.html('<p><br></p>');
     },
     //计算分钟数
     computeSeconds() {
