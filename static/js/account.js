@@ -28,7 +28,7 @@ var Vue_App = new Vue({
     editMailValid: false,
     editMobileValid: false,
     ip: "", //用于服务器
-    // ip: "http://192.168.31.81", //用于测试
+    // ip: "http://192.168.31.81", //测试
   },
   created: function() {
     if (this.usrId === "" || typeof this.usrId === "undefined") {
