@@ -44,7 +44,7 @@ var Vue_App = new Vue({
         return item;
       });
       editor.create();
-
+      console.log(25588)
       this.getList(1, 15, "", "");
       document.querySelector("#searchKey").focus();
     }
