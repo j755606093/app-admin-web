@@ -28,7 +28,7 @@ var Vue_App = new Vue({
     editMailValid: false,
     editMobileValid: false,
     ip: "", //用于服务器
-    // ip: "http://192.168.31.81", //测试
+    // ip: "http://192.168.31.82", //用于测试
   },
   created: function() {
     if (this.usrId === "" || typeof this.usrId === "undefined") {
@@ -224,21 +224,6 @@ var Vue_App = new Vue({
       this.checkMobile('edit');
       if (this.editValid) {
         this.isHide = false; //加载中
-        if (this.editItem.Enabled_Refund_Verify) {
-          this.editItem.Enabled_Refund_Verify = 1;
-        } else {
-          this.editItem.Enabled_Refund_Verify = 0;
-        }
-        if (this.editItem.Enabled_Refund) {
-          this.editItem.Enabled_Refund = 1;
-        } else {
-          this.editItem.Enabled_Refund = 0;
-        }
-        if (this.editItem.Enabled_Order_Handle) {
-          this.editItem.Enabled_Order_Handle = 1;
-        } else {
-          this.editItem.Enabled_Order_Handle = 0;
-        }
         var data = JSON.parse(JSON.stringify(this.editItem));
         this.$http.post(this.ip + "/api/Account/Update", data, {
           headers: {
@@ -297,21 +282,6 @@ var Vue_App = new Vue({
         this.isHide = false; //加载中
         var pwd = this.addItem.Pwd;
         this.addItem.Password = this.encodePwd(pwd);
-        if (this.addItem.Enabled_Refund_Verify) {
-          this.addItem.Enabled_Refund_Verify = 1;
-        } else {
-          this.addItem.Enabled_Refund_Verify = 0;
-        }
-        if (this.addItem.Enabled_Refund) {
-          this.addItem.Enabled_Refund = 1;
-        } else {
-          this.addItem.Enabled_Refund = 0;
-        }
-        if (this.addItem.Enabled_Order_Handle) {
-          this.addItem.Enabled_Order_Handle = 1;
-        } else {
-          this.addItem.Enabled_Order_Handle = 0;
-        }
         var data = JSON.parse(JSON.stringify(this.addItem));
         this.$http.post(this.ip + "/api/Account/Add", data, {
           headers: {
