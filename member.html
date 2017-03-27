@@ -83,7 +83,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th>邮箱</th>
             <th>手机</th>
             <th>地址</th>
-            <th>登录时间</th>
+            <!-- <th>登录时间</th> -->
             <th>创建时间</th>
             <th>状态</th>
           </tr>
@@ -99,7 +99,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Mail}}</td>
             <td>{{item.Mobile}}</td>
             <td>{{item.Address}}</td>
-            <td>{{item.LoginTime.replace("T"," ").slice(0,19)}}</td>
+            <!-- <td>{{item.LoginTime.replace("T"," ").slice(0,19)}}</td> -->
             <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
             <td>
               <a v-if="item.Status == 1" style="background-color:#00B271" class="ml-5 manage-btn enable-btn" id="id{{item.Id}}" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" href="javascript:;" v-on:click="edit(item.Id, item.Status)">已启用
