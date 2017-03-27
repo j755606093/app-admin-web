@@ -484,41 +484,49 @@ var Vue_App = new Vue({
   },
   filters: {
     // 给过长的字符串中间加上省略号
-    subStr: function(str) {
-      if (str != null) {
-        var length = str.length;
-        if (length > 13) {
-          str = str.slice(0, 8) + ". . ." + str.slice(length - 5, length);
+    subStr: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var len = val.length;
+        if (len > 8) {
+          val = val.slice(0, 5) + "..." + val.slice(len - 2, len);
         }
+        return val;
       }
-      return str;
     },
-    subUrl: function(url) {
-      if (url != null) {
-        var length = url.length;
-        if (length > 8) {
-          url = url.slice(0, 5) + ". . ." + url.slice(length - 2, length);
+    subUrl: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var len = val.length;
+        if (len > 8) {
+          val = val.slice(0, 5) + "..." + val.slice(len - 2, len);
         }
+        return val;
       }
-      return url;
     },
-    subTitle: function(title) {
-      if (title != null) {
-        var length = title.length;
-        if (length > 6) {
-          title = title.slice(0, 3) + ". . ." + title.slice(length - 3, length);
+    subTitle: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var len = val.length;
+        if (len > 6) {
+          val = val.slice(0, 3) + "..." + val.slice(len - 3, len);
         }
+        return val;
       }
-      return title;
     },
-    subContent: function(content) {
-      if (content != null) {
-        var length = content.length;
-        if (length > 15) {
-          content = content.slice(0, 5) + ". . ." + content.slice(length - 5, length);
+    subContent: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var len = val.length;
+        if (len > 15) {
+          val = val.slice(0, 5) + "..." + val.slice(len - 5, len);
         }
+        return val;
       }
-      return content;
     }
   }
 });

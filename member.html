@@ -95,7 +95,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td v-if="item.Sex === 1">男</td>
             <td v-else>女</td>
             <td>{{item.Birth.replace("T"," ").slice(0,10)}}</td>
-            <td><a href="{{item.Avatar}}" target="_blank">{{item.Avatar}}</a></td>
+            <td><a href="{{item.Avatar}}" target="_blank">{{item.Avatar | handleData}}</a></td>
             <td>{{item.Mail}}</td>
             <td>{{item.Mobile}}</td>
             <td>{{item.Address}}</td>

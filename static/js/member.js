@@ -262,12 +262,14 @@ var Vue_App = new Vue({
   },
   filters: {
     //处理Avatar
-    // handleData: function(val) {
-    //   if (val !== "null" && val != "") {
-    //     var leng = val.length;
-    //     val = val.slice(0, 8) + "..." + val.slice(leng - 3, leng);
-    //   }
-    //   return val;
-    // },
+    handleData: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        val = val.slice(0, 8) + "..." + val.slice(leng - 3, leng);
+        return val;
+      }
+    },
   }
 })
