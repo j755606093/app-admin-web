@@ -45,12 +45,12 @@ var Vue_App = new Vue({
         'Accept': 'text/x-json'
       };
       //移除全屏
-      editor.config.menus = $.map(wangEditor.config.menus, function(item, key) {
-        if (item === 'fullscreen') {
-          return null;
-        }
-        return item;
-      });
+      // editor.config.menus = $.map(wangEditor.config.menus, function(item, key) {
+      //   if (item === 'fullscreen') {
+      //     return null;
+      //   }
+      //   return item;
+      // });
       editor.create();
     }
   },
@@ -387,10 +387,12 @@ var Vue_App = new Vue({
         type: 1,
         title: "帖子内容",
         content: $("#open-rich-text"),
-        area: ["700px", "600px"],
+        // area: ["700px", "600px"],
+        area: "700px",
         skin: 'layui-layer-demo', //样式类名
         anim: 2,
         shadeClose: true, //开启遮罩关闭
+        maxmin: true,
         cancel: function() {
           // location.replace(location.href);
         },
