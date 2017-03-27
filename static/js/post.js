@@ -40,48 +40,41 @@ var Vue_App = new Vue({
       editor.config.uploadParams = {
         token: this.token,
       };
-      // 设置 headers（举例）
       editor.config.uploadHeaders = {
         'Accept': 'text/x-json'
       };
-      //移除全屏
-      // editor.config.menus = $.map(wangEditor.config.menus, function(item, key) {
-      //   if (item === 'fullscreen') {
-      //     return null;
-      //   }
-      //   return item;
-      // });
       editor.create();
     }
   },
   methods: {
     getList(index, size) {
+      var _this = this;
       this.$http.post(this.ip + "/api/Post/List", { "Index": index, "Size": size }, {
         headers: {
           "Authorization": this.token
         }
       }).then(function(response) {
         if (response.body.Code == 200) {
-          this.items = response.body.Data.Content;
-          this.displayCount = this.items.length;
-          this.TotalCount = response.body.Data.TotalCount;
-          this.isHide = true; //加载完毕
+          _this.items = response.body.Data.Content;
+          _this.displayCount = _this.items.length;
+          _this.TotalCount = response.body.Data.TotalCount;
+          _this.isHide = true; //加载完毕
           // console.log(this.items)
         } else {
           if (response.body.Code == 204) {
-            this.items = [];
-            this.displayCount = 0;
+            _this.items = [];
+            _this.displayCount = 0;
             document.getElementById("page").innerHTML = "";
           } else {
             layer.msg("服务器错误，请稍后再试", { icon: 2, time: 1500 });
           }
-          this.isHide = true;
+          _this.isHide = true;
         }
-      }, function(error) {
-        this.isHide = true;
+      }).catch(function(error) {
+        _this.isHide = true;
         console.log(error);
         layer.msg("服务器错误，请稍后再试", { icon: 2, time: 1500 });
-      })
+      });
       document.getElementById("isget").style.visibility = "visible";
     },
     //设置分页
@@ -124,13 +117,14 @@ var Vue_App = new Vue({
     },
     //获取社区Id
     getComm() {
+      var _this = this;
       this.$http.get(this.ip + "/api/Board/ListEnum", {
         headers: {
           "Authorization": this.token
         }
       }).then(function(res) {
         if (res.data.Code === 200) {
-          this.CommItem = res.data.Data;
+          _this.CommItem = res.data.Data;
         } else {
           layer.msg(res.body.Message, { icon: 2, time: 3000 });
         }
@@ -141,6 +135,7 @@ var Vue_App = new Vue({
     },
     //获取用户Id
     getUsrid() {
+      var _this = this;
       var data = {
         Index: 1,
         Size: 10,
@@ -153,14 +148,14 @@ var Vue_App = new Vue({
         }
       }).then(function(res) {
         if (res.data.Code === 200) {
-          this.UsrItem = res.data.Data.Content;
+          _this.UsrItem = res.data.Data.Content;
         } else if (res.data.Code === 204) {
-          this.UsrItem = [];
+          _this.UsrItem = [];
         } else {
           layer.msg(res.body.Message, { icon: 2, time: 3000 });
         }
       }).catch((err) => {
-        this.UsrItem = [];
+        _this.UsrItem = [];
         layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
         console.log(err)
       });
@@ -244,6 +239,9 @@ var Vue_App = new Vue({
         skin: 'layui-layer-demo', //样式类名
         anim: 2,
         shadeClose: true, //开启遮罩关闭
+        end: function() {
+          editor.$txt.html('<p><br></p>');
+        }
       });
     },
     //查看帖子内容
@@ -289,16 +287,16 @@ var Vue_App = new Vue({
           headers: {
             "Authorization": this.token
           }
-        }).then((res) => {
+        }).then(function(res) {
           if (res.body.Code === 200) {
-            this.getList(this.currPage, this.currCount);
-            this.layer_close();
+            _this.getList(_this.currPage, _this.currCount);
+            _this.layer_close();
             layer.msg('修改成功!', { icon: 1, time: 2000 });
           } else {
-            this.isHide = true;
             layer.msg(res.body.Message, { icon: 2, time: 2000 });
           }
-        }).catch((err) => {
+          _this.isHide = true;
+        }).catch(function(err) {
           console.log(err)
           layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
         })
@@ -307,7 +305,7 @@ var Vue_App = new Vue({
     add() {
       this.isEdit = false;
       this.addItem.BoardId = this.CommItem[0].Value;
-      this.nick === "";
+      this.nick = "";
       this.layer = layer.open({
         type: 1,
         title: "新增帖子",
@@ -319,7 +317,6 @@ var Vue_App = new Vue({
         end: function() {
           $("#add_title").removeClass("error");
           $("#add_likecount").removeClass("error");
-          $("#add_content").removeClass("error");
           $("#add_topic").removeClass("error");
         }
       });
@@ -341,16 +338,16 @@ var Vue_App = new Vue({
           headers: {
             "Authorization": _this.token
           }
-        }).then((res) => {
+        }).then(function(res) {
           if (res.body.Code === 200) {
             _this.getList(_this.currPage, _this.currCount, _this.searchKeyList, _this.searchKeyWord);
             layer.msg("设置成功！", { icon: 1, time: 2000 });
             _this.layer_close();
           } else {
-            _this.isHide = true;
-            layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
+            layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
-        }).catch(err => {
+          _this.isHide = true;
+        }).catch(function(err) {
           console.log(err);
           _this.isHide = true;
           layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 2500 });
@@ -436,18 +433,19 @@ var Vue_App = new Vue({
           headers: {
             "Authorization": this.token
           }
-        }).then((res) => {
+        }).then(function(res) {
           if (res.body.Code === 200) {
-            this.getList(this.currPage, this.currCount);
-            this.clearData();
-            this.layer_close();
-            this.nick = "";
+            _this.getList(_this.currPage, _this.currCount);
+            _this.clearData();
+            _this.layer_close();
+            _this.nick = "";
             layer.msg('新增成功!', { icon: 1, time: 2000 });
           } else {
-            this.isHide = true;
+            _this.isHide = true;
             layer.msg(res.body.Message, { icon: 2, time: 2000 });
           }
-        }).catch((err) => {
+        }).catch(function(err) {
+          _this.isHide = true;
           console.log(err)
           layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
         })
