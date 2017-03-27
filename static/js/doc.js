@@ -355,41 +355,49 @@ var Vue_App = new Vue({
   },
   filters: {
     // 给过长的字符串中间加上省略号
-    subStr: function(str) {
-      if (str !== null && str !== "") {
-        var length = str.length;
-        if (length > 20) {
-          str = str.slice(0, 8) + ". . ." + str.slice(length - 3, length);
+    subStr: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 20) {
+          val = val.slice(0, 8) + "..." + val.slice(leng - 3, leng);
         }
+        return val;
       }
-      return str;
     },
-    subUrl: function(url) {
-      if (url !== null && url !== "") {
-        var length = url.length;
-        if (length > 15) {
-          url = url.slice(0, 8) + ". . ." + url.slice(length - 3, length);
+    subUrl: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 15) {
+          val = val.slice(0, 8) + "..." + val.slice(leng - 3, leng);
         }
+        return val;
       }
-      return url;
     },
-    subTitle: function(title) {
-      if (title !== null && title !== "") {
-        var length = title.length;
-        if (length > 10) {
-          title = title.slice(0, 5) + ". . ." + title.slice(length - 3, length);
+    subTitle: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 10) {
+          val = val.slice(0, 6) + "..." + val.slice(leng - 3, leng);
         }
+        return val;
       }
-      return title;
     },
-    subContent: function(content) {
-      if (content !== null && content !== "") {
-        var length = content.length;
-        if (length > 20) {
-          content = content.slice(0, 5) + ". . ." + content.slice(length - 3, length);
+    subContent: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 10) {
+          val = val.slice(0, 6) + "..." + val.slice(leng - 3, leng);
         }
+        return val;
       }
-      return content;
     }
   },
   watch: {
