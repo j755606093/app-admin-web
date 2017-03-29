@@ -20,7 +20,21 @@
   <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
   <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
   <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="dist/css/moment.css" />
+  <style>
+  #loading {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 25%;
+    left: 49%;
+    z-index: 20000000;
+  }
+  
+  #addmom,
+  #lookIntro {
+    display: none;
+  }
+  </style>
   <title>说说列表</title>
 </head>
 <script>
@@ -60,11 +74,12 @@ document.getElementsByTagName("head")[0].appendChild(style);
               <input name="allSelect" type="checkbox" value="">
             </th> -->
             <th>ID</th>
+            <th>用户ID</th>
             <th>昵称</th>
             <th>视频缩略图</th>
             <th>内容</th>
             <!-- <th width="200">话题</th> -->
-            <th>链接</th>
+            <th>图片链接</th>
             <!-- <th width="150">位置</th> -->
             <th>类型</th>
             <!-- <th width="250">App调用</th> -->
@@ -79,6 +94,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
               <input name="batch" type="checkbox" id="{{ item.Id }}" value="{{item.Id}},{{item.Status}}">
             </td> -->
             <td>{{item.Id}}</td>
+            <td>{{item.UsrId}}</td>
             <td>{{item.Nick}}</td>
             <td><a href="{{item.Avatar}}" target="_blank">{{item.Avatar | subUrl}}</a></td>
             <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
@@ -111,8 +127,22 @@ document.getElementsByTagName("head")[0].appendChild(style);
   </div>
   <!-- 增加弹出框 -->
   <div id="addmom">
-    <!-- <form enctype="multipart/form-data" method="post" id="addform" action="http://192.168.31.86:12580/api/HNav/Add" target="id_iframe"> -->
     <form enctype="multipart/form-data" id="addform">
+      <div class="row cl select-nick">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>昵称:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input @keyup="getUsrid" type="text" class="input-text" id="nick" v-model="nick">
+        </div>
+        <ul v-show="UsrItem.length !== 0 && showItem">
+          <li v-for="item in UsrItem" @click="selectNick(item.Name,item.Value)">{{item.Value}}</li>
+        </ul>
+        <ul v-show="UsrItem.length === 0 && showItem">
+          <li>暂无数据</li>
+        </ul>
+      </div>
+      <div style="display: none;">
+        <input type="text" v-model="UserId" name="UsrId">
+      </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2">类型:</label>
         <div class="formControls col-xs-8 col-sm-9">
@@ -174,7 +204,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
   <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
   <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
-  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//ok82gyrdp.qnssl.com/js/admin/vue-1.0.28.js"></script>
   <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
   <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
   <div id="js"></div>

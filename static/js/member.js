@@ -13,7 +13,7 @@ var Vue_App = new Vue({
     searchKey: "",
     addValid: false,
     firstLoad: true,
-    addItem: { Id: "", Nick: "", Sex: "", Mail: "", Mobile: "", Address: "", Status: "" },
+    addItem: { Nick: "", Sex: 1, Mail: "", Mobile: "", Address: "", Status: 1 },
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
     ip: "", //用于服务器
@@ -56,13 +56,8 @@ var Vue_App = new Vue({
           this.displayCount = 0;
           this.TotalCount = 0;
           document.getElementById("page").innerHTML = "";
-        } else if (res.body.Code == 401) {
-          layer.msg("会话已过期，请重新登录", { icon: 0, time: 3500 });
-          setTimeout(() => {
-            location.href = "login.html";
-          }, 3500);
         } else {
-          layer.msg("服务器错误，请稍后再试", { icon: 2, time: 3000 });
+          layer.msg(res.body.Message, { icon: 2, time: 3000 });
         }
         this.isHide = true;
       }, function(error) {
@@ -87,17 +82,10 @@ var Vue_App = new Vue({
             jump: function(obj) {
               if (!_this.firstLoad) {
                 _this.isHide = false;
-                //跳到下一页时清空上一页的数据
-                _this.items = [];
-                //记录当前页码
-                if (_this.isSearch) {
-                  obj.curr = 1; //在进行搜索时，防止在当前页码不是1而导致获取不到数据
-                }
                 _this.currPage = obj.curr;
                 _this.getList(obj.curr, _this.currCount, _this.searchType, _this.searchKey);
-                _this.isSearch = false;
               }
-              _this.firstLoad = true;
+              _this.firstLoad = false;
             },
           })
         });
@@ -109,19 +97,19 @@ var Vue_App = new Vue({
     //获取当前页面要显示的数据量
     getData(event) {
       this.currCount = event.target.value;
-      this.currPage = 1; //防止获取不到数据
+      this.firstLoad = true;
       this.getList(1, this.currCount, this.searchType, this.searchKey);
     },
     search() {
       this.isHide = false;
-      this.isSearch = true;
+      this.firstLoad = true;
       this.getList(1, this.currCount, this.searchType, this.searchKey);
     },
     add() {
       var _this = this;
       this.layer = layer.open({
         type: 1,
-        title: "新增会员",
+        title: "新增用户",
         content: $("#addmember"),
         area: "600px",
         skin: 'layui-layer-demo', //样式类名
@@ -132,43 +120,105 @@ var Vue_App = new Vue({
         }
       });
     },
-    checkAdd() {
-      for (var key in this.addItem) {
-        if (this.addItem[key] === "") {
-          this.addValid = false;
-        }
+    checkAddItem(id, n) {
+      var el = document.getElementById(id);
+      if (el.value.length < n) {
+        el.classList.add("error");
+        this.addValid = false;
+      } else {
+        el.classList.remove("error");
+      }
+    },
+    //判断图片大小
+    pictrue_size(id) {
+      var el = document.getElementById(id);
+      var filesize = el.files[0].size;
+      filesize = filesize / 1000000
+      var sizes = this.getFloat(filesize, 1);
+      var valid = true;
+      // console.log(sizes)
+      if (sizes > 1) {
+        // layer.msg("图片大小不能超过1M!", { icon: 2, time: 2500 });
+        this.overSize = true;
+        valid = false;
+      } else {
+        this.overSize = false;
+      }
+      return valid;
+    },
+    //保留n位小数
+    getFloat(number, n) {
+      n = n ? parseInt(n) : 0;
+      if (n <= 0) return Math.round(number);
+      number = Math.round(number * Math.pow(10, n)) / Math.pow(10, n);
+      return number;
+    },
+    checkMail() {
+      var mail = "";
+      var mailRule = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
+      mail = this.addItem.Mail;
+      if (!mailRule.test(mail)) {
+        this.addValid = false;
+        document.getElementById("mail").classList.add("error");
+      } else {
+        document.getElementById("mail").classList.remove("error");
+      }
+    },
+    //验证手机
+    checkMobile() {
+      var mobile = "";
+      var mobileRule = /(^0{0,1}1[3|4|5|6|7|8|9][0-9]{9}$)/;
+      mobile = this.addItem.Mobile;
+      if (!mobileRule.test(mobile)) {
+        this.addValid = false;
+        document.getElementById("mobile").classList.add("error");
+      } else {
+        document.getElementById("mobile").classList.remove("error");
+      }
+    },
+    checkAddFile() {
+      var file = document.getElementById("addfile");
+      if (file.value === "") {
+        layer.msg("请上传图片", { icon: 0, time: 2500 });
+        this.addValid = false;
+      } else {
+        this.addValid = this.pictrue_size("addfile");
       }
     },
     layer_submit_add() {
       this.addValid = true;
-      // this.checkAdd();
+      this.checkAddItem('nick', 1);
+      this.checkAddItem('address', 1);
+      this.checkMobile();
+      this.checkMail();
+      this.checkAddFile();
       if (this.addValid) {
         this.isHide = false; //加载中
-        this.addItem.Id = this.usrId;
-        var data = JSON.stringify(this.addItem);
-        this.$http.post(this.ip + "/api/Member/Add", data, {
+        var _this = this;
+        $("#addform").ajaxSubmit({
+          url: this.ip + "/api/Member/Add",
+          type: "post",
           headers: {
             "Authorization": this.token
+          },
+          success: function(res) {
+            if (res.Code === 200) {
+              _this.firstLoad = true;
+              _this.getList(1, _this.currCount, _this.searchType, _this.searchKey);
+              _this.layer_close();
+              _this.clearData();
+              layer.msg("添加成功", { icon: 1, time: 2500 });
+            } else {
+              layer.msg(res.body.Message, { icon: 2, time: 2500 });
+            }
+            _this.isHide = true;
+          },
+          error: function(err) {
+            console.log(err)
+            _this.isHide = true;
+            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 2500 });
           }
-        }).then((res) => {
-          if (res.body.Code === 200) {
-            this.getList(this.currPage, 10, this.searchType, this.searchKey);
-            this.layer_close();
-            layer.msg('新增成功', { icon: 1, time: 2000 });
-            this.clearData();
-          } else if (res.body.Message !== "") {
-            layer.msg(res.body.Message, { icon: 0, time: 3000 });
-            this.isHide = true;
-          } else {
-            this.isHide = true;
-            layer.msg('服务器错误，请稍后再试', { icon: 0, time: 3000 });
-          }
-        }).catch((err) => {
-          console.log(err)
-          layer.msg('服务器错误，请稍后再试', { icon: 0, time: 3000 });
-        })
-      } else {
-        layer.msg("请完善表单内容");
+        });
       }
     },
     //鼠标移上时，控制“状态”按钮文本的变化
@@ -223,12 +273,13 @@ var Vue_App = new Vue({
           }
         }).then((res) => {
           if (res.body.Code === 200) {
-            _this.getList(_this.currPage, _this.currCount, _this.searchType, _this.searchKey);
+            _this.firstLoad = true;
+            _this.getList(1, _this.currCount, _this.searchType, _this.searchKey);
             layer.msg(successMsg, { icon: 1, time: 2000 });
             _this.layer_close();
           } else {
             _this.isHide = true;
-            layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
+            layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
         }).catch(err => {
           console.log(err);
@@ -247,6 +298,7 @@ var Vue_App = new Vue({
           this.addItem[key] = "";
         }
       }
+      document.getElementById("addfile").value = "";
     },
     layer_close() {
       layer.close(this.layer);

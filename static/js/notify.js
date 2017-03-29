@@ -40,6 +40,7 @@ var Vue_App = new Vue({
     isTop: false,
     isIndent: false, //是否缩进
     Intro: "", //文章内容    
+    firstLoad: true,
     selectedNemsItem: [], //被选中的新闻列表
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id 
@@ -79,28 +80,28 @@ var Vue_App = new Vue({
           "Authorization": this.token,
           "Content-Type": "application/json"
         }
-      }).then((response) => {
+      }).then(function(res) {
         // console.log(response)
-        if (response.body.Code == 200) {
-          this.items = response.body.Data.Content;
-          this.displayCount = this.items.length;
-          this.TotalCount = response.body.Data.TotalCount;
-          this.isHide = true; //加载完毕
+        if (res.body.Code == 200) {
+          _this.items = res.body.Data.Content;
+          _this.displayCount = _this.items.length;
+          _this.TotalCount = res.body.Data.TotalCount;
+          _this.isHide = true; //加载完毕
         } else {
-          if (response.body.Code == 204) {
-            this.items = [];
-            this.displayCount = 0;
-            this.TotalCount = 0;
+          if (res.body.Code == 204) {
+            _this.items = [];
+            _this.displayCount = 0;
+            _this.TotalCount = 0;
             document.getElementById("page").innerHTML = "";
           } else {
-            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 1500 });
+            layer.msg(res.body.Message, { icon: 2, time: 2500 });
           }
           _this.isHide = true;
         }
-      }, function(error) {
-        this.isHide = true;
+      }).catch(function(error) {
+        _this.isHide = true;
         console.log(error);
-        layer.msg("服务器错误，请稍后再试", { icon: 2, time: 1500 });
+        layer.msg("服务器错误，请稍后再试", { icon: 2, time: 2500 });
       });
       document.getElementById("isget").style.visibility = "visible";
     },
@@ -117,21 +118,16 @@ var Vue_App = new Vue({
             skin: '#148cf1', //自定义选中色值
             skip: true, //开启跳页
             jump: function(obj) {
-              _this.isHide = false;
-              //跳到下一页时清空上一页的数据
-              _this.items = [];
-              //记录当前页码
-              if (_this.isSearch) {
-                obj.curr = 1; //在进行搜索时，防止在当前页码不是1而导致获取不到数据
+              if (!_this.firstLoad) {
+                _this.isHide = false;
+                _this.currPage = obj.curr;
+                _this.getList(obj.curr, _this.currCount, _this.NotifyType, _this.SeearchType, _this.SearchKey);
               }
-              _this.currPage = obj.curr;
-              _this.getList(obj.curr, _this.currCount, _this.NotifyType, _this.SeearchType, _this.SearchKey);
-              _this.isSearch = false;
+              _this.firstLoad = false;
             },
           })
         });
       } else {
-        this.getList(1, _this.currCount, _this.NotifyType, _this.SeearchType, _this.SearchKey);
         document.getElementById("page").innerHTML = "";
       }
     },
@@ -143,12 +139,14 @@ var Vue_App = new Vue({
           this.NotifyType = type.value;
         }
       }
+      this.firstLoad = true;
       this.getList(1, this.currCount, this.NotifyType, this.SeearchType, this.SearchKey);
     },
     //获取当前页面要显示的数据量
     getData(event) {
       this.currCount = event.target.value;
       this.currPage = 1; //防止获取不到数据
+      this.firstLoad = true;
       this.getList(1, this.currCount, this.NotifyType, this.SeearchType, this.SearchKey);
     },
     //获取新闻总数
@@ -183,7 +181,7 @@ var Vue_App = new Vue({
             this.isHide = true;
             document.getElementById("newsPage").innerHTML = "";
           } else {
-            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 3000 });
+            layer.msg(res.body.Message, { icon: 2, time: 3000 });
             this.isHide = true;
           }
         })
@@ -228,6 +226,7 @@ var Vue_App = new Vue({
       })
     },
     getNewsList(index, key, value) {
+      var _this = this;
       var data = { "Index": index, "Size": 10 };
       if (key == "Title") {
         data.Title = value;
@@ -245,14 +244,14 @@ var Vue_App = new Vue({
         headers: {
           "Authorization": this.token
         }
-      }).then(function(response) {
-        if (response.body.Code == 200) {
-          this.newsItem = response.body.Data.Content;
+      }).then(function(res) {
+        if (res.body.Code == 200) {
+          _this.newsItem = res.body.Data.Content;
           // this.isHide = true; //加载完毕
           //为选中的新闻加上加上记号
-          setTimeout(() => {
+          setTimeout(function() {
             var newsList = document.getElementsByName("news");
-            for (var id of this.News.NewsId) {
+            for (var id of _this.News.NewsId) {
               for (var news of newsList) {
                 if (news.value == id) {
                   news.checked = true;
@@ -261,11 +260,11 @@ var Vue_App = new Vue({
             }
           }, 500);
         } else {
-          if (response.body.Code == 204) {
+          if (res.body.Code == 204) {
             this.newsItem = [];
             document.getElementById("newsPage").innerHTML = "";
           } else {
-            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 1500 });
+            layer.msg(res.body.Message, { icon: 2, time: 1500 });
           }
           //数据获取失败时清空原有数据
           this.newsItem = [];
@@ -346,6 +345,7 @@ var Vue_App = new Vue({
     },
     //推送系统通知
     addNotify() {
+      var _this = this;
       this.notifyValid = true;
       this.checkNotifyTitle();
       this.checkNotifyContent();
@@ -357,18 +357,17 @@ var Vue_App = new Vue({
             "Authorization": this.token,
             "Content-Type": "application/json"
           }
-        }).then((res) => {
+        }).then(function(res) {
           if (res.body.Code === 200) {
-            this.getList(1, this.currCount, this.NotifyType, this.SeearchType, this.SearchKey);
+            _this.firstLoad = true;
+            _this.getList(1, _this.currCount, _this.NotifyType, _this.SeearchType, _this.SearchKey);
             layer.msg("新增成功", { icon: 1, time: 2000 });
-            this.clearNotify();
-            this.layer_close(this.layer);
-          } else if (res.body.Code === 400) {
-            layer.msg(res.body.Message, { icon: 2, time: 3000 });
+            _this.clearNotify();
+            _this.layer_close(_this.layer);
           } else {
-            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 3000 });
+            layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
-        }).catch((err) => {
+        }).catch(function(err) {
           layer.msg("服务器错误，请稍后再试", { icon: 2, time: 3000 });
         })
       }
@@ -438,9 +437,11 @@ var Vue_App = new Vue({
       }).then(function(res) {
         if (res.body.Code === 200) {
           this.NewsType = res.body.Data;
+        } else {
+          this.NewsType = [];
         }
-      }, function() {
-        console.error()
+      }).catch(function(err) {
+        console.log(err)
       })
     },
     //搜索类型改变时
@@ -569,6 +570,7 @@ var Vue_App = new Vue({
       this.checkNewsTitle();
       this.checkNewsStatusBarMsg();
       this.checkNewsNewsId();
+      var _this = this;
       if (this.newsValid) {
         var data = JSON.stringify(this.News);
         this.$http.post(this.ip + "/api/Notify/PushNews", data, {
@@ -576,18 +578,17 @@ var Vue_App = new Vue({
             "Authorization": this.token,
             "Content-Type": "application/json"
           }
-        }).then((res) => {
+        }).then(function(res) {
           if (res.body.Code === 200) {
-            this.getList(1, this.currCount, this.NotifyType, this.SeearchType, this.SearchKey);
+            _this.firstLoad = true;
+            _this.getList(1, _this.currCount, _this.NotifyType, _this.SeearchType, _this.SearchKey);
             layer.msg("新增成功", { icon: 1, time: 2000 });
-            this.layer_close(this.layer);
-            this.clearData();
-          } else if (res.body.Code === 400) {
-            layer.msg(res.body.Message, { icon: 2, time: 3000 });
+            _this.layer_close(_this.layer);
+            _this.clearData();
           } else {
-            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 3000 });
+            layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
-        }).catch((err) => {
+        }).catch(function(err) {
           layer.msg("服务器错误，请稍后再试", { icon: 2, time: 3000 });
         })
       }
@@ -613,14 +614,16 @@ var Vue_App = new Vue({
     },
   },
   filters: {
-    subContent: function(content) {
-      if (content != null) {
-        var length = content.length;
-        if (length > 10) {
-          content = content.slice(0, 5) + ". . ." + content.slice(length - 5, length);
+    subContent: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 20) {
+          val = val.slice(0, 10) + "..." + val.slice(leng - 8, leng);
         }
+        return val;
       }
-      return content;
     }
   }
 });

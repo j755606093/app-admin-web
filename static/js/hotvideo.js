@@ -17,6 +17,7 @@ var Vue_App = new Vue({
     count: 200, //还能输入的内容字数
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
+    firstLoad: true,
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
   },
@@ -29,6 +30,7 @@ var Vue_App = new Vue({
   },
   methods: {
     getList(index, size) {
+      var _this = this;
       var data = { "Index": index, "Size": size };
       this.$http.post(this.ip + "/api/HotVideo/List", data, {
         headers: {
@@ -36,23 +38,22 @@ var Vue_App = new Vue({
         }
       }).then(function(response) {
         if (response.body.Code == 200) {
-          this.items = response.body.Data.Content;
-          this.displayCount = this.items.length;
-          this.TotalCount = response.body.Data.TotalCount;
-          this.isHide = true; //加载完毕
+          _this.items = response.body.Data.Content;
+          _this.displayCount = _this.items.length;
+          _this.TotalCount = response.body.Data.TotalCount;
         } else {
           if (response.body.Code == 204) {
-            this.items = [];
-            this.displayCount = 0;
-            this.TotalCount = 0;
+            _this.items = [];
+            _this.displayCount = 0;
+            _this.TotalCount = 0;
             document.getElementById("page").innerHTML = "";
           } else {
-            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 2500 });
+            layer.msg(res.body.Message, { icon: 2, time: 2500 });
           }
-          this.isHide = true;
         }
-      }, function(error) {
-        this.isHide = true;
+        _this.isHide = true;
+      }).catch(function(error) {
+        _this.isHide = true;
         console.log(error);
         layer.msg("服务器错误，请稍后再试", { icon: 2, time: 2500 });
       })
@@ -71,19 +72,19 @@ var Vue_App = new Vue({
             skin: '#148cf1', //自定义选中色值
             skip: true, //开启跳页
             jump: function(obj) {
-              _this.isHide = false;
-              //跳到下一页时清空上一页的数据
-              _this.items = [];
-              //记录当前页码
-              _this.currPage = obj.curr;
-              //获取当前页或指定页的数据
-              // console.log(obj.curr);
-              _this.getList(obj.curr, _this.currCount);
+              if (!_this.firstLoad) {
+                _this.isHide = false;
+                //记录当前页码
+                _this.currPage = obj.curr;
+                //获取当前页或指定页的数据
+                // console.log(obj.curr);
+                _this.getList(obj.curr, _this.currCount);
+              }
+              _this.firstLoad = false;
             },
           })
         });
       } else {
-        this.getList(1, this.currCount);
         document.getElementById("page").innerHTML = "";
       }
     },
@@ -91,6 +92,7 @@ var Vue_App = new Vue({
     getData(event) {
       this.currCount = event.target.value;
       this.currPage = 1; //防止获取不到数据
+      this.firstLoad = true;
       this.getList(1, this.currCount);
     },
     edit(index, id) {
@@ -206,13 +208,14 @@ var Vue_App = new Vue({
           },
           success: function(res) {
             if (res.Code === 200) {
+              _this.firstLoad = true;
               _this.getList(1, _this.currCount);
               _this.layer_close();
               _this.clearData();
               layer.msg("添加成功!", { icon: 1, time: 2500 });
             } else {
               _this.isHide = true;
-              layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2500 });
+              layer.msg(res.Message, { icon: 2, time: 2500 });
             }
           }
         });
@@ -243,12 +246,13 @@ var Vue_App = new Vue({
           },
           success: function(res) {
             if (res.Code === 200) {
+              _this.firstLoad = true;
               _this.getList(1, _this.currCount);
               _this.layer_close();
               layer.msg("修改成功!", { icon: 1, time: 2500 });
             } else {
               _this.isHide = true;
-              layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2500 });
+              layer.msg(res.Message, { icon: 2, time: 2500 });
             }
           }
         });
@@ -286,23 +290,27 @@ var Vue_App = new Vue({
   },
   filters: {
     // 给过长的字符串中间加上省略号
-    subStr: function(str) {
-      if (str != null) {
-        var length = str.length;
-        if (length > 30) {
-          str = str.slice(0, 15) + ". . ." + str.slice(length - 10, length);
+    subStr: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 20) {
+          val = val.slice(0, 10) + "..." + val.slice(leng - 9, leng);
         }
+        return val;
       }
-      return str;
     },
-    subContent: function(str) {
-      if (str != null) {
-        var length = str.length;
-        if (length > 15) {
-          str = str.slice(0, 5) + ". . ." + str.slice(length - 5, length);
+    subContent: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 15) {
+          val = val.slice(0, 7) + "..." + val.slice(leng - 7, leng);
         }
+        return val;
       }
-      return str;
     }
   }
 });

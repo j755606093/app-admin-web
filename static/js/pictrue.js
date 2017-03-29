@@ -16,6 +16,7 @@ var Vue_App = new Vue({
     isHide: false, //隐藏“加载”图标
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
+    firstLoad: true,
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
   },
@@ -46,7 +47,7 @@ var Vue_App = new Vue({
             this.TotalCount = 0;
             document.getElementById("page").innerHTML = "";
           } else {
-            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 2500 });
+            layer.msg(res.body.Message, { icon: 2, time: 2500 });
           }
           this.isHide = true;
         }
@@ -70,19 +71,19 @@ var Vue_App = new Vue({
             skin: '#148cf1', //自定义选中色值
             skip: true, //开启跳页
             jump: function(obj) {
-              _this.isHide = false;
-              //跳到下一页时清空上一页的数据
-              _this.items = [];
-              //记录当前页码
-              _this.currPage = obj.curr;
-              //获取当前页或指定页的数据
-              // console.log(obj.curr);
-              _this.getList(obj.curr, _this.currCount);
+              if (!_this.firstLoad) {
+                _this.isHide = false;
+                //记录当前页码
+                _this.currPage = obj.curr;
+                //获取当前页或指定页的数据
+                // console.log(obj.curr);
+                _this.getList(obj.curr, _this.currCount);
+              }
+              _this.firstLoad = false;
             },
           })
         });
       } else {
-        this.getList(1, 15);
         document.getElementById("page").innerHTML = "";
       }
     },
@@ -90,6 +91,7 @@ var Vue_App = new Vue({
     getData(event) {
       this.currCount = event.target.value;
       this.currPage = 1; //防止获取不到数据
+      this.firstLoad = true;
       this.getList(1, this.currCount);
     },
     edit(index, id) {
@@ -202,12 +204,14 @@ var Vue_App = new Vue({
           },
           success: function(res) {
             if (res.Code === 200) {
-              _this.getList(_this.currPage, 10);
+              _this.firstLoad = true;
+              _this.getList(1, 10);
               _this.layer_close();
               layer.msg("添加成功", { icon: 1, time: 2500 });
               _this.clearData();
             } else {
-              layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2500 });
+              _this.isHide = true;
+              layer.msg(res.Message, { icon: 2, time: 2500 });
             }
           },
           error: function(err) {
@@ -247,7 +251,8 @@ var Vue_App = new Vue({
           contentType: "application/json; charset=utf-8",
           success: function(res) {
             if (res.Code === 200) {
-              _this.getList(_this.currPage, 10);
+              _this.firstLoad = true;
+              _this.getList(1, 10);
               _this.layer_close();
               layer.msg("修改成功", { icon: 1, time: 2500 });
             } else {
@@ -284,14 +289,16 @@ var Vue_App = new Vue({
   },
   filters: {
     // 给过长的字符串中间加上省略号
-    subStr: function(str) {
-      if (str != null) {
-        var length = str.length;
-        if (length > 50) {
-          str = str.slice(0, 20) + ". . ." + str.slice(length - 20, length);
+    subStr: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 20) {
+          val = val.slice(0, 10) + "..." + val.slice(leng - 9, leng);
         }
+        return val;
       }
-      return str;
     }
   }
 });

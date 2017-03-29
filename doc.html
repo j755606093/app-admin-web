@@ -3,12 +3,27 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="lib/layui/css/layui.css" />
   <link rel="stylesheet" href="static/h-ui/css/H-ui.min.css" />
   <link rel="stylesheet" href="static/h-ui.admin/css/H-ui.admin.css" />
   <link rel="stylesheet" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" href="lib/layui/css/layui.css" />
   <link rel="stylesheet" href="editor/dist/css/wangEditor.min.css">
-  <link rel="stylesheet" href="dist/css/doc.css" />
+  <style>
+  #loading {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 25%;
+    left: 49%;
+    z-index: 20000000;
+  }
+  
+  #editdoc,
+  #adddoc,
+  #lookIntro {
+    display: none;
+  }
+  </style>
   <title>首页文章管理</title>
 </head>
 <script>
@@ -64,6 +79,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td v-if="item.SourceType == 2">新闻</td>
             <td v-if="item.SourceType == 3">城市圈官微</td>
             <td v-if="item.SourceType == 4">社区帖子</td>
+            <td v-if="item.SourceType == 5">视频</td>
             <td>{{item.Author}}</td>
             <td>{{item.Url | subUrl}}</td>
             <td>{{item.OriginUrl | subUrl}}</td>
@@ -280,7 +296,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
   <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
-  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//ok82gyrdp.qnssl.com/js/admin/vue-1.0.28.js"></script>
   <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
   <script type="text/javascript" src="editor/dist/js/wangEditor.js"></script>
   <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>

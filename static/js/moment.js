@@ -20,8 +20,12 @@ var Vue_App = new Vue({
     fileType: "图片", //文件类型
     uploadType: "", //上传的文件类型
     count: 200, //还能输入的内容字数
+    UserId: "",
+    showItem: false,
     token: "Bearer " + window.localStorage.token,
-    usrId: window.localStorage.usrId, //用户Id    
+    usrId: window.localStorage.usrId, //用户Id 
+    UsrItem: [],
+    firstLoad: true,
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
   },
@@ -48,6 +52,7 @@ var Vue_App = new Vue({
           this.displayCount = this.items.length;
           this.TotalCount = res.body.Data.TotalCount;
           this.isHide = true; //加载完毕
+          // console.log(this.items)
         } else {
           if (res.body.Code == 204) {
             this.items = [];
@@ -55,7 +60,7 @@ var Vue_App = new Vue({
             this.TotalCount = 0;
             document.getElementById("page").innerHTML = "";
           } else {
-            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 2500 });
+            layer.msg(res.body.Message, { icon: 2, time: 2500 });
           }
           this.isHide = true;
         }
@@ -79,19 +84,19 @@ var Vue_App = new Vue({
             skin: '#148cf1', //自定义选中色值
             skip: true, //开启跳页
             jump: function(obj) {
-              _this.isHide = false;
-              //跳到下一页时清空上一页的数据
-              _this.items = [];
-              //记录当前页码
-              _this.currPage = obj.curr;
-              //获取当前页或指定页的数据
-              // console.log(obj.curr);
-              _this.getList(obj.curr, _this.currCount);
+              if (!_this.firstLoad) {
+                _this.isHide = false;
+                //记录当前页码
+                _this.currPage = obj.curr;
+                //获取当前页或指定页的数据
+                // console.log(obj.curr);
+                _this.getList(obj.curr, _this.currCount);
+              }
+              _this.firstLoad = false;
             },
           })
         });
       } else {
-        this.getList(1, this.currCount);
         document.getElementById("page").innerHTML = "";
       }
     },
@@ -99,7 +104,43 @@ var Vue_App = new Vue({
     getData(event) {
       this.currCount = event.target.value;
       this.currPage = 1; //防止获取不到数据
+      this.firstLoad = true;
       this.getList(1, this.currCount);
+    },
+    //获取用户Id
+    getUsrid() {
+      var _this = this;
+      var data = {
+        Index: 1,
+        Size: 10,
+        Nick: this.nick
+      };
+      data = JSON.stringify(data);
+      this.$http.post(this.ip + "/api/Member/VirtualManEnum", data, {
+        headers: {
+          "Authorization": this.token
+        }
+      }).then(function(res) {
+        if (res.data.Code === 200) {
+          _this.UsrItem = res.data.Data.Content;
+        } else if (res.data.Code === 204) {
+          _this.UsrItem = [];
+        } else {
+          layer.msg(res.body.Message, { icon: 2, time: 3000 });
+        }
+      }).catch(function(err) {
+        _this.UsrItem = [];
+        layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
+        console.log(err)
+      });
+      // console.log(this.UsrItem)
+      this.showItem = true;
+    },
+    //选择昵称
+    selectNick(val, name) {
+      this.nick = name;
+      this.UserId = val;
+      this.showItem = false;
     },
     lookIntro(intro) {
       layer.open({
@@ -164,16 +205,17 @@ var Vue_App = new Vue({
           headers: {
             "Authorization": _this.token
           }
-        }).then((res) => {
+        }).then(function(res) {
           if (res.body.Code === 200) {
+            _this.firstLoad = true;
             _this.getList(1, _this.currCount);
             layer.msg(successMsg, { icon: 1, time: 2000 });
             _this.layer_close();
           } else {
             _this.isHide = true;
-            layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
+            layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
-        }).catch(err => {
+        }).catch(function(err) {
           console.log(err);
           _this.isHide = true;
           layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 2500 });
@@ -193,7 +235,7 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: false, //开启遮罩关闭
       });
-      $("#add_content").focus();
+      $("#nick").focus();
       $("#addfile").val("");
       $("#add_content").val("");
       $("#add_content").removeClass("error");
@@ -273,16 +315,22 @@ var Vue_App = new Vue({
           },
           success: function(res) {
             if (res.Code === 200) {
+              _this.firstLoad = true;
               _this.getList(1, _this.currCount);
               $("#addfile").val("");
               $("#add_content").val("");
               _this.layer_close();
-              layer.msg("添加成功!", { icon: 1, time: 2500 });
+              layer.msg("添加成功", { icon: 1, time: 2500 });
             } else {
               _this.isHide = true;
-              layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2500 });
+              layer.msg(res.Message, { icon: 2, time: 2500 });
             }
-          }
+          },
+          error: function(err) {
+            console.log(err);
+            _this.isHide = true;
+            layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2500 });
+          },
         });
       }
     },
@@ -291,23 +339,27 @@ var Vue_App = new Vue({
     },
   },
   filters: {
-    subUrl: function(url) {
-      if (url != null) {
-        var length = url.length;
-        if (length > 15) {
-          url = url.slice(0, 8) + ". . ." + url.slice(length - 5, length);
+    subUrl: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 10) {
+          val = val.slice(0, 6) + "..." + val.slice(leng - 3, leng);
         }
+        return val;
       }
-      return url;
     },
-    subContent: function(content) {
-      if (content != null) {
-        var length = content.length;
-        if (length > 20) {
-          content = content.slice(0, 10) + ". . ." + content.slice(length - 8, length);
+    subContent: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 20) {
+          val = val.slice(0, 10) + "..." + val.slice(leng - 8, leng);
         }
+        return val;
       }
-      return content;
     }
   },
   watch: {

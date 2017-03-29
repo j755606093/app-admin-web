@@ -18,7 +18,7 @@ var Vue_App = new Vue({
     isIndent: false, //是否缩进
     isEdit: true,
     Intro: "", //文章内容    
-    falseLoad: true,
+    firstLoad: true,
     showItem: false,
     UsrItem: [],
     nick: "",
@@ -29,8 +29,7 @@ var Vue_App = new Vue({
   },
   created: function() {
     if (this.usrId === "" || typeof this.usrId === "undefined") {
-      parent.location
-        .href = "login.html";
+      parent.location.href = "login.html";
     } else {
       this.getList(1, 15);
       this.getComm();
@@ -53,20 +52,20 @@ var Vue_App = new Vue({
         headers: {
           "Authorization": this.token
         }
-      }).then(function(response) {
-        if (response.body.Code == 200) {
-          _this.items = response.body.Data.Content;
+      }).then(function(res) {
+        if (res.body.Code == 200) {
+          _this.items = res.body.Data.Content;
           _this.displayCount = _this.items.length;
-          _this.TotalCount = response.body.Data.TotalCount;
+          _this.TotalCount = res.body.Data.TotalCount;
           _this.isHide = true; //加载完毕
           // console.log(this.items)
         } else {
-          if (response.body.Code == 204) {
+          if (res.body.Code == 204) {
             _this.items = [];
             _this.displayCount = 0;
             document.getElementById("page").innerHTML = "";
           } else {
-            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 1500 });
+            layer.msg(res.body.Message, { icon: 2, time: 1500 });
           }
           _this.isHide = true;
         }
@@ -90,22 +89,19 @@ var Vue_App = new Vue({
             skin: '#148cf1', //自定义选中色值
             skip: true, //开启跳页
             jump: function(obj) {
-              if (!_this.falseLoad) {
+              if (!_this.firstLoad) {
                 _this.isHide = false;
-                //跳到下一页时清空上一页的数据
-                _this.items = [];
                 //记录当前页码
                 _this.currPage = obj.curr;
                 //获取当前页或指定页的数据
                 // console.log(obj.curr);
                 _this.getList(obj.curr, _this.currCount);
               }
-              _this.falseLoad = false;
+              _this.firstLoad = false;
             },
           })
         });
       } else {
-        this.getList(1, this.currCount);
         document.getElementById("page").innerHTML = "";
       }
     },
@@ -113,6 +109,7 @@ var Vue_App = new Vue({
     getData(event) {
       this.currCount = event.target.value;
       this.currPage = 1; //防止获取不到数据
+      this.firstLoad = true;
       this.getList(1, this.currCount);
     },
     //获取社区Id
@@ -289,16 +286,17 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
+            _this.firstLoad = true;
             _this.getList(_this.currPage, _this.currCount);
             _this.layer_close();
-            layer.msg('修改成功!', { icon: 1, time: 2000 });
+            layer.msg('修改成功', { icon: 1, time: 2000 });
           } else {
             layer.msg(res.body.Message, { icon: 2, time: 2000 });
           }
           _this.isHide = true;
         }).catch(function(err) {
           console.log(err)
-          layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 3000 });
+          layer.msg('服务器错误，请稍后再试', { icon: 2, time: 3000 });
         })
       }
     },
@@ -340,8 +338,9 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.getList(_this.currPage, _this.currCount, _this.searchKeyList, _this.searchKeyWord);
-            layer.msg("设置成功！", { icon: 1, time: 2000 });
+            _this.firstLoad = true;
+            _this.getList(1, _this.currCount, _this.searchKeyList, _this.searchKeyWord);
+            layer.msg("设置成功", { icon: 1, time: 2000 });
             _this.layer_close();
           } else {
             layer.msg(res.body.Message, { icon: 2, time: 3000 });
@@ -435,11 +434,12 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.getList(_this.currPage, _this.currCount);
+            _this.firstLoad = true;
+            _this.getList(1, _this.currCount);
             _this.clearData();
             _this.layer_close();
             _this.nick = "";
-            layer.msg('新增成功!', { icon: 1, time: 2000 });
+            layer.msg('新增成功', { icon: 1, time: 2000 });
           } else {
             _this.isHide = true;
             layer.msg(res.body.Message, { icon: 2, time: 2000 });

@@ -29,29 +29,30 @@ var Vue_App = new Vue({
   },
   methods: {
     getList(index, size) {
+      var _this = this;
       this.$http.post(this.ip + "/api/Community/List", { "Index": index, "Size": size }, {
         headers: {
           "Authorization": this.token
         }
-      }).then(function(response) {
-        if (response.body.Code == 200) {
-          this.items = response.body.Data.Content;
-          this.displayCount = this.items.length;
-          this.TotalCount = response.body.Data.TotalCount;
-        } else if (response.body.Code == 204) {
-          this.items = [];
-          this.displayCount = 0;
-          this.TotalCount = 0;
+      }).then(function(res) {
+        if (res.body.Code == 200) {
+          _this.items = res.body.Data.Content;
+          _this.displayCount = _this.items.length;
+          _this.TotalCount = res.body.Data.TotalCount;
+        } else if (res.body.Code == 204) {
+          _this.items = [];
+          _this.displayCount = 0;
+          _this.TotalCount = 0;
           document.getElementById("page").innerHTML = "";
         } else {
           layer.msg("服务器错误，请稍后再试", { icon: 2, time: 3000 });
         }
-        this.isHide = true;
-      }, function(error) {
-        this.isHide = true;
+        _this.isHide = true;
+      }).catch(function(err) {
+        _this.isHide = true;
         console.log(error);
         layer.msg("服务器错误，请稍后再试", { icon: 2, time: 3000 });
-      });
+      })
       document.getElementById("isget").style.visibility = "visible";
     },
     //设置分页
@@ -219,14 +220,16 @@ var Vue_App = new Vue({
     },
   },
   filters: {
-    subPUrl: function(url) {
-      if (url != null) {
-        var length = url.length;
-        if (length > 60) {
-          url = url.slice(0, 30) + ". . ." + url.slice(length - 30, length);
+    subPUrl: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 10) {
+          val = val.slice(0, 6) + "..." + val.slice(leng - 3, leng);
         }
+        return val;
       }
-      return url;
     },
   }
 });

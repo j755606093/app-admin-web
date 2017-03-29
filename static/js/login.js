@@ -17,7 +17,6 @@ var Vue_App = new Vue({
     isHide: true,
     ip: "",
     // ip: "http://192.168.31.82", //APP
-    // ip: "http://192.168.31.81", //票务
   },
   created: function() {
     this.getCheckCode();

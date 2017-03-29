@@ -10,7 +10,21 @@
   <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
   <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
   <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="dist/css/comment.css" />
+  <style>
+  #loading {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 25%;
+    left: 49%;
+    z-index: 20000000;
+  }
+  
+  #PostDetail,
+  #lookIntro {
+    display: none;
+  }
+  </style>
   <title>评论列表</title>
 </head>
 <script>
@@ -134,7 +148,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
   <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
   <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
-  <script src="//cdn.bootcss.com/vue/1.0.28/vue.min.js"></script>
+  <script src="//ok82gyrdp.qnssl.com/js/admin/vue-1.0.28.js"></script>
   <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
   <script src="//cdn.bootcss.com/fetch/2.0.1/fetch.min.js"></script>
   <script src="static/js/comment.js"></script>
