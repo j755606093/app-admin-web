@@ -48,15 +48,15 @@ var Vue_App = new Vue({
             _this.TotalCount = 0;
             document.getElementById("page").innerHTML = "";
           } else {
-            layer.msg(res.body.Message, { icon: 2, time: 1500 });
+            layer.msg(res.body.Message, { icon: 2, time: 2500 });
           }
           _this.isHide = true;
         }
-      }, function(error) {
-        console.log(error);
+      }).catch(function(error) {
         _this.isHide = true;
-        layer.msg("服务器错误，请稍后再试", { icon: 2, time: 1500 });
-      })
+        console.log(error);
+        layer.msg("服务器错误，请稍后再试", { icon: 0, time: 2500 });
+      });
       document.getElementById("isget").style.visibility = "visible";
     },
     //设置分页

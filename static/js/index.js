@@ -41,6 +41,7 @@ var VM = new Vue({
     newItem: [], //新的待处理订单
     firstTip: "", //第一次提示，防止出现多个提示窗口
     stayOrder: window.localStorage.stayHandleOrder,
+    layer: "",
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
   },
