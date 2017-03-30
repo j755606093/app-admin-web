@@ -32,7 +32,7 @@ var Vue_App = new Vue({
     // ip: "http://192.168.31.82", //用于测试
   },
   created: function() {
-    if (this.usrId === "" || typeof this.usrId === "undefined") {
+    if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
       //富文本编辑器初始化
@@ -122,6 +122,27 @@ var Vue_App = new Vue({
       this.currCount = event.target.value;
       this.firstLoad = true;
       this.getList(1, this.currCount, this.searchType, this.searchKey);
+    },
+    // 查看二维码
+    lookQrcode(url) {
+      //生成二维码
+      $("#code").qrcode({
+        width: 200,
+        height: 200,
+        text: url
+      });
+      this.layer = layer.open({
+        type: 1,
+        title: "查看二维码",
+        content: $("#qrcode"),
+        area: ["300px", "300px"],
+        skin: 'layui-layer-demo', //样式类名
+        anim: 2,
+        shadeClose: false, //开启遮罩关闭
+        end: function() {
+          document.getElementById("code").innerHTML = "";
+        }
+      });
     },
     clickCopy(id) {
       id = "#id" + id;
@@ -488,8 +509,8 @@ var Vue_App = new Vue({
         return "";
       } else {
         var leng = val.length;
-        if (leng > 10) {
-          val = val.slice(0, 6) + "..." + val.slice(leng - 3, leng);
+        if (leng > 8) {
+          val = val.slice(0, 4) + "..." + val.slice(leng - 3, leng);
         }
         return val;
       }
@@ -499,8 +520,8 @@ var Vue_App = new Vue({
         return "";
       } else {
         var leng = val.length;
-        if (leng > 20) {
-          val = val.slice(0, 10) + "..." + val.slice(leng - 8, leng);
+        if (leng > 10) {
+          val = val.slice(0, 5) + "..." + val.slice(leng - 4, leng);
         }
         return val;
       }
