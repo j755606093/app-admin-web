@@ -273,10 +273,12 @@ var Vue_App = new Vue({
           _this.addMobileValid = false;
           _this.addPwdValid = false;
           _this.addMailValid = false;
+          _this.addConfirmPwdValid = false;
         }
       });
     },
     layer_submit_add() {
+      var _this = this;
       this.addValid = true;
       this.checkNick('add');
       this.checkMail('add');
