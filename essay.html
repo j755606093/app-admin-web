@@ -220,7 +220,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
   </div>
   <!-- 查看二维码 -->
   <div id="qrcode">
-    <div id="code"></div>
+    <a :href="qrcodeUrl" target="_blank" id="code"></a>
   </div>
   <!-- 页面加载提示 -->
   <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>

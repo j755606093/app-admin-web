@@ -28,6 +28,7 @@ var Vue_App = new Vue({
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
     firstLoad: true,
+    qrcodeUrl: "javascript:;",
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
   },
@@ -125,17 +126,18 @@ var Vue_App = new Vue({
     },
     // 查看二维码
     lookQrcode(url) {
+      this.qrcodeUrl = url;
       //生成二维码
       $("#code").qrcode({
-        width: 200,
-        height: 200,
+        width: 250,
+        height: 250,
         text: url
       });
       this.layer = layer.open({
         type: 1,
         title: "查看二维码",
         content: $("#qrcode"),
-        area: ["300px", "300px"],
+        area: ["300px", "320px"],
         skin: 'layui-layer-demo', //样式类名
         anim: 2,
         shadeClose: false, //开启遮罩关闭
