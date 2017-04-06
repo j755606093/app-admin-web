@@ -110,19 +110,19 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" class="input-text" v-model="editItem.Title" placeholder="字数不少于5" @keyup="checkEditItem('edit_title',5)" @keyup.enter="layer_submit_edit" id="edit_title" name="Title" autofocus>
+          <input type="text" class="input-text" v-model="editItem.Title" placeholder="字数不少于5" @blur="checkEditItem('edit_title',5)" @keyup.enter="layer_submit_edit" id="edit_title" name="Title" autofocus>
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>URL/数据:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" class="input-text" v-model="editItem.Url" placeholder="链接或者一段数据" @keyup="checkEditItem('edit_url',1)" @keyup.enter="layer_submit_edit" id="edit_url" name="Url">
+          <input type="text" class="input-text" v-model="editItem.Url" placeholder="链接或者一段数据" @blur="checkEditItem('edit_url',1)" @keyup.enter="layer_submit_edit" id="edit_url" name="Url">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>展示顺序:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkEditItem('edit_sort',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Sort" placeholder="整数" id="edit_sort" name="Sort">
+          <input type="number" @blur="checkEditItem('edit_sort',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Sort" placeholder="整数" id="edit_sort" name="Sort">
         </div>
       </div>
       <div class="row cl">
@@ -157,19 +157,19 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup="checkAddItem('add_name',5)" @keyup.enter="layer_submit_add" class="input-text" placeholder="字数不少于5" id="add_name" name="Title" autofocus>
+          <input type="text" @blur="checkAddItem('add_name',5)" @keyup.enter="layer_submit_add" class="input-text" placeholder="字数不少于5" id="add_name" name="Title" autofocus>
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>URL/数据:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup="checkAddItem('add_url',1)" @keyup.enter="layer_submit_add" class="input-text" placeholder="链接或者一段数据" id="add_url" name="Url">
+          <input type="text" @blur="checkAddItem('add_url',1)" @keyup.enter="layer_submit_add" class="input-text" placeholder="链接或者一段数据" id="add_url" name="Url">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>展示顺序:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkAddItem('add_sort',1)" @keyup.enter="layer_submit_add" class="input-text" placeholder="整数" id="add_sort" name="Sort">
+          <input type="number" @blur="checkAddItem('add_sort',1)" @keyup.enter="layer_submit_add" class="input-text" placeholder="整数" id="add_sort" name="Sort">
         </div>
       </div>
       <div class="row cl">

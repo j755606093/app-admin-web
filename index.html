@@ -142,17 +142,17 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <div id="updatePassword">
     <div class="form-margin">
       <label><span class="c-red">*</span>旧密码:</label>
-      <input type="password" class="input-text" v-model="updateItem.OldPassword" @keyup.enter="save" @keyup="checkOriginalPwd" id="update_original" autofocus>
+      <input type="password" class="input-text" v-model="updateItem.OldPassword" @keyup.enter="save" @blur="checkOriginalPwd" id="update_original" autofocus>
     </div>
     <p :style="{'visibility': isShowOld?'visible':'hidden'}" class="error">{{inforOld}}</p>
     <div class="form-margin">
       <label><span class="c-red">*</span>新密码:</label>
-      <input type="password" class="input-text" placeholder="密码长度为6-16" v-model="updateItem.NewPassword" @keyup.enter="save" @keyup="checkNewPwd" id="update_new">
+      <input type="password" class="input-text" placeholder="密码长度为6-16" v-model="updateItem.NewPassword" @keyup.enter="save" @blur="checkNewPwd" id="update_new">
     </div>
     <p :style="{'visibility': isShowNew?'visible':'hidden'}" class="error">{{inforNew}}</p>
     <div class="form-margin">
       <label><span class="c-red">*</span>确认新密码:</label>
-      <input type="password" class="input-text" v-model="updateItem.confirmPwd" @keyup.enter="save" @keyup="checkConfirmPwd" id="update_confirm">
+      <input type="password" class="input-text" v-model="updateItem.confirmPwd" @keyup.enter="save" @blur="checkConfirmPwd" id="update_confirm">
     </div>
     <p :style="{'visibility': isShowConfirm?'visible':'hidden'}" class="error">{{inforConfirm}}</p>
     <div class="form-margin form-button">

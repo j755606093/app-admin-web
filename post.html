@@ -163,31 +163,31 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input @keyup="checkEditItem('edit_title')" type="text" class="input-text" @keyup.enter="layer_submit" v-model="editItem.Title" placeholder="" id="edit_title" name="Title">
+        <input @blur="checkEditItem('edit_title')" type="text" class="input-text" @keyup.enter="layer_submit" v-model="editItem.Title" placeholder="" id="edit_title" name="Title">
       </div>
     </div>
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>话题:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" @keyup="checkEditItem('edit_topic')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.Topic" placeholder="" id="edit_topic">
+        <input type="text" @blur="checkEditItem('edit_topic')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.Topic" placeholder="" id="edit_topic">
       </div>
     </div>
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" @input="checkEditItem('edit_content')" class="input-text" readonly v-model="editItem.Content" @click="openRichText" id="edit_content">
+        <input type="text" @blur="checkEditItem('edit_content')" class="input-text" readonly v-model="editItem.Content" @click="openRichText" id="edit_content">
       </div>
     </div>
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>阅读量:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="number" @keyup="checkEditItem('edit_readcount')" @keyup.enter="layer_submit" class="input-text" v-model="addItem.ReadCount" placeholder="" id="edit_readcount">
+        <input type="number" @blur="checkEditItem('edit_readcount')" @keyup.enter="layer_submit" class="input-text" v-model="addItem.ReadCount" placeholder="" id="edit_readcount">
       </div>
     </div>
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>点赞数:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="number" @keyup="checkEditItem('edit_likecount')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.LikeCount" placeholder="" id="edit_likecount" name="LikeCount">
+        <input type="number" @blur="checkEditItem('edit_likecount')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.LikeCount" placeholder="" id="edit_likecount" name="LikeCount">
       </div>
     </div>
     <div class="row cl">
@@ -240,13 +240,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input @keyup.enter="layer_submit_add" @keyup="checkAddItem('add_title')" type="text" class="input-text" v-model="addItem.Title" placeholder="" id="add_title" name="Title">
+        <input @keyup.enter="layer_submit_add" @blur="checkAddItem('add_title')" type="text" class="input-text" v-model="addItem.Title" placeholder="" id="add_title" name="Title">
       </div>
     </div>
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>话题:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" @keyup="checkAddItem('add_topic')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Topic" placeholder="" id="add_topic" name="Topic">
+        <input type="text" @blur="checkAddItem('add_topic')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Topic" placeholder="" id="add_topic" name="Topic">
       </div>
     </div>
     <div class="row cl">
@@ -258,13 +258,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>阅读量:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="number" @keyup="checkAddItem('add_readcount')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.ReadCount" placeholder="" id="add_readcount">
+        <input type="number" @blur="checkAddItem('add_readcount')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.ReadCount" placeholder="" id="add_readcount">
       </div>
     </div>
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>点赞数:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="number" @keyup="checkAddItem('add_likecount')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.LikeCount" placeholder="" id="add_likecount">
+        <input type="number" @blur="checkAddItem('add_likecount')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.LikeCount" placeholder="" id="add_likecount">
       </div>
     </div>
     <div class="row cl">

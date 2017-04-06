@@ -138,7 +138,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>作者:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup="checkEditItem('edit_author')" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Author" placeholder="" id="edit_author" name="Author">
+          <input type="text" @blur="checkEditItem('edit_author')" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Author" placeholder="" id="edit_author" name="Author">
         </div>
       </div>
       <!-- <div class="row cl">
@@ -156,7 +156,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <textarea v-model="editItem.Content" cols="61" rows="9" @keyup="checkContent('edit_content')" @keyup.enter="layer_submit_edit" id="edit_content" name="Content" placeholder="字数在5~200以内"></textarea>
+          <textarea v-model="editItem.Content" cols="61" rows="9" @blur="checkContent('edit_content')" @keyup.enter="layer_submit_edit" id="edit_content" name="Content" placeholder="字数在5~200以内"></textarea>
           <p>还能输入{{count}}个字</p>
         </div>
       </div>
@@ -205,7 +205,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup="checkAddItem('add_name')" @keyup.enter="layer_submit_add" class="input-text" id="add_name" name="Title" autofocus>
+          <input type="text" @blur="checkAddItem('add_name')" @keyup.enter="layer_submit_add" class="input-text" id="add_name" name="Title" autofocus>
         </div>
       </div>
       <div class="row cl">
@@ -222,7 +222,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>作者:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup="checkAddItem('add_author')" @keyup.enter="layer_submit_add" class="input-text" id="add_author" name="Author">
+          <input type="text" @blur="checkAddItem('add_author')" @keyup.enter="layer_submit_add" class="input-text" id="add_author" name="Author">
         </div>
       </div>
       <!-- <div class="row cl">
@@ -240,7 +240,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <textarea cols="61" rows="9" @keyup="checkContent('add_content')" @keyup.enter="layer_submit_add" id="add_content" name="Content" placeholder="字数在5~200以内"></textarea>
+          <textarea cols="61" rows="9" @blur="checkContent('add_content')" @keyup.enter="layer_submit_add" id="add_content" name="Content" placeholder="字数在5~200以内"></textarea>
           <p>还能输入{{count}}个字</p>
         </div>
       </div>

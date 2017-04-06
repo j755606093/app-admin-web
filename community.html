@@ -122,7 +122,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" class="input-text" @keyup="checkEditTitle" @keyup.enter="layer_submit" placeholder="字数不超过20" v-model="editItem.Title" :class="{ error: editTitleValid }" name="Title" autofocus>
+          <input type="text" class="input-text" @blur="checkEditTitle" @keyup.enter="layer_submit" placeholder="字数不超过20" v-model="editItem.Title" :class="{ error: editTitleValid }" name="Title" autofocus>
         </div>
       </div>
       <div class="row cl">
@@ -170,7 +170,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" class="input-text" @keyup="checkAddTitle" @keyup.enter="layer_submit_add" name="Title" id="addTitle" :class="{ error: addTitleValid }" autofocus>
+          <input type="text" class="input-text" @blur="checkAddTitle" @keyup.enter="layer_submit_add" name="Title" id="addTitle" :class="{ error: addTitleValid }" autofocus>
         </div>
       </div>
       <div class="row cl">

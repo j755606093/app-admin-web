@@ -158,7 +158,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <textarea cols="51" rows="10" @keyup="checkAddItem('add_content')" @keyup.enter="layer_submit_add" id="add_content" name="Content" placeholder="字数在5~200以内"></textarea>
+          <textarea cols="51" rows="10" @blur="checkAddItem('add_content')" @keyup.enter="layer_submit_add" id="add_content" name="Content" placeholder="字数在5~200以内"></textarea>
           <p>还能输入{{count}}个字</p>
         </div>
       </div>

@@ -145,13 +145,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" v-model="Notify.Title" @keyup="checkNotifyTitle" @keyup.enter="addNotify" :class="{ error: notifyTitleValid }" class="input-text" autofocus>
+        <input type="text" v-model="Notify.Title" @blur="checkNotifyTitle" @keyup.enter="addNotify" :class="{ error: notifyTitleValid }" class="input-text" autofocus>
       </div>
     </div>
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" @keyup="checkNotifyContent" @keyup.enter="addNotify" v-model="Notify.Content" :class="{ error: notifyContentValid }" class="input-text">
+        <input type="text" @blur="checkNotifyContent" @keyup.enter="addNotify" v-model="Notify.Content" :class="{ error: notifyContentValid }" class="input-text">
       </div>
     </div>
     <div class="row cl">
@@ -168,7 +168,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态栏消息:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" @keyup="checkNotifyStatusBarMsg" @keyup.enter="addNotify" v-model="Notify.StatusBarMsg" :class="{ error: notifyStatusBarMsgValid }" class="input-text">
+        <input type="text" @blur="checkNotifyStatusBarMsg" @keyup.enter="addNotify" v-model="Notify.StatusBarMsg" :class="{ error: notifyStatusBarMsgValid }" class="input-text">
       </div>
     </div>
     <div class="row cl">
@@ -183,7 +183,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" @keyup="checkNewsTitle" v-model="News.Title" :class="{ error: newsTitleValid }" class="input-text" autofocus>
+        <input type="text" @blur="checkNewsTitle" v-model="News.Title" :class="{ error: newsTitleValid }" class="input-text" autofocus>
       </div>
     </div>
     <div class="row cl">
@@ -200,7 +200,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态栏消息:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" @keyup="checkNewsStatusBarMsg" v-model="News.StatusBarMsg" :class="{ error: newsStatusBarMsgValid }" class="input-text">
+        <input type="text" @blur="checkNewsStatusBarMsg" v-model="News.StatusBarMsg" :class="{ error: newsStatusBarMsgValid }" class="input-text">
       </div>
     </div>
     <div class="row cl">

@@ -105,7 +105,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" class="input-text" @blur="checkEditName" @input="checkEditName" @keyup.enter="layer_submit" :class="{ error: editNameValid }" v-model="editName">
+        <input type="text" class="input-text" @blur="checkEditName" @keyup.enter="layer_submit" :class="{ error: editNameValid }" v-model="editName">
       </div>
     </div>
     <div class="row cl" v-for="items in moduleItems">
@@ -144,7 +144,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" class="input-text" @blur="checkAddName" @input="checkAddName" @keyup.enter="layer_submit_add" :class="{ error: addNameValid }" v-model="addName">
+        <input type="text" class="input-text" @blur="checkAddName" @keyup.enter="layer_submit_add" :class="{ error: addNameValid }" v-model="addName">
       </div>
     </div>
     <div class="row cl" v-for="items in moduleItems">

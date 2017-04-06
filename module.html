@@ -119,13 +119,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input @keyup="checkEditItem('edit_name')" @keyup.enter="layer_submit" type="text" class="input-text" v-model="editItem.Name" id="edit_name">
+        <input @blur="checkEditItem('edit_name')" @keyup.enter="layer_submit" type="text" class="input-text" v-model="editItem.Name" id="edit_name">
       </div>
     </div>
     <div class="row cl" v-if="editItem.IsParent == 0">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>链接:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input @keyup="checkEditItem('edit_value')" @keyup.enter="layer_submit" type="text" class="input-text" v-model="editItem.Value" id="edit_value">
+        <input @blur="checkEditItem('edit_value')" @keyup.enter="layer_submit" type="text" class="input-text" v-model="editItem.Value" id="edit_value">
       </div>
     </div>
     <!-- <div class="row cl">
@@ -137,7 +137,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>顺序:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="number" @keyup.enter="layer_submit" class="input-text" @keyup="checkEditItem('edit_sort')" v-model="editItem.Sort" id="edit_sort">
+        <input type="number" @keyup.enter="layer_submit" class="input-text" @blur="checkEditItem('edit_sort')" v-model="editItem.Sort" id="edit_sort">
       </div>
     </div>
     <div class="row cl">
@@ -178,13 +178,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input @keyup="checkAddItem('add_name')" @keyup.enter="layer_submit_add" type="text" class="input-text" v-model="addItem.Name" id="add_name">
+        <input @blur="checkAddItem('add_name')" @keyup.enter="layer_submit_add" type="text" class="input-text" v-model="addItem.Name" id="add_name">
       </div>
     </div>
     <div class="row cl" v-if="addItem.IsParent == 0">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>链接:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input @keyup="checkAddItem('add_value')" @keyup.enter="layer_submit_add" type="text" class="input-text" v-model="addItem.Value" id="add_value">
+        <input @blur="checkAddItem('add_value')" @keyup.enter="layer_submit_add" type="text" class="input-text" v-model="addItem.Value" id="add_value">
       </div>
     </div>
     <!-- <div class="row cl">
@@ -196,7 +196,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>顺序:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="number" @keyup.enter="layer_submit_add" class="input-text" @keyup="checkAddItem('add_sort')" v-model="addItem.Sort" placeholder="" id="add_sort">
+        <input type="number" @keyup.enter="layer_submit_add" class="input-text" @blur="checkAddItem('add_sort')" v-model="addItem.Sort" placeholder="" id="add_sort">
       </div>
     </div>
     <div class="row cl">

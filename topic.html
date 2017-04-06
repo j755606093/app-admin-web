@@ -105,37 +105,37 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>话题:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup="checkEditItem('edit_title',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Key" id="edit_title" name="Key" autofocus>
+          <input type="text" @blur="checkEditItem('edit_title',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Key" id="edit_title" name="Key" autofocus>
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图片数:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkEditItem('edit_piccount',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.PicCount" placeholder="整数" id="edit_piccount" name="PicCount">
+          <input type="number" @blur="checkEditItem('edit_piccount',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.PicCount" placeholder="整数" id="edit_piccount" name="PicCount">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>发布人数量:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkEditItem('edit_issuercount',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.IssuerCount" placeholder="整数" id="edit_issuercount" name="IssuerCount">
+          <input type="number" @blur="checkEditItem('edit_issuercount',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.IssuerCount" placeholder="整数" id="edit_issuercount" name="IssuerCount">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>参与人数量:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkEditItem('edit_attentcount',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.AttentCount" placeholder="整数" id="edit_attentcount" name="AttentCount">
+          <input type="number" @blur="checkEditItem('edit_attentcount',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.AttentCount" placeholder="整数" id="edit_attentcount" name="AttentCount">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>顺序:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkEditItem('edit_sort',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Sort" placeholder="整数" id="edit_sort" name="Sort">
+          <input type="number" @blur="checkEditItem('edit_sort',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Sort" placeholder="整数" id="edit_sort" name="Sort">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup="checkEditItem('edit_remark',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Content" id="edit_remark" name="Content">
+          <input type="text" @blur="checkEditItem('edit_remark',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Content" id="edit_remark" name="Content">
         </div>
       </div>
       <div class="row cl">
@@ -179,37 +179,37 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>话题:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Key" @keyup="checkAddItem('add_title',1)" id="add_title" name="Key" autofocus>
+          <input type="text" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Key" @blur="checkAddItem('add_title',1)" id="add_title" name="Key" autofocus>
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图片数:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkAddItem('add_piccount',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.PicCount" placeholder="整数" id="add_piccount" name="PicCount">
+          <input type="number" @blur="checkAddItem('add_piccount',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.PicCount" placeholder="整数" id="add_piccount" name="PicCount">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>发布人数量:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkAddItem('add_issuercount',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.IssuerCount" placeholder="整数" id="add_issuercount" name="IssuerCount">
+          <input type="number" @blur="checkAddItem('add_issuercount',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.IssuerCount" placeholder="整数" id="add_issuercount" name="IssuerCount">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>参与人数量:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkAddItem('add_attentcount',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.AttentCount" placeholder="整数" id="add_attentcount" name="AttentCount">
+          <input type="number" @blur="checkAddItem('add_attentcount',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.AttentCount" placeholder="整数" id="add_attentcount" name="AttentCount">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>顺序:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="number" @keyup="checkAddItem('add_sort',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Sort" placeholder="整数" id="add_sort" name="Sort">
+          <input type="number" @blur="checkAddItem('add_sort',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Sort" placeholder="整数" id="add_sort" name="Sort">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" class="input-text" @keyup="checkAddItem('add_remark',1)" v-model="addItem.Content" id="add_remark" name="Content">
+          <input type="text" class="input-text" @blur="checkAddItem('add_remark',1)" v-model="addItem.Content" id="add_remark" name="Content">
         </div>
       </div>
       <div class="row cl">

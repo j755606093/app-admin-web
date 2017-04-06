@@ -121,7 +121,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <div class="row cl">
           <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>昵称:</label>
           <div class="formControls col-xs-8 col-sm-9">
-            <input type="text" class="input-text" v-model="addItem.Nick" @keyup.enter="layer_submit_add" @keyup="checkAddItem('nick',1)" id="nick" autofocus name="Nick">
+            <input type="text" class="input-text" v-model="addItem.Nick" @keyup.enter="layer_submit_add" @blur="checkAddItem('nick',1)" id="nick" autofocus name="Nick">
           </div>
         </div>
         <div class="row cl">
@@ -136,19 +136,19 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <div class="row cl">
           <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>邮箱:</label>
           <div class="formControls col-xs-8 col-sm-9">
-            <input type="text" id="mail" class="input-text" v-model="addItem.Mail" @keyup.enter="layer_submit_add" @keyup="checkMail" @keyup="checkMail" name="Mail">
+            <input type="text" id="mail" class="input-text" v-model="addItem.Mail" @keyup.enter="layer_submit_add" @blur="checkMail" name="Mail">
           </div>
         </div>
         <div class="row cl">
           <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>手机:</label>
           <div class="formControls col-xs-8 col-sm-9">
-            <input type="number" class="input-text" v-model="addItem.Mobile" placeholder="11位手机号" @keyup.enter="layer_submit_add" @keyup="checkMobile" id="mobile" name="Mobile">
+            <input type="number" class="input-text" v-model="addItem.Mobile" placeholder="11位手机号" @keyup.enter="layer_submit_add" @blur="checkMobile" id="mobile" name="Mobile">
           </div>
         </div>
         <div class="row cl">
           <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>地址:</label>
           <div class="formControls col-xs-8 col-sm-9">
-            <input type="text" class="input-text" v-model="addItem.Address" @keyup.enter="layer_submit_add" @keyup="checkAddItem('address',1)" id="address" name="Address">
+            <input type="text" class="input-text" v-model="addItem.Address" @keyup.enter="layer_submit_add" @blur="checkAddItem('address',1)" id="address" name="Address">
           </div>
         </div>
         <div class="row cl">

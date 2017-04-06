@@ -120,7 +120,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <textarea v-model="editItem.Content" style="width: 442px;
-    height: 144px;" cols="61" rows="9" @blur="checkContent('edit_content')" @keyup .enter="layer_submit_edit" id="edit_content" name="Content" placeholder="字数在5~200以内"></textarea>
+    height: 144px;" cols="61" rows="9" @blur="checkContent('edit_content')" @keyup.enter="layer_submit_edit" id="edit_content" name="Content" placeholder="字数在5~200以内"></textarea>
           <p>还能输入{{count}}个字</p>
         </div>
       </div>
