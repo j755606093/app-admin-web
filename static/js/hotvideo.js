@@ -5,7 +5,7 @@ var Vue_App = new Vue({
     items: {},
     editItem: {}, //要编辑的items中的数据
     layer: null, //弹出框,
-    addItem: {}, //增加图
+    addItem: { "ClassifyId": "" }, //增加图
     currCount: 15, //当前数据量
     displayCount: 15, //当前页要显示的数据量
     TotalCount: 0,
@@ -17,6 +17,7 @@ var Vue_App = new Vue({
     count: 200, //还能输入的内容字数
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
+    ClassifyItem: [],
     firstLoad: true,
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
@@ -26,6 +27,7 @@ var Vue_App = new Vue({
       parent.location.href = "login.html";
     } else {
       this.getList(1, 15);
+      this.getClassify();
     }
   },
   methods: {
@@ -41,6 +43,7 @@ var Vue_App = new Vue({
           _this.items = response.body.Data.Content;
           _this.displayCount = _this.items.length;
           _this.TotalCount = response.body.Data.TotalCount;
+          console.log(_this.items)
         } else {
           if (response.body.Code == 204) {
             _this.items = [];
@@ -95,10 +98,30 @@ var Vue_App = new Vue({
       this.firstLoad = true;
       this.getList(1, this.currCount);
     },
+    //获取分类
+    getClassify() {
+      var _this = this;
+      this.$http.get(this.ip + "/api/HotVideo/ListClassifyEnum", {
+        headers: {
+          "Authorization": this.token
+        }
+      }).then(function(res) {
+        if (res.data.Code === 200) {
+          _this.ClassifyItem = res.data.Data;
+        } else {
+          layer.msg(res.body.Message, { icon: 2, time: 3000 });
+        }
+      }).catch(function(error) {
+        _this.isHide = true;
+        console.log(error);
+        layer.msg("服务器错误，请稍后再试", { icon: 2, time: 3000 });
+      });
+    },
     edit(index, id) {
       // console.log(index,id)
       // 编辑内容
       this.editItem = this.items[index];
+      this.editItem.ClassifyId = this.editItem.ClassifyId.toString();
       //计算内容的字数
       var content = this.editItem.Content;
       if (content != null) {
@@ -118,12 +141,14 @@ var Vue_App = new Vue({
       $("#edit_title").focus();
       $("#editfile").val("");
       this.overSize = false;
+      // this.getClassify();
     },
     layer_close() {
       layer.close(this.layer);
     },
     add() {
       $("#add_title").focus();
+      this.addItem.ClassifyId = this.ClassifyItem[0].Value;
       var _this = this;
       this.layer = layer.open({
         type: 1,
@@ -140,6 +165,7 @@ var Vue_App = new Vue({
       });
       this.count = 200;
       $("#add_title").focus();
+      this.getClassify();
     },
     checkAddItem(id, n) {
       var el = document.getElementById(id);

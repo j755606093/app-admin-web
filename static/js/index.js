@@ -42,11 +42,12 @@ var VM = new Vue({
     firstTip: "", //第一次提示，防止出现多个提示窗口
     stayOrder: window.localStorage.stayHandleOrder,
     layer: "",
+    childVideoModule: [],
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
   },
   created: function() {
-    if (this.usrId === "" || typeof this.usrId === "undefined") {
+    if (!this.usrId) {
       this.isHide = true;
       layer.alert('会话已过期，请重新登录', {
         closeBtn: 0,
@@ -110,6 +111,9 @@ var VM = new Vue({
             }
             if (name == "用户") {
               _this.childMemberModule = modules;
+            }
+            if (name == "视频") {
+              _this.childVideoModule = modules;
             }
           }
           _this.isHide = true;

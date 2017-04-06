@@ -58,7 +58,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <dt><i class="Hui-iconfont">&#xe625;</i> 首页<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            <li v-for="item in childHomeModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+            <li v-for="item in childHomeModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
           </ul>
         </dd>
       </dl>
@@ -66,7 +66,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <dt><i class="Hui-iconfont">&#xe62b;</i> 社区<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            <li v-for="item in childCommunityModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+            <li v-for="item in childCommunityModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
           </ul>
         </dd>
       </dl>
@@ -74,7 +74,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <dt><i class="Hui-iconfont">&#xe63f;</i> 权限<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            <li v-for="item in childAuthorityModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+            <li v-for="item in childAuthorityModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
           </ul>
         </dd>
       </dl>
@@ -82,7 +82,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <dt><i class="Hui-iconfont">&#xe694;</i> 微信<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            <li v-for="item in childWechatModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+            <li v-for="item in childWechatModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
           </ul>
         </dd>
       </dl>
@@ -90,7 +90,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <dt><i class="Hui-iconfont">&#xe69d;</i> 身边圈<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            <li v-for="item in childSideModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+            <li v-for="item in childSideModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
           </ul>
         </dd>
       </dl>
@@ -98,7 +98,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <dt><i class="Hui-iconfont">&#xe622;</i> 评论<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            <li v-for="item in childCommentModule"><a _href="{{item.Value | addHash }}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+            <li v-for="item in childCommentModule"><a _href="{{item.Value | addHash }}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
           </ul>
         </dd>
       </dl>
@@ -106,14 +106,22 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <dt><i class="Hui-iconfont">&#xe60d;</i> 用户<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
           <ul>
-            <li v-for="item in childMemberModule"><a _href="{{item.Value | addHash }}" data-title="{{item.Name}}" href="javascript:void(0)"> {{item.Name}}</a></li>
+            <li v-for="item in childMemberModule"><a _href="{{item.Value | addHash }}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
+          </ul>
+        </dd>
+      </dl>
+      <dl id="menu-comment" v-show="childVideoModule.length !== 0">
+        <dt><i class="Hui-iconfont">&#xe6e6;</i> 视频<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+          <ul>
+            <li v-for="item in childVideoModule"><a _href="{{item.Value | addHash }}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
           </ul>
         </dd>
       </dl>
     </div>
   </aside>
   <div class="dislpayArrow hidden-xs">
-    <a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a>
+    <a class="pngfix" href="javascript:;" onClick="displaynavbar(this)"></a>
   </div>
   <section class="Hui-article-box">
     <div id="Hui-tabNav" class="Hui-tabNav hidden-xs">
