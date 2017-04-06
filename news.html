@@ -71,8 +71,8 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th>ID</th>
             <th>标题</th>
             <th>缩略图</th>
-            <th>Web专用</th>
-            <th>App专用</th>
+            <!-- <th>Web专用</th> -->
+            <!-- <th>App专用</th> -->
             <th>来源</th>
             <th>类别</th>
             <th>类型</th>
@@ -91,8 +91,8 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Id}}</td>
             <td id="title{{item.Id}}"><a onmouseover="lookTitle({{item.Id}},'title','{{item.Title}}')" href="javascript:;">{{item.Title | subTitle}}</a></td>
             <td><a href="{{item.PUrl}}" title="{{item.PUrl}}" target="_blank">{{item.PUrl | subStr}}</a></td>
-            <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td>
-            <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td>
+            <!-- <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td> -->
+            <!-- <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td> -->
             <td>{{item.Author}}</td>
             <td>{{item.RealType}}</td>
             <td v-if="item.ViewType == 1">文字</td>

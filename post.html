@@ -49,8 +49,17 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <div class="page-container" id="isget" style="visibility: hidden">
     <div class="cl pd-5 bg-1 bk-gray mt-20">
       <span class="l">
-          <a class="btn btn-primary radius" v-on:click="add()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加帖子</a>
-        </span>
+        <a class="btn btn-primary radius" v-on:click="add()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加帖子</a>
+      </span>
+      <span>
+        <select id="searchType" v-model="searchType" class="input-text">
+          <option value="Title">标题</option>
+          <option value="UsrName" selected>发帖人</option>
+          <option value="Topic">话题</option>
+          <option value="LikeCount">点赞数</option>
+        </select>
+        <input id="searchKey" v-model="searchKey" @keyup.enter="search" class="input-text" type="text"><a id="searchBtn" class="btn btn-success radius" @click="search" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
+      </span>
       <span class="r lh">本页数据:
           <select v-model="displayCount" @change="getData($event)">
             <option value="{{displayCount}}">{{displayCount}}</option>
@@ -77,12 +86,12 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th>标题</th>
             <th>话题</th>
             <th>内容</th>
-            <th>Web专用</th>
-            <th>App专用</th>
-            <!-- <th width="100">阅读数</th> -->
+            <!-- <th>Web专用</th> -->
+            <!-- <th>App专用</th> -->
+            <th>阅读量</th>
             <!-- <th width="100">评论数</th> -->
             <th>点赞数</th>
-            <!-- <th>管理员发帖</th> -->
+            <th>置顶</th>
             <th>创建时间</th>
             <th>状态</th>
             <th>操作</th>
@@ -100,14 +109,14 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.BoardName}}</td>
             <td id="title{{item.Id}}"><a onmouseover="lookDetail({{item.Id}},'title','{{item.Title}}')" href="javascript:;">{{item.Title | subTitle}}</a></td>
             <td>{{item.Topic}}</td>
-            <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
-            <!-- <td>{{item.ReadCount}}</td> -->
+            <td><a href="javascript:;">{{item.Content | subContent}}</a></td>
+            <td>{{item.ReadCount}}</td>
             <!-- <td>{{item.CmtCount}}</td> -->
-            <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td>
-            <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td>
+            <!-- <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td> -->
+            <!-- <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td> -->
             <td>{{item.LikeCount}}</td>
-            <!-- <td v-if="item.IsAdmin == 1" style="color:green">是</td> -->
-            <!-- <td v-if="item.IsAdmin == 0" style="color:red">否</td> -->
+            <td v-if="item.IsTop == 1" style="color:green">是</td>
+            <td v-if="item.IsTop == 0" style="color:red">否</td>
             <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
             <td v-if="item.Status == 1" style="color:green">启用</td>
             <td v-if="item.Status == 0" style="color:red">禁用</td>
@@ -160,13 +169,19 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>话题:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" @keyup="checkEditItem('edit_topic')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.Topic" placeholder="" id="edit_topic" name="Topic">
+        <input type="text" @keyup="checkEditItem('edit_topic')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.Topic" placeholder="" id="edit_topic">
       </div>
     </div>
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="text" @input="checkEditItem('edit_content')" class="input-text" readonly v-model="editItem.Content" @click="openRichText" id="edit_content" name="Content">
+        <input type="text" @input="checkEditItem('edit_content')" class="input-text" readonly v-model="editItem.Content" @click="openRichText" id="edit_content">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>阅读量:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="number" @keyup="checkEditItem('edit_readcount')" @keyup.enter="layer_submit" class="input-text" v-model="addItem.ReadCount" placeholder="" id="edit_readcount">
       </div>
     </div>
     <div class="row cl">
@@ -176,9 +191,18 @@ document.getElementsByTagName("head")[0].appendChild(style);
       </div>
     </div>
     <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">置顶:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="editItem.IsTop" class="input-text">
+          <option value="1">是</option>
+          <option value="0">否</option>
+        </select>
+      </div>
+    </div>
+    <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2">状态:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <select v-model="editItem.Status" name="Status" class="input-text">
+        <select v-model="editItem.Status" class="input-text">
           <option value="1">启用</option>
           <option value="0">禁用</option>
         </select>
@@ -232,9 +256,24 @@ document.getElementsByTagName("head")[0].appendChild(style);
       </div>
     </div>
     <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>阅读量:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <input type="number" @keyup="checkAddItem('add_readcount')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.ReadCount" placeholder="" id="add_readcount">
+      </div>
+    </div>
+    <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>点赞数:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="number" @keyup="checkAddItem('add_likecount')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.LikeCount" placeholder="" id="add_likecount" name="LikeCount">
+        <input type="number" @keyup="checkAddItem('add_likecount')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.LikeCount" placeholder="" id="add_likecount">
+      </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-xs-4 col-sm-2">置顶:</label>
+      <div class="formControls col-xs-8 col-sm-9">
+        <select v-model="addItem.IsTop" name="IsTop" class="input-text">
+          <option value="1">是</option>
+          <option value="0" selected>否</option>
+        </select>
       </div>
     </div>
     <div class="row cl">

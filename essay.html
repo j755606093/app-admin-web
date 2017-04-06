@@ -81,8 +81,8 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th>来源</th>
             <th>缩略图</th>
             <th>导读</th>
-            <th>Web专用</th>
-            <th>App专用</th>
+            <!-- <th>Web专用</th> -->
+            <!-- <th>App专用</th> -->
             <!-- <th width="80">浏览次数</th> -->
             <th>文章类型</th>
             <th>创建时间</th>
@@ -99,8 +99,8 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Author}}</td>
             <td><a title="{{item.PUrl}}" href="{{item.PUrl}}" target="_blank">{{item.PUrl | subPurl}}</a></td>
             <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
-            <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td>
-            <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td>
+            <!-- <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td> -->
+            <!-- <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td> -->
             <!-- <td>{{item.ReadCount}}</td> -->
             <!-- <td>{{item.WechatUrl}}</td> -->
             <td v-if="item.ViewType == 0"></td>

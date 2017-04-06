@@ -60,8 +60,8 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th>标题</th>
             <th>来源</th>
             <th>作者</th>
-            <th>Web专用</th>
-            <th>App专用</th>
+            <!-- <th>Web专用</th> -->
+            <!-- <th>App专用</th> -->
             <th>图片路径</th>
             <th>视频链接</th>
             <th>内容</th>
@@ -81,8 +81,8 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td v-if="item.SourceType == 4">社区帖子</td>
             <td v-if="item.SourceType == 5">视频</td>
             <td>{{item.Author}}</td>
-            <td>{{item.Url | subUrl}}</td>
-            <td>{{item.OriginUrl | subUrl}}</td>
+            <!-- <td>{{item.Url | subUrl}}</td> -->
+            <!-- <td>{{item.OriginUrl | subUrl}}</td> -->
             <td><a title="{{item.Avatar}}" href="{{item.Avatar}}" target="_blank">{{item.Avatar | subStr}}</a></td>
             <td><a title="{{item.VUrl}}" href="item.VUrl" target="_blank">{{item.VUrl | subStr}}</a></td>
             <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
@@ -141,7 +141,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
           <input type="text" @keyup="checkEditItem('edit_author')" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Author" placeholder="" id="edit_author" name="Author">
         </div>
       </div>
-      <div class="row cl">
+      <!-- <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2">Web专用:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <input type="text" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Url" placeholder="" id="edit_url" name="Url">
@@ -152,7 +152,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <div class="formControls col-xs-8 col-sm-9">
           <input type="text" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.OriginUrl" placeholder="" id="edit_originurl" name="OriginUrl">
         </div>
-      </div>
+      </div> -->
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
@@ -225,7 +225,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
           <input type="text" @keyup="checkAddItem('add_author')" @keyup.enter="layer_submit_add" class="input-text" id="add_author" name="Author">
         </div>
       </div>
-      <div class="row cl">
+      <!-- <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2">Web专用:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <input type="text" @keyup.enter="layer_submit_add" placeholder="从新闻管理或微信文章管理中复制" class="input-text" id="add_url" name="Url">
@@ -236,7 +236,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <div class="formControls col-xs-8 col-sm-9">
           <input type="text" @keyup.enter="layer_submit_add" class="input-text" placeholder="从新闻管理或微信文章管理中复制" id="add_originurl" name="OriginUrl">
         </div>
-      </div>
+      </div> -->
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">

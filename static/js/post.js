@@ -20,6 +20,8 @@ var Vue_App = new Vue({
     Intro: "", //文章内容    
     firstLoad: true,
     showItem: false,
+    searchType: "UsrName",
+    searchKey: "",
     UsrItem: [],
     nick: "",
     token: "Bearer " + window.localStorage.token,
@@ -28,10 +30,10 @@ var Vue_App = new Vue({
     // ip: "http://192.168.31.82", //用于测试
   },
   created: function() {
-    if (this.usrId === "" || typeof this.usrId === "undefined") {
+    if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
-      this.getList(1, 15);
+      this.getList(1, 15, "", "");
       this.getComm();
       //富文本编辑器初始化
       window.editor = new wangEditor('editor');
@@ -46,9 +48,22 @@ var Vue_App = new Vue({
     }
   },
   methods: {
-    getList(index, size) {
+    getList(index, size, type, key) {
       var _this = this;
-      this.$http.post(this.ip + "/api/Post/List", { "Index": index, "Size": size }, {
+      var data = { "Index": index, "Size": size };
+      if (type == "Title") {
+        data.Title = key;
+      }
+      if (type == "UsrName") {
+        data.UsrName = key;
+      }
+      if (type == "Topic") {
+        data.Topic = key;
+      }
+      if (type == "LikeCount") {
+        data.LikeCount = key;
+      }
+      this.$http.post(this.ip + "/api/Post/List", data, {
         headers: {
           "Authorization": this.token
         }
@@ -95,7 +110,7 @@ var Vue_App = new Vue({
                 _this.currPage = obj.curr;
                 //获取当前页或指定页的数据
                 // console.log(obj.curr);
-                _this.getList(obj.curr, _this.currCount);
+                _this.getList(obj.curr, _this.currCount, _this.searchType, _this.searchKey);
               }
               _this.firstLoad = false;
             },
@@ -110,7 +125,7 @@ var Vue_App = new Vue({
       this.currCount = event.target.value;
       this.currPage = 1; //防止获取不到数据
       this.firstLoad = true;
-      this.getList(1, this.currCount);
+      this.getList(1, this.currCount, this.searchType, this.searchKey);
     },
     //获取社区Id
     getComm() {
@@ -287,7 +302,7 @@ var Vue_App = new Vue({
         }).then(function(res) {
           if (res.body.Code === 200) {
             _this.firstLoad = true;
-            _this.getList(_this.currPage, _this.currCount);
+            _this.getList(1, _this.currCount, "", "");
             _this.layer_close();
             layer.msg('修改成功', { icon: 1, time: 2000 });
           } else {
@@ -339,7 +354,7 @@ var Vue_App = new Vue({
         }).then(function(res) {
           if (res.body.Code === 200) {
             _this.firstLoad = true;
-            _this.getList(1, _this.currCount, _this.searchKeyList, _this.searchKeyWord);
+            _this.getList(1, _this.currCount, "", "");
             layer.msg("设置成功", { icon: 1, time: 2000 });
             _this.layer_close();
           } else {
@@ -435,7 +450,7 @@ var Vue_App = new Vue({
         }).then(function(res) {
           if (res.body.Code === 200) {
             _this.firstLoad = true;
-            _this.getList(1, _this.currCount);
+            _this.getList(1, _this.currCount, "", "");
             _this.clearData();
             _this.layer_close();
             _this.nick = "";
