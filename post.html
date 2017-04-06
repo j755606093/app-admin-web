@@ -55,7 +55,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <select id="searchType" v-model="searchType" class="input-text">
           <option value="Title">标题</option>
           <option value="UsrName" selected>发帖人</option>
-          <option value="Topic">话题</option>
+          <!-- <option value="Topic">话题</option> -->
           <option value="LikeCount">点赞数</option>
         </select>
         <input id="searchKey" v-model="searchKey" @keyup.enter="search" class="input-text" type="text"><a id="searchBtn" class="btn btn-success radius" @click="search" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
@@ -84,7 +84,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th width="80">版块Id</th> -->
             <th>社区名称</th>
             <th>标题</th>
-            <th>话题</th>
+            <!-- <th>话题</th> -->
             <th>内容</th>
             <!-- <th>Web专用</th> -->
             <!-- <th>App专用</th> -->
@@ -108,8 +108,8 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.BoardId}}</td> -->
             <td>{{item.BoardName}}</td>
             <td id="title{{item.Id}}"><a onmouseover="lookDetail({{item.Id}},'title','{{item.Title}}')" href="javascript:;">{{item.Title | subTitle}}</a></td>
-            <td>{{item.Topic}}</td>
-            <td><a href="javascript:;">{{item.Content | subContent}}</a></td>
+            <!-- <td>{{item.Topic}}</td> -->
+            <td>{{item.Content | subContent}}</td>
             <td>{{item.ReadCount}}</td>
             <!-- <td>{{item.CmtCount}}</td> -->
             <!-- <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td> -->
@@ -166,12 +166,12 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <input @blur="checkEditItem('edit_title')" type="text" class="input-text" @keyup.enter="layer_submit" v-model="editItem.Title" placeholder="" id="edit_title" name="Title">
       </div>
     </div>
-    <div class="row cl">
+    <!-- <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>话题:</label>
       <div class="formControls col-xs-8 col-sm-9">
         <input type="text" @blur="checkEditItem('edit_topic')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.Topic" placeholder="" id="edit_topic">
       </div>
-    </div>
+    </div> -->
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
       <div class="formControls col-xs-8 col-sm-9">
@@ -243,12 +243,12 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <input @keyup.enter="layer_submit_add" @blur="checkAddItem('add_title')" type="text" class="input-text" v-model="addItem.Title" placeholder="" id="add_title" name="Title">
       </div>
     </div>
-    <div class="row cl">
+    <!-- <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>话题:</label>
       <div class="formControls col-xs-8 col-sm-9">
         <input type="text" @blur="checkAddItem('add_topic')" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Topic" placeholder="" id="add_topic" name="Topic">
       </div>
-    </div>
+    </div> -->
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
       <div class="formControls col-xs-8 col-sm-9">
