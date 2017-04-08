@@ -57,9 +57,9 @@ var Vue_App = new Vue({
       if (type == "UsrName") {
         data.UsrName = key;
       }
-      if (type == "Topic") {
-        data.Topic = key;
-      }
+      // if (type == "Topic") {
+      //   data.Topic = key;
+      // }
       if (type == "LikeCount") {
         data.LikeCount = key;
       }
@@ -68,6 +68,7 @@ var Vue_App = new Vue({
           "Authorization": this.token
         }
       }).then(function(res) {
+        console.log(res.body)
         if (res.body.Code == 200) {
           _this.items = res.body.Data.Content;
           _this.displayCount = _this.items.length;
@@ -127,6 +128,10 @@ var Vue_App = new Vue({
       this.firstLoad = true;
       this.getList(1, this.currCount, this.searchType, this.searchKey);
     },
+    search() {
+      this.firstLoad = true;
+      this.getList(1, this.currCount, this.searchType, this.searchKey);
+    },
     //获取社区Id
     getComm() {
       var _this = this;
@@ -175,7 +180,7 @@ var Vue_App = new Vue({
       this.showItem = true;
     },
     //选择昵称
-    selectNick(val, name) {
+    selectNick(name, val) {
       this.nick = name;
       if (this.isEdit) {
         this.editItem.UsrId = val;
@@ -281,7 +286,7 @@ var Vue_App = new Vue({
       var _this = this;
       this.editValid = true;
       this.checkEditItem('edit_title');
-      this.checkEditItem('edit_topic');
+      // this.checkEditItem('edit_topic');
       if (this.editItem.Content === "") {
         this.editValid = false;
         layer.msg("帖子内容不能为空")
@@ -330,7 +335,7 @@ var Vue_App = new Vue({
         end: function() {
           $("#add_title").removeClass("error");
           $("#add_likecount").removeClass("error");
-          $("#add_topic").removeClass("error");
+          // $("#add_topic").removeClass("error");
         }
       });
       this.getComm();
@@ -429,7 +434,7 @@ var Vue_App = new Vue({
       var _this = this;
       this.addValid = true;
       this.checkAddItem('add_title');
-      this.checkAddItem('add_topic');
+      // this.checkAddItem('add_topic');
       if (this.addItem.Content === "") {
         this.addValid = false;
         layer.msg("帖子内容不能为空")
@@ -473,20 +478,8 @@ var Vue_App = new Vue({
       $("#add_title").val("");
       $("#add_content").val("");
       $("#add_likecount").val("");
-      $("#add_topic").val("");
+      // $("#add_topic").val("");
       editor.$txt.html('<p><br></p>');
-    },
-    //计算分钟数
-    computeSeconds() {
-      var seconds = 0;
-      var logindate = parseInt(this.loginDate); //登陆日期
-      if (logindate !== "") {
-        var nowdate = Date.now(); //当前日期
-        logindate = new Date(logindate);
-        nowdate = new Date(nowdate);
-        seconds = Math.floor((nowdate - logindate) / (60 * 1000));
-      }
-      return seconds;
     },
   },
   watch: {
@@ -537,8 +530,8 @@ var Vue_App = new Vue({
         return "";
       } else {
         var len = val.length;
-        if (len > 15) {
-          val = val.slice(0, 5) + "..." + val.slice(len - 5, len);
+        if (len > 30) {
+          val = val.slice(0, 15) + "..." + val.slice(len - 14, len);
         }
         return val;
       }
