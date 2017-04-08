@@ -130,7 +130,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             </td>
           </tr>
           <tr class="text-c" v-if="displayCount === 0">
-            <td colspan="11">抱歉，暂无相关数据 </td>
+            <td colspan="10">暂无数据</td>
           </tr>
         </tbody>
       </table>
@@ -146,7 +146,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <input @keyup="getUsrid" type="text" class="input-text" v-model="nick">
       </div>
       <ul v-show="UsrItem.length !== 0 && showItem">
-        <li v-for="item in UsrItem" @click="selectNick(item.Name,item.Value)">{{item.Value}}</li>
+        <li v-for="item in UsrItem" @click="selectNick(item.Name,item.Value)">{{item.Name}}</li>
       </ul>
       <ul v-show="UsrItem.length === 0 && showItem">
         <li>暂无数据</li>
@@ -223,7 +223,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <input @keyup="getUsrid" type="text" class="input-text" v-model="nick">
       </div>
       <ul v-show="UsrItem.length !== 0 && showItem">
-        <li v-for="item in UsrItem" @click="selectNick(item.Name,item.Value)">{{item.Value}}</li>
+        <li v-for="item in UsrItem" @click="selectNick(item.Name,item.Value)">{{item.Name}}</li>
       </ul>
       <ul v-show="UsrItem.length === 0 && showItem">
         <li>暂无数据</li>
