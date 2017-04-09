@@ -435,7 +435,7 @@ var Vue_App = new Vue({
           if (res.body.Code === 200) {
             _this.firstLoad = true;
             _this.getList(1, _this.currCount, _this.searchKeyList, _this.searchKeyWord);
-            layer.msg("设置成功！", { icon: 1, time: 2000 });
+            layer.msg("设置成功", { icon: 1, time: 2000 });
             _this.layer_close();
           } else {
             _this.isHide = true;

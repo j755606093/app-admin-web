@@ -29,7 +29,7 @@ var Vue_App = new Vue({
     // ip: "http://192.168.31.82", //用于测试
   },
   created: function() {
-    if (this.usrId === "" || typeof this.usrId === "undefined") {
+    if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
       this.getList(1, 15, "", "");

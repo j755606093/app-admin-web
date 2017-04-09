@@ -23,7 +23,7 @@ var Vue_App = new Vue({
     // ip: "http://192.168.31.82", //用于测试
   },
   created: function() {
-    if (this.usrId === "" || typeof this.usrId === "undefined") {
+    if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
       this.getList(1, 15);
@@ -43,7 +43,7 @@ var Vue_App = new Vue({
           _this.items = response.body.Data.Content;
           _this.displayCount = _this.items.length;
           _this.TotalCount = response.body.Data.TotalCount;
-          console.log(_this.items)
+          // console.log(_this.items)
         } else {
           if (response.body.Code == 204) {
             _this.items = [];

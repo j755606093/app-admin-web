@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
+  <title>举报管理</title>
+</head>
+<style>
+#handlerFeedBack {
+  display: none;
+  padding: 20px;
+}
+
+#handlerFeedBack span {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+#handlerFeedBack span.pass {
+  margin-left: 20px;
+  float: left;
+}
+
+#handlerFeedBack span.failure {
+  margin-right: 20px;
+  float: right;
+}
+
+#loading {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  top: 25%;
+  left: 49%;
+  z-index: 20000000;
+}
+
+.page-container .cl .l input {
+  display: inline-block;
+  margin-left: 15px;
+}
+</style>
+<!-- <script>
+var style = document.createElement("link");
+style.setAttribute("rel", "stylesheet");
+style.setAttribute("href", "dist/css/feedback.css?hash=" + Date.now());
+document.getElementsByTagName("head")[0].appendChild(style);
+</script> -->
+
+<body id="app">
+  <nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 举报管理
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+  <div class="page-container" id="isget" style="visibility: hidden">
+    <div class="cl pd-5 bg-1 bk-gray mt-20 center">
+      <!-- <span>
+        <select id="searchType" v-model="searchType" @change="changeType" class="input-text">
+          <option value="Nick" selected>昵 称</option>
+          <option value="Mobile">手 机</option>
+          <option value="Mail">邮 箱</option>
+          <option value="UsrId">用户ID</option>
+        </select>
+      </span>
+      <span>         
+        <input id="searchKey" v-model="searchKey" @keyup.enter="search" class="input-text" type="search" autofocus><a id="searchBtn" class="btn btn-success radius" @click="search" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
+      </span> -->
+      <span class="l">
+        <input id="all" type="radio" v-on:click="getFeedback(2)" name="feedback" checked>
+        <label for="all">所有</label>        
+        <input id="pass" type="radio" v-on:click="getFeedback(1)" name="feedback">
+        <label for="pass">举报有效</label>
+        <input id="failure" type="radio" v-on:click="getFeedback(-1)" name="feedback">
+        <label for="failure">举报无效</label> 
+        <input id="stay" type="radio" v-on:click="getFeedback(0)" name="feedback">
+        <label for="stay">待处理</label>             
+      </span>
+      <span class="r lh">本页数据:
+        <select v-model="displayCount" @change="getData($event)">
+          <option value="{{displayCount}}">{{displayCount}}</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select> 条
+        <span> &nbsp;共{{TotalCount}}条</span>
+      </span>
+    </div>
+    <div class="mt-20">
+      <table class="table table-border table-bordered table-bg table-hover table-sort">
+        <thead>
+          <tr class="text-c">
+            <th>ID</th>
+            <th>用户ID</th>
+            <th>昵称</th>
+            <th>来源</th>
+            <th>举报类型</th>
+            <th>举报原因</th>
+            <th>其他原因</th>
+            <th>创建时间</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-c" v-for="item in items">
+            <td>{{item.Id}}</td>
+            <td>{{item.UsrId}}</td>
+            <td>{{item.Nick}}</td>
+            <td v-if="item.SourceType == 0">用户</td>
+            <td v-if="item.SourceType == 1">帖子</td>
+            <td v-if="item.SourceType == 2">社区帖子</td>
+            <td v-if="item.SourceType == 3">身边圈说说</td>
+            <td v-if="item.SourceType == 4">视频评论</td>
+            <td>{{item.TypeSrc}}</td>
+            <td v-if="item.TypeId == 0">恶意攻击谩骂</td>
+            <td v-if="item.TypeId == 1">淫秽色情</td>
+            <td v-if="item.TypeId == 2">政治反动</td>
+            <td v-if="item.TypeId == 3">其他原因</td>
+            <td>{{item.Remark}}</td>
+            <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
+            <td v-if="item.Status == -1">举报无效</td>
+            <td v-if="item.Status == 0"><a style="text-decoration: underline;" @click="selectFeedback(item.Id)" href="javascript:;">待处理</a></td>
+            <td v-if="item.Status == 1">举报有效</td>
+          </tr>
+          <tr class="text-c" v-if="displayCount === 0">
+            <td colspan="9">暂无数据 </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 分页 -->
+    <div id="page"></div>
+    <!-- 页面加载提示 -->
+    <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
+    <!-- 处理举报 -->
+    <div id="handlerFeedBack">
+      <span class="pass">
+      <input id="pass" type="radio" v-on:click="handlerFeedBack" name="feedback">
+      <label for="pass">举报有效</label>
+    </span>
+      <span class="failure">
+      <input id="failure" type="radio" v-on:click="handlerFeedBack" name="feedback">
+      <label for="failure">举报无效</label>
+    </span>
+    </div>
+    <script src="lib/jquery/1.9.1/jquery.min.js"></script>
+    <script src="lib/layer/2.1/layer.js"></script>
+    <script src="lib/layui/layui.js"></script>
+    <script src="//ok82gyrdp.qnssl.com/js/admin/vue-1.0.28.js"></script>
+    <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+    <div id="js"></div>
+    <script>
+    var script = document.createElement("script");
+    script.setAttribute("src", "static/js/feedback.js?hash=" + Date.now());
+    document.getElementById("js").appendChild(script);
+    </script>
+</body>
+
+</html>

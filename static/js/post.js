@@ -68,7 +68,7 @@ var Vue_App = new Vue({
           "Authorization": this.token
         }
       }).then(function(res) {
-        console.log(res.body)
+        // console.log(res.body)
         if (res.body.Code == 200) {
           _this.items = res.body.Data.Content;
           _this.displayCount = _this.items.length;

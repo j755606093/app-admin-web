@@ -12,6 +12,20 @@
   <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
   <link rel="stylesheet" type="text/css" href="dist/css/index.css" />
   <title>admin</title>
+  <style>
+  #loading {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 25%;
+    left: 49%;
+    z-index: 20000000;
+  }
+  
+  #updatePassword {
+    display: none;
+  }
+  </style>
 </head>
 <script>
 var style = document.createElement("link");
@@ -162,10 +176,10 @@ document.getElementsByTagName("head")[0].appendChild(style);
   </div>
   <!-- 页面加载提示 -->
   <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
-  <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
-  <script type="text/javascript" src="lib/layer/2.1/layer.js"></script>
-  <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
-  <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+  <script src="lib/jquery/1.9.1/jquery.min.js"></script>
+  <script src="lib/layer/2.1/layer.js"></script>
+  <script src="static/h-ui/js/H-ui.js"></script>
+  <script src="static/h-ui.admin/js/H-ui.admin.js"></script>
   <script src="//ok82gyrdp.qnssl.com/js/admin/vue-1.0.28.js"></script>
   <script src="//cdn.bootcss.com/axios/0.15.3/axios.min.js"></script>
   <script src="static/js/api.js"></script>
