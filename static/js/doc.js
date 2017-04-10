@@ -264,9 +264,9 @@ var Vue_App = new Vue({
               layer.msg("添加成功", { icon: 1, time: 2000 });
               _this.clearData();
             } else {
-              _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 2000 });
             }
+            _this.isHide = true;
           },
           error: function(err) {
             _this.isHide = true;
@@ -312,12 +312,12 @@ var Vue_App = new Vue({
             } else {
               layer.msg(res.Message, { icon: 2, time: 2000 });
             }
+            _this.isHide = true;
           },
           error: function(err) {
             console.log(err)
             layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2000 });
           }
-          _this.isHide = true;
         });
       }
     },
