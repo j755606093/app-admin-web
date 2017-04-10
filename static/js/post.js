@@ -339,6 +339,7 @@ var Vue_App = new Vue({
         }
       });
       this.getComm();
+      this.clearData();
     },
     //设为热门文章
     setHot(id) {
@@ -475,9 +476,11 @@ var Vue_App = new Vue({
       return JSON.parse(JSON.stringify(data));
     },
     clearData() {
-      $("#add_title").val("");
-      $("#add_content").val("");
-      $("#add_likecount").val("");
+      this.nick = "";
+      document.getElementById("add_title").value = "";
+      document.getElementById("add_content").value = "";
+      document.getElementById("add_readcount").value = "";
+      document.getElementById("add_likecount").value = "";
       // $("#add_topic").val("");
       editor.$txt.html('<p><br></p>');
     },
