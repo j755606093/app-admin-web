@@ -243,14 +243,13 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.firstLoad = true;
-            _this.getList(1, _this.currCount);
+            _this.setPage();
             _this.layer_close();
             layer.msg('修改成功', { icon: 1, time: 2000 });
           } else {
-            _this.isHide = true;
             layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
+          _this.isHide = true;
         }).catch(function(error) {
           _this.isHide = true;
           layer.msg("服务器错误，请稍后再试", { icon: 2, time: 2500 });

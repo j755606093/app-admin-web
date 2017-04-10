@@ -251,19 +251,20 @@ var Vue_App = new Vue({
           contentType: "application/json; charset=utf-8",
           success: function(res) {
             if (res.Code === 200) {
-              _this.firstLoad = true;
-              _this.getList(1, 10);
+              _this.setPage();
               _this.layer_close();
               layer.msg("修改成功", { icon: 1, time: 2500 });
             } else {
               layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2500 });
             }
+            _this.isHide = true;
           },
           error: function(err) {
             _this.isHide = true;
             layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2500 });
           }
         });
+        this.isHide = true;
       }
     },
     //计算分钟数

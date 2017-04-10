@@ -306,8 +306,7 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.firstLoad = true;
-            _this.getList(1, _this.currCount, "", "");
+            _this.setPage();
             _this.layer_close();
             layer.msg('修改成功', { icon: 1, time: 2000 });
           } else {

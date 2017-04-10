@@ -131,15 +131,13 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            this.firstLoad = true;
-            this.getList(1, this.currCount);
             this.setPage();
             this.layer_close();
             layer.msg('修改成功', { icon: 1, time: 2000 });
           } else {
-            this.isHide = true;
             layer.msg(res.body.Message, { icon: 0, time: 3000 });
           }
+          this.isHide = true;
         }).catch(function(err) {
           this.isHide = true;
           console.log(error);

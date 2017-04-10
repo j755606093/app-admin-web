@@ -102,7 +102,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>URL:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup.enter="layer_submit_edit" @blur="checkEditItem('edit_url',1)" class="input-text" v-model="editItem.Url" placeholder="链接或者一段数据" id="edit_url" name="Url">
+          <input type="text" @keyup.enter="layer_submit_edit" @blur="checkEditItem('edit_url',1)" class="input-text" v-model="editItem.Url" id="edit_url" name="Url">
         </div>
       </div>
       <div class="row cl">

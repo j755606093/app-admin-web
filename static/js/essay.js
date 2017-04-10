@@ -47,7 +47,6 @@ var Vue_App = new Vue({
       });
       editor.create();
       this.getList(1, 15, "", "");
-      document.querySelector("#searchKey").focus();
     }
   },
   methods: {
@@ -257,7 +256,7 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: true, //开启遮罩关闭
       });
-      $("#editfile").val("");
+      document.getElementById("editfile").value = "";
     },
     layer_close() {
       layer.close(this.layer);
@@ -277,11 +276,10 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: true, //开启遮罩关闭
         end: function() {
-          $("#add_name").removeClass("error");
-          $("#add_url").removeClass("error");
+          document.getElementById("add_name").classList.remove("error");
+          document.getElementById("add_url").classList.remove("error");
         }
       });
-      $("#add_name").focus();
     },
     checkAddItem(id) {
       var el = document.getElementById(id);
@@ -299,7 +297,7 @@ var Vue_App = new Vue({
         layer.msg("请上传图片!", { icon: 0, time: 2000 });
         this.addValid = false;
       } else {
-        this.addValid = pictrue_size(file);
+        this.addValid = this.pictrue_size(file);
       }
     },
     checkEditItem(id) {
@@ -353,11 +351,11 @@ var Vue_App = new Vue({
           success: function(res) {
             if (res.Code === 200) {
               _this.getList(1, _this.currCount, _this.searchType, _this.searchKey);
-              $("#add_name").val("");
-              $("#add_url").val("");
-              $("#addfile").val("");
+              document.getElementById("add_name").value = "";
+              document.getElementById("add_url").value = "";
+              document.getElementById("addfile").value = "";
               _this.layer_close();
-              layer.msg("添加成功!", { icon: 1, time: 1500 });
+              layer.msg("添加成功", { icon: 1, time: 1500 });
             } else {
               _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 3000 });
@@ -385,14 +383,13 @@ var Vue_App = new Vue({
           },
           success: function(res) {
             if (res.Code === 200) {
-              _this.firstLoad = true;
-              _this.getList(1, _this.currCount, _this.searchType, _this.searchKey);
+              _this.setPage();
               layer.closeAll('page');
-              layer.msg("修改成功!", { icon: 1, time: 1500 });
+              layer.msg("修改成功", { icon: 1, time: 1500 });
             } else {
-              _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 1500 });
             }
+            _this.isHide = true;
           }
         });
       }

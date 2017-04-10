@@ -132,12 +132,12 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.firstLoad = true;
-            _this.getList(1, _this.currCount, _this.Status);
+            _this.setPage();
             layer.msg("操作成功", { icon: 1, time: 2500 });
             layer.close(confirm);
             layer.close(_this.layer);
           }
+          _this.isHide = true;
         })
       }, function() {
         layer.close(confirm);

@@ -38,14 +38,14 @@ var Vue_App = new Vue({
         headers: {
           "Authorization": this.token
         }
-      }).then(function(response) {
-        if (response.body.Code == 200) {
-          _this.items = response.body.Data.Content;
+      }).then(function(res) {
+        if (res.body.Code == 200) {
+          _this.items = res.body.Data.Content;
           _this.displayCount = _this.items.length;
-          _this.TotalCount = response.body.Data.TotalCount;
+          _this.TotalCount = res.body.Data.TotalCount;
           // console.log(_this.items)
         } else {
-          if (response.body.Code == 204) {
+          if (res.body.Code == 204) {
             _this.items = [];
             _this.displayCount = 0;
             _this.TotalCount = 0;
@@ -138,8 +138,7 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: true, //开启遮罩关闭
       });
-      $("#edit_title").focus();
-      $("#editfile").val("");
+      document.getElementById("editfile").value = "";
       this.overSize = false;
       // this.getClassify();
     },
@@ -147,7 +146,6 @@ var Vue_App = new Vue({
       layer.close(this.layer);
     },
     add() {
-      $("#add_title").focus();
       this.addItem.ClassifyId = this.ClassifyItem[0].Value;
       var _this = this;
       this.layer = layer.open({
@@ -164,7 +162,6 @@ var Vue_App = new Vue({
         }
       });
       this.count = 200;
-      $("#add_title").focus();
       this.getClassify();
     },
     checkAddItem(id, n) {
@@ -221,6 +218,7 @@ var Vue_App = new Vue({
     },
     layer_submit_add() {
       var _this = this;
+      this.addValid = true;
       this.checkAddItem('add_title', 1);
       this.checkContent('add_content');
       this.checkAddFile();
@@ -248,10 +246,10 @@ var Vue_App = new Vue({
       }
     },
     clearData() {
-      $("#add_title").val("");
-      $("#add_content").val("");
-      $("#add_title").removeClass("error");
-      $("#add_content").removeClass("error");
+      document.getElementById("add_title").value = "";
+      document.getElementById("add_content").value = "";
+      document.getElementById("add_title").classList.remove("error");
+      document.getElementById("add_content").classList.remove("error");
     },
     formatData(data) {
       return JSON.parse(JSON.stringify(data));
@@ -272,14 +270,13 @@ var Vue_App = new Vue({
           },
           success: function(res) {
             if (res.Code === 200) {
-              _this.firstLoad = true;
-              _this.getList(1, _this.currCount);
+              _this.setPage();
               _this.layer_close();
-              layer.msg("修改成功!", { icon: 1, time: 2500 });
+              layer.msg("修改成功", { icon: 1, time: 2500 });
             } else {
-              _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 2500 });
             }
+            _this.isHide = true;
           }
         });
       }
@@ -321,8 +318,19 @@ var Vue_App = new Vue({
         return "";
       } else {
         var leng = val.length;
-        if (leng > 20) {
-          val = val.slice(0, 10) + "..." + val.slice(leng - 9, leng);
+        if (leng > 10) {
+          val = val.slice(0, 6) + "..." + val.slice(leng - 3, leng);
+        }
+        return val;
+      }
+    },
+    subTitle(val) {
+      if (!val) {
+        return "";
+      } else {
+        var leng = val.length;
+        if (leng > 30) {
+          val = val.slice(0, 20) + "..." + val.slice(leng - 9, leng);
         }
         return val;
       }

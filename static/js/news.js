@@ -237,14 +237,13 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.firstLoad = true;
-            _this.getList(1, _this.currCount, _this.searchKeyList, _this.searchKeyWord);
+            _this.setPage();
             layer.msg(successMsg, { icon: 1, time: 2000 });
             _this.layer_close();
           } else {
-            _this.isHide = true;
             layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
+          _this.isHide = true;
         }).catch(function(err) {
           console.log(err);
           _this.isHide = true;
@@ -275,8 +274,7 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.firstLoad = true;
-            _this.getList(1, _this.currCount, _this.searchKeyList, _this.searchKeyWord);
+            _this.setPage();
             layer.msg("设置成功", { icon: 1, time: 2000 });
             _this.layer_close();
           } else {

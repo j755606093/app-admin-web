@@ -121,8 +121,6 @@ var Vue_App = new Vue({
       // console.log(index,id)
       // 编辑内容
       this.editItem = this.items[index];
-      this.editItem.index = index; //记录位置
-      this.oldData = Object.assign({}, this.items[index]); //修改之前的数据
       this.layer = layer.open({
         type: 1,
         title: "编辑模块",
@@ -167,14 +165,15 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.firstLoad = true;
-            _this.getList(1, _this.currCount);
+            // _this.firstLoad = true;
+            // _this.getList(1, _this.currCount);
+            _this.setPage();
             _this.layer_close();
             layer.msg('修改成功', { icon: 1, time: 2000 });
           } else {
-            _this.isHide = true;
             layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
+          _this.isHide = true;
         }).catch(function(err) {
           _this.isHide = true;
           console.log(err)
@@ -193,8 +192,8 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: false, //开启遮罩关闭
         end: function() {
-          $("#add_name").removeClass("error");
-          $("#add_value").removeClass("error");
+          document.getElementById("add_name").classList.remove("error");
+          document.getElementById("add_value").classList.remove("error");
         }
       });
       this.getParentModule();
@@ -231,7 +230,7 @@ var Vue_App = new Vue({
             _this.getList(1, _this.currCount);
             _this.clearData();
             _this.layer_close();
-            layer.msg('新增成功!', { icon: 1, time: 2000 });
+            layer.msg('新增成功', { icon: 1, time: 2000 });
           } else {
             _this.isHide = true;
             layer.msg(res.body.Message, { icon: 2, time: 3000 });
@@ -244,11 +243,11 @@ var Vue_App = new Vue({
       }
     },
     clearData() {
-      $("#add_name").val("");
-      $("#add_remark").val("");
-      $("#add_value").val("");
-      $("#add_pid").val("");
-      $("#add_icon").val("");
+      document.getElementById("add_name").value = "";
+      document.getElementById("add_remark").value = "";
+      document.getElementById("add_value").value = "";
+      document.getElementById("add_pid").value = "";
+      document.getElementById("add_icon").value = "";
       this.addItem.Value = "";
       this.addItem.Sort = "";
     },

@@ -14,9 +14,14 @@ var Vue_App = new Vue({
     editValid: true,
     overSize: false, //图片超过限制大小
     isHide: false, //隐藏“加载”图标
-    firstLoad: true,
+    firstLoad: false,
+    showEditModule: false,
+    showAddModule: false,
+    appModule: "",
+    moduleItem: [],
+    addModule: "",
     token: "Bearer " + window.localStorage.token,
-    usrId: window.localStorage.usrId, //用户Id  
+    usrId: window.localStorage.usrId, //用户Id   
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
   },
@@ -25,30 +30,35 @@ var Vue_App = new Vue({
       parent.location.href = "login.html";
     } else {
       this.getList(1, 15);
+      this.getModule();
     }
   },
   methods: {
-    getList(index, size) {
+    getList(index, size, module) {
+      var _this = this;
       var data = { "Index": index, "Size": size };
+      if (module !== "") {
+        data.AppModule = module;
+      }
       data = JSON.stringify(data);
-      this.$http.post(this.ip + "/api/Topic/List", data, {
+      this.$http.post(this.ip + "/api/Member/ListService", data, {
         headers: {
           "Authorization": this.token
         }
       }).then(function(res) {
         if (res.body.Code == 200) {
-          this.items = res.body.Data.Content;
-          this.displayCount = this.items.length;
-          this.TotalCount = res.body.Data.TotalCount;
+          _this.items = res.body.Data.Content;
+          _this.displayCount = _this.items.length;
+          _this.TotalCount = res.body.Data.TotalCount;
         } else if (res.body.Code == 204) {
-          this.items = [];
-          this.displayCount = 0;
-          this.TotalCount = 0;
+          _this.items = [];
+          _this.displayCount = 0;
+          _this.TotalCount = 0;
           document.getElementById("page").innerHTML = "";
         } else {
           layer.msg(res.body.Message, { icon: 2, time: 2500 });
         }
-        this.isHide = true;
+        _this.isHide = true;
       }).catch(function(error) {
         _this.isHide = true;
         console.log(error);
@@ -75,7 +85,7 @@ var Vue_App = new Vue({
                 _this.currPage = obj.curr;
                 //获取当前页或指定页的数据
                 // console.log(obj.curr);
-                _this.getList(obj.curr, _this.currCount);
+                _this.getList(obj.curr, _this.currCount, _this.appModule);
               }
               _this.firstLoad = false;
             },
@@ -88,23 +98,51 @@ var Vue_App = new Vue({
     //获取当前页面要显示的数据量
     getData(event) {
       this.currCount = event.target.value;
-      this.currPage = 1; //防止获取不到数据
       this.firstLoad = true;
       this.getList(1, this.currCount);
     },
-    edit(index, id) {
+    //获取分组http://192.168.31.82/api/Member/AppModuleEnum
+    getModule() {
+      this.$http.get(this.ip + "/api/Member/AppModuleEnum", {
+        headers: {
+          "Authorization": this.token
+        }
+      }).then(function(res) {
+        if (res.body.Code === 200) {
+          this.moduleItem = res.body.Data;
+        } else {
+          this.moduleItem = [];
+        }
+      });
+    },
+    //点击选择分组
+    selectEditModule(item) {
+      this.editItem.AppModule = item;
+      this.showEditModule = false;
+    },
+    selectAddModule(item) {
+      this.addModule = item;
+      this.showAddModule = false;
+    },
+    showEditModules() {
+      this.showEditModule = !this.showEditModule;
+    },
+    showAddModules() {
+      this.showAddModule = !this.showAddModule;
+    },
+    edit(index) {
       // 编辑内容
       this.editItem = this.items[index];
-      this.editItem.index = index; //记录位置
       this.layer = layer.open({
         type: 1,
-        title: "编辑话题",
+        title: "编辑服务",
         content: $("#editnav"),
         area: "600px",
         skin: 'layui-layer-demo', //样式类名
         anim: 2,
         shadeClose: true, //开启遮罩关闭
       });
+      this.getModule();
       document.getElementById("editfile").value = "";
     },
     layer_close() {
@@ -114,7 +152,7 @@ var Vue_App = new Vue({
       var _this = this;
       this.layer = layer.open({
         type: 1,
-        title: "增加话题",
+        title: "增加服务",
         content: $("#addnav"),
         area: "600px",
         skin: 'layui-layer-demo', //样式类名
@@ -124,6 +162,8 @@ var Vue_App = new Vue({
           _this.clearData();
         }
       });
+      this.getModule();
+      document.getElementById("add_name").focus();
     },
     checkAddItem(id, n) {
       var el = document.getElementById(id);
@@ -185,17 +225,14 @@ var Vue_App = new Vue({
     layer_submit_add() {
       var _this = this;
       this.addValid = true;
-      this.checkAddItem("add_title", 1);
-      this.checkAddItem("add_piccount", 1);
-      this.checkAddItem("add_issuercount", 1);
-      this.checkAddItem("add_attentcount", 1);
+      this.checkAddItem("add_name", 1);
+      this.checkAddItem("add_url", 1);
       this.checkAddItem("add_sort", 1);
-      this.checkAddItem("add_remark", 1);
       this.checkedAddFile();
       if (this.addValid) {
         this.isHide = false; //加载中
         $("#addform").ajaxSubmit({
-          url: this.ip + "/api/Topic/Add",
+          url: this.ip + "/api/Member/AddService",
           type: "post",
           headers: {
             "Authorization": this.token
@@ -209,7 +246,7 @@ var Vue_App = new Vue({
               layer.msg("添加成功", { icon: 1, time: 2500 });
             } else {
               _this.isHide = true;
-              layer.msg("服务器错误，请稍后再试", { icon: 2, time: 2500 });
+              layer.msg(res.Message, { icon: 2, time: 2500 });
             }
           },
           error: function(err) {
@@ -227,16 +264,13 @@ var Vue_App = new Vue({
       var _this = this;
       this.editValid = true;
       this.checkEditItem('edit_title', 1);
-      this.checkEditItem('edit_piccount', 1);
-      this.checkEditItem('edit_issuercount', 1);
-      this.checkEditItem('edit_attentcount', 1);
+      this.checkEditItem('edit_url', 1);
       this.checkEditItem('edit_sort', 1);
-      this.checkEditItem('edit_remark', 1);
       this.checkEditFile();
       if (this.editValid) {
         this.isHide = false; //加载中
         $("#editform").ajaxSubmit({
-          url: this.ip + "/api/Topic/Modify",
+          url: this.ip + "/api/Member/UpdateService",
           type: "post",
           headers: {
             "Authorization": this.token
@@ -260,19 +294,13 @@ var Vue_App = new Vue({
       }
     },
     clearData() {
-      $("#add_title").val("");
-      $("#add_piccount").val("");
-      $("#add_issuercount").val("");
-      $("#add_sort").val("");
-      $("#addfile").val("");
-      $("#add_attentcount").val("");
-      $("#add_remark").val("");
-      $("#add_title").removeClass("error");
-      $("#add_piccount").removeClass("error");
-      $("#add_sort").removeClass("error");
-      $("#add_issuercount").removeClass("error");
-      $("#add_remark").removeClass("error");
-      $("#add_attentcount").removeClass("error");
+      document.getElementById("add_name").value = "";
+      document.getElementById("add_url").value = "";
+      document.getElementById("add_sort").value = "";
+      document.getElementById("addfile").value = "";
+      document.getElementById("add_name").classList.remove("error");
+      document.getElementById("add_url").classList.remove("error");
+      document.getElementById("add_sort").classList.remove("error");
       this.overSize = false;
     },
   },

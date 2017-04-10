@@ -100,7 +100,6 @@ var Vue_App = new Vue({
       this.getList(1, this.currCount);
     },
     edit(index, id) {
-      $("#edit_title").focus();
       // 编辑内容
       this.editItem = this.items[index];
       //计算内容的字数
@@ -119,14 +118,13 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: true, //开启遮罩关闭
       });
-      $("#editfile").val("");
+      document.getElementById("editfile").value = "";
     },
     layer_close() {
       layer.close(this.layer);
     },
     add() {
       var _this = this;
-      $("#add_name").focus();
       this.layer = layer.open({
         type: 1,
         title: "文章增加",
@@ -136,15 +134,13 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: false, //开启遮罩关闭
         end: function() {
-          $("#add_name").removeClass("error");
-          $("#add_author").removeClass("error");
-          $("#add_url").removeClass("error");
-          $("#add_originurl").removeClass("error");
-          $("#add_content").removeClass("error");
-          // $("#add_readcount").removeClass("error");
-          // $("#add_cmtcount").removeClass("error");
-          $("#add_sourcetype").removeClass("error");
-          $("#add_sourceid").removeClass("error");
+          document.getElementById("add_name").classList.remove("error");
+          document.getElementById("add_author").classList.remove("error");
+          document.getElementById("add_url").classList.remove("error");
+          document.getElementById("add_originurl").classList.remove("error");
+          document.getElementById("add_content").classList.remove("error");
+          document.getElementById("add_sourcetype").classList.remove("error");
+          document.getElementById("add_sourceid").classList.remove("error");
         }
       });
     },
@@ -205,7 +201,7 @@ var Vue_App = new Vue({
     checkAddFile() {
       var file = document.getElementById("addfile");
       if (file.value === "") {
-        layer.msg("请上传文件!", { icon: 0, time: 2500 });
+        layer.msg("请上传文件", { icon: 0, time: 2500 });
         this.addValid = false;
       } else {
         this.addValid = this.fileSize(file);
@@ -274,7 +270,7 @@ var Vue_App = new Vue({
           },
           error: function(err) {
             _this.isHide = true;
-            layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2000 });
+            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 2000 });
           }
         });
       }
@@ -283,16 +279,14 @@ var Vue_App = new Vue({
       return JSON.parse(JSON.stringify(data));
     },
     clearData() {
-      $("#add_name").val("");
-      $("#add_url").val("");
-      $("#add_originurl").val("");
-      $("#add_author").val("");
-      $("#add_content").val("");
-      // $("#add_readcount").val("");
-      // $("#add_cmtcount").val("");
-      $("#add_sourcetype").val("");
-      $("#add_sourceid").val("");
-      $("#addfile").val("");
+      document.getElementById("add_name").value = "";
+      document.getElementById("add_url").value = "";
+      document.getElementById("add_originurl").value = "";
+      document.getElementById("add_author").value = "";
+      document.getElementById("add_content").value = "";
+      document.getElementById("add_sourcetype").value = "";
+      document.getElementById("add_sourceid").value = "";
+      document.getElementById("addfile").value = "";
     },
     layer_submit_edit() {
       var _this = this;
@@ -312,19 +306,18 @@ var Vue_App = new Vue({
           },
           success: function(res) {
             if (res.Code === 200) {
-              _this.firstLoad = true;
-              _this.getList(1, _this.currCount);
+              _this.setPage();
               _this.layer_close();
               layer.msg("修改成功", { icon: 1, time: 2000 });
             } else {
-              _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 2000 });
             }
           },
           error: function(err) {
-            _this.isHide = true;
+            console.log(err)
             layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2000 });
           }
+          _this.isHide = true;
         });
       }
     },

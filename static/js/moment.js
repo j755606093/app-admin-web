@@ -137,7 +137,7 @@ var Vue_App = new Vue({
       this.showItem = true;
     },
     //选择昵称
-    selectNick(val, name) {
+    selectNick(name, val) {
       this.nick = name;
       this.UserId = val;
       this.showItem = false;
@@ -207,8 +207,7 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.firstLoad = true;
-            _this.getList(1, _this.currCount);
+            _this.setPage();
             layer.msg(successMsg, { icon: 1, time: 2000 });
             _this.layer_close();
           } else {
@@ -236,8 +235,8 @@ var Vue_App = new Vue({
         shadeClose: false, //开启遮罩关闭
       });
       document.getElementById("nick").focus();
-      document.getElementById("addfile").value("");
-      document.getElementById("add_content").value("");
+      document.getElementById("addfile").value = "";
+      document.getElementById("add_content").value = "";
       document.getElementById("add_content").classList.remove("error");
       this.overSize = false;
     },
@@ -307,7 +306,7 @@ var Vue_App = new Vue({
       }
       if (this.addValid) {
         this.isHide = false; //加载中
-        document.getElementById("addform").ajaxSubmit({
+        $("#addform").ajaxSubmit({
           url: this.ip + "/api/Moment/Add",
           type: "post",
           headers: {
@@ -317,14 +316,15 @@ var Vue_App = new Vue({
             if (res.Code === 200) {
               _this.firstLoad = true;
               _this.getList(1, _this.currCount);
+              _this.nick = "";
               document.getElementById("addfile").value = "";
               document.getElementById("add_content").value = "";
               _this.layer_close();
               layer.msg("添加成功", { icon: 1, time: 2500 });
             } else {
-              _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 2500 });
             }
+            _this.isHide = true;
           },
           error: function(err) {
             console.log(err);

@@ -236,14 +236,13 @@ var Vue_App = new Vue({
           },
           success: function(res) {
             if (res.Code === 200) {
-              _this.firstLoad = true;
-              _this.getList(1, _this.currCount);
+              _this.setPage();
               _this.layer_close();
               layer.msg("修改成功", { icon: 1, time: 2500 });
             } else {
-              _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 2500 });
             }
+            _this.isHide = true;
           },
           error: function(err) {
             console.log(err)

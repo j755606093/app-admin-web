@@ -172,19 +172,18 @@ var Vue_App = new Vue({
           },
           success: function(res) {
             if (res.Code === 200) {
-              _this.firstLoad = true;
-              _this.getList(1, _this.currCount);
+              _this.setPage();
               _this.layer_close();
-              layer.msg("修改成功!", { icon: 1, time: 1500 });
+              layer.msg("修改成功", { icon: 1, time: 1500 });
             } else {
-              _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 1500 });
             }
+            _this.isHide = true;
           },
           error: function(err) {
-            // console.log(err)
             _this.isHide = true;
-            layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 1500 });
+            console.log(err)
+            layer.msg("服务器错误，请稍后再试", { icon: 2, time: 1500 });
           }
         };
         $("#editform").ajaxSubmit(options);
@@ -236,10 +235,10 @@ var Vue_App = new Vue({
               _this.firstLoad = true;
               _this.getList(1, _this.currCount);
               _this.layer_close();
-              layer.msg("添加成功!", { icon: 1, time: 2000 });
-              $("#addTitle").val("");
-              $("#add_remark").val("");
-              $("#addfile").val("");
+              layer.msg("添加成功", { icon: 1, time: 2000 });
+              document.getElementById("addTitle").value = "";
+              document.getElementById("add_remark").value = "";
+              document.getElementById("addfile").value = "";
             } else {
               _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 2000 });

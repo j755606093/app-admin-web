@@ -178,7 +178,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div class="row cl">
       <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>阅读量:</label>
       <div class="formControls col-xs-8 col-sm-9">
-        <input type="number" @blur="checkEditItem('edit_readcount')" @keyup.enter="layer_submit" class="input-text" v-model="addItem.ReadCount" placeholder="" id="edit_readcount">
+        <input type="number" @blur="checkEditItem('edit_readcount')" @keyup.enter="layer_submit" class="input-text" v-model="editItem.ReadCount" placeholder="" id="edit_readcount">
       </div>
     </div>
     <div class="row cl">

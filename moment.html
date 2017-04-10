@@ -122,10 +122,10 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl select-nick">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>昵称:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input @keyup="getUsrid" type="text" class="input-text" id="nick" v-model="nick">
+          <input @click="getUsrid" @keyup="getUsrid" type="text" class="input-text" id="nick" v-model="nick">
         </div>
         <ul v-show="UsrItem.length !== 0 && showItem">
-          <li v-for="item in UsrItem" @click="selectNick(item.Name,item.Value)">{{item.Value}}</li>
+          <li v-for="item in UsrItem" @click="selectNick(item.Name,item.Value)">{{item.Name}}</li>
         </ul>
         <ul v-show="UsrItem.length === 0 && showItem">
           <li>暂无数据</li>

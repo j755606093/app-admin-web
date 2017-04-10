@@ -153,7 +153,7 @@ var VM = new Vue({
     },
     //验证旧密码
     checkOriginalPwd() {
-      var original = this.updateItem.OldPassword.trim();
+      var original = this.updateItem.OldPassword;
       if (original === "") {
         this.isValid = false;
         this.isShowOld = true;
@@ -165,7 +165,7 @@ var VM = new Vue({
     },
     //验证新密码
     checkNewPwd() {
-      var newpwd = this.updateItem.NewPassword.trim();
+      var newpwd = this.updateItem.NewPassword;
       if (newpwd === "") {
         this.isValid = false;
         this.isShowNew = true;
@@ -182,8 +182,8 @@ var VM = new Vue({
     },
     //验证确认新密码
     checkConfirmPwd() {
-      var confirm = this.updateItem.confirmPwd.trim();
-      var newpwd = this.updateItem.NewPassword.trim();
+      var confirm = this.updateItem.confirmPwd;
+      var newpwd = this.updateItem.NewPassword;
       if (confirm === "") {
         this.isValid = false;
         this.isShowConfirm = true;
