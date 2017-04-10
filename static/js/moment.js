@@ -235,10 +235,10 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: false, //开启遮罩关闭
       });
-      $("#nick").focus();
-      $("#addfile").val("");
-      $("#add_content").val("");
-      $("#add_content").removeClass("error");
+      document.getElementById("nick").focus();
+      document.getElementById("addfile").value("");
+      document.getElementById("add_content").value("");
+      document.getElementById("add_content").classList.remove("error");
       this.overSize = false;
     },
     checkAddItem(id) {
@@ -307,7 +307,7 @@ var Vue_App = new Vue({
       }
       if (this.addValid) {
         this.isHide = false; //加载中
-        $("#addform").ajaxSubmit({
+        document.getElementById("addform").ajaxSubmit({
           url: this.ip + "/api/Moment/Add",
           type: "post",
           headers: {
@@ -317,8 +317,8 @@ var Vue_App = new Vue({
             if (res.Code === 200) {
               _this.firstLoad = true;
               _this.getList(1, _this.currCount);
-              $("#addfile").val("");
-              $("#add_content").val("");
+              document.getElementById("addfile").value = "";
+              document.getElementById("add_content").value = "";
               _this.layer_close();
               layer.msg("添加成功", { icon: 1, time: 2500 });
             } else {
@@ -378,7 +378,7 @@ var Vue_App = new Vue({
         this.totalSize = 10;
       }
       this.overSize = false;
-      $("#addfile").val("");
+      document.getElementById("addfile").value = "";
     },
     TotalCount: function(val) {
       this.setPage();

@@ -87,10 +87,10 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Id}}</td>
             <td>{{item.UsrId}}</td>
             <td>{{item.Nick}}</td>
-            <td><a href="{{item.Avatar}}" target="_blank">{{item.Avatar | subUrl}}</a></td>
-            <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
+            <td><a href="{{item.Thumb[0].Src}}" target="_blank">{{item.Thumb[0].Src | subUrl}}</a></td>
+            <td><a @click="lookIntro(item.Body)" href="javascript:;">{{item.Body | subContent}}</a></td>
             <!-- <td>{{item.Topic}}</td> -->
-            <td><a href="{{item.Url}}" target="_blank">{{item.Url | subUrl}}</a></td>
+            <td><a href="{{item.Img[0].Src}}" target="_blank">{{item.Img[0].Src | subUrl}}</a></td>
             <!-- <td>{{item.Location}}</td> -->
             <td v-if="item.ViewType == 1">文字</td>
             <td v-if="item.ViewType == 2">单图</td>
