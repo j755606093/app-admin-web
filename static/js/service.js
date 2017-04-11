@@ -119,10 +119,12 @@ var Vue_App = new Vue({
     selectEditModule(item) {
       this.editItem.AppModule = item;
       this.showEditModule = false;
+      document.getElementById("edit_sort").classList.remove("error");
     },
     selectAddModule(item) {
       this.addModule = item;
       this.showAddModule = false;
+      document.getElementById("add_sort").classList.remove("error");
     },
     showEditModules() {
       this.showEditModule = !this.showEditModule;

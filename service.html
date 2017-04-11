@@ -67,7 +67,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Title}}</td>
             <td>{{item.AppModule}}</td>
             <td><a href="{{item.Url}}" title="{{item.Url}}" target="_blank">{{item.Url | subStr}}</a></td>
-            <td><a href="{{item.Purl}}" title="{{item.Purl}}" target="_blank">{{item.Purl | subStr}}</a></td>
+            <td><a href="{{item.PUrl}}" title="{{item.PUrl}}" target="_blank">{{item.PUrl | subStr}}</a></td>
             <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
             <td v-if="item.Status == 1" style="color:green">启用</td>
             <td v-else style="color:red">禁用</td>
