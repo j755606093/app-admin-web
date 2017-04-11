@@ -71,7 +71,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Id}}</td>
             <td>{{item.Key}}</td>
             <td><a href="{{item.PUrl}}" title="{{item.PUrl}}" target="_blank">{{item.PUrl | subStr}}</a></td>
-            <td><a title="{{item.Content}}" href="javascript:;" style="text-decoration:none">{{item.Content | subRemark}}</a></td>
+            <td>{{item.Content | subRemark}}</td>
             <td>{{item.PicCount}}</td>
             <td>{{item.IssuerCount}}</td>
             <td>{{item.AttentCount}}</td>
@@ -87,7 +87,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             </td>
           </tr>
           <tr class="text-c" v-if="displayCount === 0">
-            <td colspan="12">抱歉，暂无相关数据</td>
+            <td colspan="12">暂无数据</td>
           </tr>
         </tbody>
       </table>
