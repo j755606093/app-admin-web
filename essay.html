@@ -98,7 +98,12 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Id}}</td>
             <td id="title{{item.Id}}"><a onmouseover="lookTitle({{item.Id}},'title','{{item.Title}}')" href="javascript:;">{{item.Title | subTitle}}</a></td>
             <td>{{item.Author}}</td>
-            <td><a title="{{item.PUrl}}" href="{{item.PUrl}}" target="_blank">{{item.PUrl | subPurl}}</a></td>
+            <!-- <td><a title="{{item.PUrl}}" href="{{item.PUrl}}" target="_blank">{{item.PUrl | subPurl}}</a></td> -->
+            <td v-if="item.ViewType == 2"><a title="{{item.PUrl}}" href="{{item.PUrl | dealAvatar}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
+            <td v-if="item.ViewType == 3"><a title="{{item.PUrl}}" href="{{item.PUrl | subAvatar 0}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a>
+              <a title="{{item.PUrl}}" href="{{item.PUrl | subAvatar 1}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a>
+              <a title="{{item.PUrl}}" href="{{item.PUrl | subAvatar 2}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
+            <td v-if="item.ViewType != 2 && item.ViewType != 3"><a title="{{item.PUrl}}" href="{{item.PUrl}}" target="_blank">{{item.PUrl | subPurl}}</a></td>
             <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
             <!-- <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td> -->
             <!-- <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td> -->
