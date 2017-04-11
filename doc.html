@@ -84,7 +84,11 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Author}}</td>
             <!-- <td>{{item.Url | subUrl}}</td> -->
             <!-- <td>{{item.OriginUrl | subUrl}}</td> -->
-            <td><a title="{{item.Avatar}}" href="{{item.Avatar}}" target="_blank">{{item.Avatar | subStr}}</a></td>
+            <td v-if="item.ViewType == 2"><a title="{{item.Avatar}}" href="{{item.Avatar | dealAvatar}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
+            <td v-if="item.ViewType == 3"><a title="{{item.Avatar}}" href="{{item.Avatar | subAvatar 0}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a>
+              <a title="{{item.Avatar}}" href="{{item.Avatar | subAvatar 1}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a>
+              <a title="{{item.Avatar}}" href="{{item.Avatar | subAvatar 2}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
+            <td v-if="item.ViewType != 2 && item.ViewType != 3"><a title="{{item.Avatar}}" href="{{item.Avatar}}" target="_blank">{{item.Avatar | subUrl}}</a></td>
             <td><a title="{{item.VUrl}}" href="item.VUrl" target="_blank">{{item.VUrl | subStr}}</a></td>
             <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
             <td v-if="item.ViewType == 1">无图</td>

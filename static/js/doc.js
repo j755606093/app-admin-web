@@ -373,7 +373,26 @@ var Vue_App = new Vue({
         }
         return val;
       }
-    }
+    },
+    subAvatar: function(val, n) {
+      if (!val) {
+        return "";
+      } else {
+        var arr = val.split(",");
+        return arr[n];
+      }
+    },
+    dealAvatar: function(val, n) {
+      if (!val) {
+        return "";
+      } else {
+        if (val.indexOf(",") === -1) {
+          return val;
+        } else {
+          return val.slice(0, val.length - 1);
+        }
+      }
+    },
   },
   watch: {
     TotalCount: function(val) {
