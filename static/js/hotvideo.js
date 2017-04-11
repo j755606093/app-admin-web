@@ -185,7 +185,7 @@ var Vue_App = new Vue({
     checkAddFile() {
       var file = document.getElementById("addfile");
       if (file.value === "") {
-        layer.msg("请上传视频!", { icon: 0, time: 2500 });
+        layer.msg("请上传视频或图片", { icon: 0, time: 2500 });
         this.addValid = false;
       } else {
         this.addValid = this.video_size(file);
@@ -236,7 +236,7 @@ var Vue_App = new Vue({
               _this.getList(1, _this.currCount);
               _this.layer_close();
               _this.clearData();
-              layer.msg("添加成功!", { icon: 1, time: 2500 });
+              layer.msg("添加成功", { icon: 1, time: 2500 });
             } else {
               _this.isHide = true;
               layer.msg(res.Message, { icon: 2, time: 2500 });

@@ -58,7 +58,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th>ID</th>
             <th>标题</th>
             <th>视频链接</th>
-            <th>概略图</th>
+            <th>缩略图</th>
             <th>内容</th>
             <!-- <th>热门视频</th> -->
             <th>创建时间</th>
@@ -107,12 +107,12 @@ document.getElementsByTagName("head")[0].appendChild(style);
           <input type="text" @blur="checkEditItem('edit_title',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Title" id="edit_title" name="Title" autofocus>
         </div>
       </div>
-      <!-- <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
+      <div style="display: none;" class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">视频链接:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup="checkEditItem('edit_content',1)" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Content" name="Content" id="edit_content">
+          <input type="text" @keyup.enter="layer_submit_edit" v-model="editItem.Url" class="input-text" name="VideoUrl" id="edit_url">
         </div>
-      </div> -->
+      </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
@@ -139,10 +139,10 @@ document.getElementsByTagName("head")[0].appendChild(style);
         </div>
       </div>
       <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>视频上传:</label>
+        <label class="form-label col-xs-4 col-sm-2">缩略图上传:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <div class="uploader-thum-container">
-            <input v-model="editItem.File" @change="checkEditFile" id="editfile" accept="video/*" type="file" name="File">
+            <input v-model="editItem.File" @change="checkEditFile" id="editfile" accept="image/*" type="file" name="File">
           </div>
           <span class="totalSize" :style="{'color':overSize?'red':'#333'}">大小不超过10M</span>
         </div>
@@ -161,15 +161,15 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>标题:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @blur="checkAddItem('add_title',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Title" id="add_title" name="Title" autofocus>
+          <input type="text" @blur="checkAddItem('add_title',1)" @keyup.enter="layer_submit_add" class="input-text" id="add_title" name="Title" autofocus>
         </div>
       </div>
-      <!-- <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2">视频链接:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup="checkAddItem('add_content',1)" @keyup.enter="layer_submit_add" class="input-text" v-model="addItem.Content" name="Content" id="add_content">
+          <input type="text" @keyup.enter="layer_submit_add" class="input-text" name="VideoUrl" id="add_url">
         </div>
-      </div> -->
+      </div>
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
@@ -196,10 +196,10 @@ document.getElementsByTagName("head")[0].appendChild(style);
         </div>
       </div>
       <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>视频上传:</label>
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文件上传:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <div class="uploader-thum-container">
-            <input @change="checkAddFile" id="addfile" accept="video/*" type="file" name="File">
+            <input @change="checkAddFile" id="addfile" type="file" name="File">
           </div>
           <span class="totalSize" :style="{'color':overSize?'red':'#333'}">大小不超过10M</span>
         </div>

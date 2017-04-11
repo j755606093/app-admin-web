@@ -145,7 +145,7 @@ var Vue_App = new Vue({
     lookIntro(intro) {
       layer.open({
         type: 1,
-        title: "说说内容",
+        title: "动态内容",
         content: $("#lookIntro"),
         area: "400px",
         skin: 'layui-layer-demo', //样式类名
@@ -227,7 +227,7 @@ var Vue_App = new Vue({
       // 增加图
       this.layer = layer.open({
         type: 1,
-        title: "说说增加",
+        title: "添加动态",
         content: $("#addmom"),
         area: "500px",
         skin: 'layui-layer-demo', //样式类名
