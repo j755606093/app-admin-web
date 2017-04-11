@@ -119,6 +119,9 @@ var Vue_App = new Vue({
         shadeClose: true, //开启遮罩关闭
       });
       document.getElementById("editfile").value = "";
+      document.getElementById("edit_title").classList.remove("error");
+      document.getElementById("edit_author").classList.remove("error");
+      document.getElementById("edit_content").classList.remove("error");
     },
     layer_close() {
       layer.close(this.layer);
@@ -136,11 +139,7 @@ var Vue_App = new Vue({
         end: function() {
           document.getElementById("add_name").classList.remove("error");
           document.getElementById("add_author").classList.remove("error");
-          document.getElementById("add_url").classList.remove("error");
-          document.getElementById("add_originurl").classList.remove("error");
           document.getElementById("add_content").classList.remove("error");
-          document.getElementById("add_sourcetype").classList.remove("error");
-          document.getElementById("add_sourceid").classList.remove("error");
         }
       });
     },
@@ -238,15 +237,11 @@ var Vue_App = new Vue({
       this.addValid = true;
       if (this.isCustom) {
         this.checkAddItem('add_name');
-        // this.checkAddItem('add_url');
-        // this.checkAddItem('add_originurl');
         this.checkAddItem('add_author');
         this.checkContent('add_content');
-        // this.checkAddItem('add_readcount');
-        // this.checkAddItem('add_cmtcount');
         this.checkAddFile();
       } else {
-        this.checkAddItem('add_sourceid');
+        // this.checkAddItem('add_sourceid');
       }
       if (this.addValid) {
         this.isHide = false; //加载中
@@ -280,20 +275,14 @@ var Vue_App = new Vue({
     },
     clearData() {
       document.getElementById("add_name").value = "";
-      document.getElementById("add_url").value = "";
-      document.getElementById("add_originurl").value = "";
       document.getElementById("add_author").value = "";
       document.getElementById("add_content").value = "";
-      document.getElementById("add_sourcetype").value = "";
-      document.getElementById("add_sourceid").value = "";
       document.getElementById("addfile").value = "";
     },
     layer_submit_edit() {
       var _this = this;
       this.editValid = true;
       this.checkEditItem('edit_title');
-      this.checkEditItem('edit_url');
-      this.checkEditItem('edit_originurl');
       this.checkEditItem('edit_author');
       this.checkContent('edit_content');
       if (this.editValid) {
