@@ -62,14 +62,9 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <table class="table table-border table-bordered table-bg table-hover table-sort">
         <thead>
           <tr class="text-c">
-            <!-- <th width="40">
-              <input name="allSelect" type="checkbox" value="">
-            </th> -->
             <th>ID</th>
             <th>标题</th>
             <th>缩略图</th>
-            <!-- <th>Web专用</th> -->
-            <!-- <th>App专用</th> -->
             <th>来源</th>
             <th>类别</th>
             <th>类型</th>
@@ -81,15 +76,12 @@ document.getElementsByTagName("head")[0].appendChild(style);
         </thead>
         <tbody>
           <tr class="text-c" v-for="item in items">
-            <!-- <td>
-              <input name="batch" type="checkbox" id="{{ item.Id }}" value="{{item.Id}},{{item.Status}}">
-            </td> -->
-            <!-- <td data-clipboard-text="{{item.Id}}" @click="clickCopy(item.Id)" id="id{{item.Id}}"><a style="text-decoration:underline" onmouseover="addTips({{item.Id}})" href="javascript:;">{{item.Id}}</a></td> -->
             <td>{{item.Id}}</td>
             <td id="title{{item.Id}}"><a onmouseover="lookTitle({{item.Id}},'title','{{item.Title}}')" href="javascript:;">{{item.Title | subTitle}}</a></td>
-            <td><a href="{{item.PUrl}}" title="{{item.PUrl}}" target="_blank">{{item.PUrl | subStr}}</a></td>
-            <!-- <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td> -->
-            <!-- <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td> -->
+            <!-- <td><a href="{{item.PUrl}}" title="{{item.PUrl}}" target="_blank">{{item.PUrl | subStr}}</a></td> -->
+            <td v-if="item.ViewType == 2"><a title="{{item.PUrl}}" href="{{item.PUrl | subAvatar 0}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
+            <td v-if="item.ViewType == 3"><a title="{{item.PUrl}}" href="{{item.PUrl | subAvatar 0}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
+            <td v-if="item.ViewType != 2 && item.ViewType != 3"><a title="{{item.PUrl}}" href="{{item.PUrl}}" target="_blank">{{item.PUrl | subStr}}</a></td>
             <td>{{item.Author}}</td>
             <td>{{item.RealType}}</td>
             <td v-if="item.ViewType == 1">文字</td>
@@ -97,12 +89,9 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td v-if="item.ViewType == 3">三张图</td>
             <td v-if="item.ViewType == 4">广告</td>
             <td v-if="item.ViewType == 5">视频</td>
-            <td v-if="item.ViewType == ''">视频</td>
             <td v-if="item.IsTop == 1">是</td>
             <td v-else>否</td>
             <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
-            <!-- <td v-if="item.Status == 1" style="color:green">已启用</td> -->
-            <!-- <td v-if="item.Status == 0" style="color:red">已禁用</td> -->
             <td>
               <a v-if="item.Status == 1" style="background-color:#00B271" class="ml-5 manage-btn enableBtn" id="id{{item.Id}}" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" href="javascript:;" v-on:click="edit(item.Id, item.Status)">已启用
               </a>

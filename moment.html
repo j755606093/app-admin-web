@@ -61,44 +61,34 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <table class="table table-border table-bordered table-bg table-hover table-sort">
         <thead>
           <tr class="text-c">
-            <!-- <th width="30">
-              <input name="allSelect" type="checkbox" value="">
-            </th> -->
             <th>ID</th>
             <th>用户ID</th>
             <th>昵称</th>
             <th>视频缩略图</th>
             <th>内容</th>
-            <!-- <th width="200">话题</th> -->
             <th>图片链接</th>
-            <!-- <th width="150">位置</th> -->
             <th>类型</th>
-            <!-- <th width="250">App调用</th> -->
+            <th>后台发布</th>
             <th>创建时间</th>
             <th>状态</th>
-            <!-- <th>操作</th> -->
           </tr>
         </thead>
         <tbody>
           <tr class="text-c" v-for="item in items">
-            <!-- <td>
-              <input name="batch" type="checkbox" id="{{ item.Id }}" value="{{item.Id}},{{item.Status}}">
-            </td> -->
             <td>{{item.Id}}</td>
             <td>{{item.UsrId}}</td>
             <td>{{item.Nick}}</td>
-            <td><a href="{{item.Thumb[0].Src}}" target="_blank">{{item.Thumb[0].Src | subUrl}}</a></td>
+            <td v-if="!item.Thumb"></td>
+            <td v-else><a style="text-decoration: none;" v-for="key in item.Thumb" href="{{key.Src}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i>&nbsp;</a></td>
             <td><a @click="lookIntro(item.Body)" href="javascript:;">{{item.Body | subContent}}</a></td>
-            <!-- <td>{{item.Topic}}</td> -->
-            <td><a href="{{item.Img[0].Src}}" target="_blank">{{item.Img[0].Src | subUrl}}</a></td>
-            <!-- <td>{{item.Location}}</td> -->
+            <td v-if="!item.Img"></td>
+            <td v-else><a style="text-decoration: none;" v-for="img in item.Img" href="{{img.Src}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i>&nbsp;</a></td>
             <td v-if="item.ViewType == 1">文字</td>
-            <td v-if="item.ViewType == 2">单图</td>
-            <td v-if="item.ViewType == 3">图片</td>
-            <td v-if="item.ViewType == 4">广告</td>
-            <td v-if="item.ViewType == 5">视频</td>
-            <td v-if="item.ViewType == ''"></td>
-            <!-- <td>{{item.AppUsage}}</td> -->
+            <td v-if="item.ViewType == 2">单图文</td>
+            <td v-if="item.ViewType == 3">多图文</td>
+            <td v-if="item.ViewType == 5">视频加文字</td>
+            <td v-if="item.IsVirtualPublish == 1" style="color:green">是</td>
+            <td v-else style="color:red">否</td>
             <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
             <td>
               <a v-if="item.Status == 1" style="background-color:#00B271" class="ml-5 manage-btn enable-btn" id="id{{item.Id}}" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" href="javascript:;" v-on:click="edit(item.Id, item.Status)">已启用
