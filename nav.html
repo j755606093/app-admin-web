@@ -67,7 +67,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Id}}</td>
             <td>{{item.Title}}</td>
             <td><a href="{{item.Url}}" title="{{item.Url}}" target="_blank">{{item.Url | subStr}}</a></td>
-            <td><a href="{{item.Purl}}" title="{{item.Purl}}" target="_blank">{{item.Purl | subStr}}</a></td>
+            <td><a href="{{item.Purl}}" title="{{item.Purl}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
             <td>{{item.Sort}}</td>
             <td><a title="{{item.Remark}}" href="javascript:;" style="text-decoration:none">{{item.Remark | subRemark}}</a></td>
             <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
