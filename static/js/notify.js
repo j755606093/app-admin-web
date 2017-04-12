@@ -365,6 +365,7 @@ var Vue_App = new Vue({
             _this.clearNotify();
             _this.layer_close(_this.layer);
           } else {
+            console.log(res.body.Message)
             layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
         }).catch(function(err) {

@@ -46,20 +46,20 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <div class="page-container" id="isget" style="visibility: hidden">
     <div class="cl pd-5 bg-1 bk-gray mt-20 center">
       <span class="l">
-        <!-- <a class="btn btn-primary radius" v-on:click="pushNotify()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i>系统通知</a>
-        <a class="btn btn-primary radius" v-on:click="pushNews()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i>今日头条</a> -->
+        <a class="btn btn-primary radius" v-on:click="pushNotify()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i>系统通知</a>
+        <a class="btn btn-primary radius" v-on:click="pushNews()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i>今日头条</a>
       </span>
-      <span>
-        <input id="all" type="radio" value="-1" name="notifytype" @click="search">
-        <label for="all">所有</label> 
-        <input id="comment" type="radio" value="0" name="notifytype" @click="search">
-        <label for="comment">评论通知</label>        
-        <input id="like" type="radio" value="1" name="notifytype" @click="search">
-        <label for="like">点赞通知</label>        
-        <input id="system" type="radio" value="2" name="notifytype" @click="search">
-        <label for="system">系统通知</label> 
-        <input id="top" type="radio" value="3" name="notifytype" @click="search">
-        <label for="top">今日头条</label>                       
+      <input id="all" type="radio" value="-1" name="notifytype" @click="search" checked>
+      <label for="all">所有</label>
+      <input id="comment" type="radio" value="0" name="notifytype" @click="search">
+      <label for="comment">评论通知</label>
+      <input id="like" type="radio" value="1" name="notifytype" @click="search">
+      <label for="like">点赞通知</label>
+      <input id="system" type="radio" value="2" name="notifytype" @click="search">
+      <label for="system">系统通知</label>
+      <input id="top" type="radio" value="3" name="notifytype" @click="search">
+      <label for="top">今日头条</label>
+      <span>               
         <select id="searchList" style="border-radius: 5px;" v-model="SeearchType" class="input-text">
           <option value="Nick" selected>昵&nbsp;&nbsp;&nbsp;&nbsp;称</option>
           <option value="Mobile">手&nbsp;&nbsp;&nbsp;&nbsp;机</option>
@@ -68,7 +68,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <input v-model="SearchKey" @keyup.enter="search" class="input-text search" type="search" autofocus placeholder="昵称、手机、用户ID">
         <a class="btn btn-success radius searchBtn" @click="search" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
       </span>
-      <span class="r lh">本页数据:
+      <span class="pageData">本页数据:
         <select v-model="displayCount" @change="getData($event)">
           <option value="{{displayCount}}">{{displayCount}}</option>
           <option value="10">10</option>
@@ -129,7 +129,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
           </tr>
           <tr class="text-c" v-if="displayCount === 0">
-            <td colspan="11">暂无数据</td>
+            <td colspan="12">暂无数据</td>
           </tr>
         </tbody>
       </table>
