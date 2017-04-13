@@ -189,14 +189,6 @@ var Vue_App = new Vue({
       }
       this.showItem = false;
     },
-    //html转义
-    htmlEncode(html) {
-      var temp = document.createElement("div");
-      (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
-      var output = temp.innerHTML;
-      temp = null;
-      return output;
-    },
     //复制Id
     clickCopy(id) {
       id = "#id" + id;
@@ -245,6 +237,13 @@ var Vue_App = new Vue({
     },
     edit(index, id) {
       this.editItem = this.items[index];
+      var imgItem = this.editItem.Img;
+      var img = "";
+      //循环替换
+      for (var i = 0; i < imgItem.length; i++) {
+        img = "<img src=" + imgItem[i].Src + ">";
+        this.editItem.Content = this.editItem.Content.replace(imgItem[i].PositionName, img);
+      }
       editor.$txt.html(this.editItem.Content);
       this.nick = this.editItem.UsrName;
       this.isEdit = true;
@@ -256,6 +255,7 @@ var Vue_App = new Vue({
         skin: 'layui-layer-demo', //样式类名
         anim: 2,
         shadeClose: true, //开启遮罩关闭
+        scrollbar: false,
         end: function() {
           editor.$txt.html('<p><br></p>');
         }
@@ -286,7 +286,7 @@ var Vue_App = new Vue({
       var _this = this;
       this.editValid = true;
       this.checkEditItem('edit_title');
-      // this.checkEditItem('edit_topic');
+      this.checkEditItem('edit_readcount');
       if (this.editItem.Content === "") {
         this.editValid = false;
         layer.msg("帖子内容不能为空")
@@ -331,6 +331,7 @@ var Vue_App = new Vue({
         skin: 'layui-layer-demo', //样式类名
         anim: 2,
         shadeClose: false, //开启遮罩关闭
+        scrollbar: false,
         end: function() {
           $("#add_title").removeClass("error");
           $("#add_likecount").removeClass("error");
@@ -444,6 +445,7 @@ var Vue_App = new Vue({
         layer.msg("发帖人不能为空")
       }
       this.checkAddItem('add_likecount');
+      this.checkAddItem('add_readcount');
       if (this.addValid) {
         this.isHide = false; //加载中
         // this.addItem.Content = this.htmlEncode(this.addItem.Content);
