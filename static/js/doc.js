@@ -5,7 +5,7 @@ var Vue_App = new Vue({
     items: {},
     editItem: {}, //要编辑的items中的数据
     layer: null, //弹出框,
-    addItem: {}, //增加图
+    addItem: { "Content": "" }, //增加图
     TotalCount: 0, //总数
     currCount: 15, //当前数据量
     displayCount: 15, //当前页要显示的数据量   
@@ -22,7 +22,9 @@ var Vue_App = new Vue({
     count: 200, //还能输入的内容字数
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id
-    firstLoad: false,
+    firstLoad: true,
+    isEdit: true,
+    layer_text: "",
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
   },
@@ -31,6 +33,16 @@ var Vue_App = new Vue({
       parent.location.href = "login.html";
     } else {
       this.getList(1, 15);
+      //富文本编辑器初始化
+      window.editor = new wangEditor('editor');
+      editor.config.uploadImgUrl = this.ip + '/api/Default/UploadImg';
+      editor.config.uploadParams = {
+        token: this.token,
+      };
+      editor.config.uploadHeaders = {
+        'Accept': 'text/x-json'
+      };
+      editor.create();
     }
   },
   methods: {
@@ -99,15 +111,35 @@ var Vue_App = new Vue({
       this.firstLoad = true;
       this.getList(1, this.currCount);
     },
-    edit(index, id) {
-      // 编辑内容
+    edit(index) {
+      this.isEdit = true;
       this.editItem = this.items[index];
       //计算内容的字数
-      var content = this.editItem.Content;
-      if (content != null) {
-        this.count = 200 - content.length;
+      // var content = this.editItem.Content;
+      // if (content != null) {
+      //   this.count = 200 - content.length;
+      // } else {
+      //   this.count = 200;
+      // }
+      if (!this.editItem.SrcContent) {
+        var imgItem = this.editItem.Img;
+        var videoItem = this.editItem.Video;
+        var img = "";
+        var video = "";
+        //循环替换
+        for (var i = 0; i < imgItem.length; i++) {
+          img = "<img src=" + imgItem[i].Src + ">";
+          this.editItem.Content = this.editItem.Content.replace(imgItem[i].PositionName, img);
+        }
+        if (videoItem !== null) {
+          for (var i = 0; i < videoItem.length; i++) {
+            video = "<video src=" + videoItem[i].Src + "></video>";
+            this.editItem.Content = this.editItem.Content.replace(videoItem[i].PositionName, video);
+          }
+        }
+        editor.$txt.html(this.editItem.Content);
       } else {
-        this.count = 200;
+        editor.$txt.html(this.editItem.SrcContent);
       }
       this.layer = layer.open({
         type: 1,
@@ -118,9 +150,9 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: true, //开启遮罩关闭
       });
-      document.getElementById("editfile").value = "";
+      // document.getElementById("editfile").value = "";
       document.getElementById("edit_title").classList.remove("error");
-      document.getElementById("edit_author").classList.remove("error");
+      // document.getElementById("edit_author").classList.remove("error");
       document.getElementById("edit_content").classList.remove("error");
     },
     layer_close() {
@@ -142,6 +174,38 @@ var Vue_App = new Vue({
           document.getElementById("add_content").classList.remove("error");
         }
       });
+    },
+    //打开富文本
+    openRichText() {
+      this.layer_text = layer.open({
+        type: 1,
+        title: "帖子内容",
+        content: $("#open-rich-text"),
+        // area: ["700px", "600px"],
+        area: "700px",
+        skin: 'layui-layer-demo', //样式类名
+        anim: 2,
+        shadeClose: true, //开启遮罩关闭
+        maxmin: true,
+        cancel: function() {
+          // location.replace(location.href);
+        },
+        end: function() {
+          // location.replace(location.href);
+        }
+      });
+    },
+    close() {
+      layer.close(this.layer_text);
+    },
+    submit() {
+      var html = editor.$txt.html();
+      if (this.isEdit) {
+        this.editItem.Content = html;
+      } else {
+        this.addItem.Content = html;
+      }
+      this.close();
     },
     lookIntro(intro) {
       layer.open({
@@ -181,12 +245,8 @@ var Vue_App = new Vue({
     checkContent(id) {
       var _this = this;
       var el = document.getElementById(id);
-      var length = el.value.length; //内容的字数长度
-      this.count = 200 - length; //还能输入的字数
-      if (this.count < 0) {
-        this.count = 0;
-      }
-      if (length < 5 || length > 200) {
+      var length = el.value.length;
+      if (length < 1) {
         el.classList.add("error");
         if (id == "add_content") {
           _this.addValid = false;
@@ -206,12 +266,12 @@ var Vue_App = new Vue({
         this.addValid = this.fileSize(file);
       }
     },
-    checkEditFile() {
-      var file = document.getElementById("editfile");
-      if (file.value != "") {
-        this.editValid = this.fileSize(file);
-      }
-    },
+    // checkEditFile() {
+    //   var file = document.getElementById("editfile");
+    //   if (file.value != "") {
+    //     this.editValid = this.fileSize(file);
+    //   }
+    // },
     //判断视频大小
     fileSize(id) {
       var filesize = id.files[0].size / 1000000;
@@ -283,7 +343,7 @@ var Vue_App = new Vue({
       var _this = this;
       this.editValid = true;
       this.checkEditItem('edit_title');
-      this.checkEditItem('edit_author');
+      // this.checkEditItem('edit_author');
       this.checkContent('edit_content');
       if (this.editValid) {
         this.isHide = false; //加载中
@@ -306,6 +366,7 @@ var Vue_App = new Vue({
           error: function(err) {
             console.log(err)
             layer.msg("服务器错误，请稍后再试!", { icon: 2, time: 2000 });
+            _this.isHide = true;
           }
         });
       }

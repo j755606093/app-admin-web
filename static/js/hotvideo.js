@@ -248,6 +248,8 @@ var Vue_App = new Vue({
     clearData() {
       document.getElementById("add_title").value = "";
       document.getElementById("add_content").value = "";
+      document.getElementById("add_url").value = "";
+      document.getElementById("addfile").value = "";
       document.getElementById("add_title").classList.remove("error");
       document.getElementById("add_content").classList.remove("error");
     },

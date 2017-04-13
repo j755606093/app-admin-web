@@ -19,6 +19,7 @@
     z-index: 20000000;
   }
   
+  #open-rich-text,
   #editdoc,
   #adddoc,
   #lookIntro {
@@ -39,7 +40,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <div class="page-container" id="isget" style="visibility: hidden">
     <div class="cl pd-5 bg-1 bk-gray mt-20">
       <span class="l">
-        <a class="btn btn-primary radius" v-on:click="add()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加文章</a>
+       <!--  <a class="btn btn-primary radius" v-on:click="add()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加文章</a> -->
       </span>
       <span class="r lh">本页数据:
         <select v-model="displayCount" @change="getData($event)">
@@ -63,8 +64,8 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th>作者</th>
             <!-- <th>Web专用</th> -->
             <!-- <th>App专用</th> -->
-            <th>图片路径</th>
-            <th>视频链接</th>
+            <!-- <th>图片路径</th> -->
+            <!-- <th>视频链接</th> -->
             <th>内容</th>
             <th>文章类型</th>
             <th>创建时间</th>
@@ -84,13 +85,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td>{{item.Author}}</td>
             <!-- <td>{{item.Url | subUrl}}</td> -->
             <!-- <td>{{item.OriginUrl | subUrl}}</td> -->
-            <td v-if="item.ViewType == 2"><a title="{{item.Avatar}}" href="{{item.Avatar | dealAvatar}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
+            <!-- <td v-if="item.ViewType == 2"><a title="{{item.Avatar}}" href="{{item.Avatar | dealAvatar}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
             <td v-if="item.ViewType == 3"><a title="{{item.Avatar}}" href="{{item.Avatar | subAvatar 0}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a>
               <a title="{{item.Avatar}}" href="{{item.Avatar | subAvatar 1}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a>
               <a title="{{item.Avatar}}" href="{{item.Avatar | subAvatar 2}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
             <td v-if="item.ViewType != 2 && item.ViewType != 3"><a title="{{item.Avatar}}" href="{{item.Avatar}}" target="_blank">{{item.Avatar | subUrl}}</a></td>
-            <td><a title="{{item.VUrl}}" href="item.VUrl" target="_blank">{{item.VUrl | subStr}}</a></td>
-            <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
+            <td><a title="{{item.VUrl}}" href="item.VUrl" target="_blank">{{item.VUrl | subStr}}</a></td> -->
+            <td>{{item.Content | subContent}}</td>
             <td v-if="item.ViewType == 1">无图</td>
             <td v-if="item.ViewType == 2">一张图</td>
             <td v-if="item.ViewType == 3">三张图</td>
@@ -101,7 +102,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td v-if="item.Status == 1" style="color:green">启用</td>
             <td v-else style="color:red">禁用</td>
             <td class="td-manage">
-              <a style="text-decoration:none" class="ml-5" href="javascript:;" v-on:click="edit($index,item.Id)" title="编辑"> <i class="Hui-iconfont">&#xe6df;</i>
+              <a style="text-decoration:none" class="ml-5" href="javascript:;" v-on:click="edit($index)" title="编辑"> <i class="Hui-iconfont">&#xe6df;</i>
               </a>
             </td>
           </tr>
@@ -129,7 +130,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
           <input type="text" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Title" placeholder="字数不能少于5" id="edit_title" name="Title" autofocus>
         </div>
       </div>
-      <div class="row cl">
+      <div style="display: none;" class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>来源类型:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <select name="SourceType" v-model="editItem.SourceType" class="input-text">
@@ -140,29 +141,15 @@ document.getElementsByTagName("head")[0].appendChild(style);
           </select>
         </div>
       </div>
-      <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>作者:</label>
+      <div style="display: none;" class="row cl">
         <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @blur="checkEditItem('edit_author')" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Author" placeholder="" id="edit_author" name="Author">
+          <input type="text" class="input-text" v-model="editItem.Author" name="Author">
         </div>
       </div>
-      <!-- <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2">Web专用:</label>
-        <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.Url" placeholder="" id="edit_url" name="Url">
-        </div>
-      </div>
-      <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2">App专用:</label>
-        <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup.enter="layer_submit_edit" class="input-text" v-model="editItem.OriginUrl" placeholder="" id="edit_originurl" name="OriginUrl">
-        </div>
-      </div> -->
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
-          <textarea v-model="editItem.Content" cols="61" rows="9" @blur="checkContent('edit_content')" @keyup.enter="layer_submit_edit" id="edit_content" name="Content" placeholder="字数在5~200以内"></textarea>
-          <p>还能输入{{count}}个字</p>
+          <input type="text" class="input-text" readonly v-model="editItem.Content" @click="openRichText" id="edit_content" name="Content">
         </div>
       </div>
       <div class="row cl">
@@ -186,7 +173,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
           </select>
         </div>
       </div>
-      <div class="row cl">
+      <!-- <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2">文件上传:</label>
         <span class="multiple">(多文件)</span>
         <div class="formControls col-xs-8 col-sm-9">
@@ -195,7 +182,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
           </div>
           <span class="totalSize" :style="{'color':overSize?'red':'#333'}">大小不超过10M</span>
         </div>
-      </div>
+      </div> -->
       <div class="row cl">
         <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
           <button v-on:click="layer_submit_edit" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交修改</button>
@@ -213,7 +200,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
           <input type="text" @blur="checkAddItem('add_name')" @keyup.enter="layer_submit_add" class="input-text" id="add_name" name="Title" autofocus>
         </div>
       </div>
-      <div class="row cl">
+      <!-- <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>来源类型:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <select name="SourceType" class="input-text">
@@ -223,13 +210,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <option value="4">社区帖子</option>
           </select>
         </div>
-      </div>
-      <div class="row cl">
+      </div> -->
+      <!-- <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>作者:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <input type="text" @blur="checkAddItem('add_author')" @keyup.enter="layer_submit_add" class="input-text" id="add_author" name="Author">
         </div>
-      </div>
+      </div> -->
       <!-- <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2">Web专用:</label>
         <div class="formControls col-xs-8 col-sm-9">
@@ -242,11 +229,17 @@ document.getElementsByTagName("head")[0].appendChild(style);
           <input type="text" @keyup.enter="layer_submit_add" class="input-text" placeholder="从新闻管理或微信文章管理中复制" id="add_originurl" name="OriginUrl">
         </div>
       </div> -->
-      <div class="row cl">
+      <!-- <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <textarea cols="61" rows="9" @blur="checkContent('add_content')" @keyup.enter="layer_submit_add" id="add_content" name="Content" placeholder="字数在5~200以内"></textarea>
           <p>还能输入{{count}}个字</p>
+        </div>
+      </div> -->
+      <div class="row cl">
+        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
+        <div class="formControls col-xs-8 col-sm-9">
+          <input type="text" class="input-text" v-model="addItem.Content" readonly id="add_content" name="Content" @click="openRichText">
         </div>
       </div>
       <div class="row cl">
@@ -271,7 +264,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
           </select>
         </div>
       </div>
-      <div class="row cl" v-if="isCustom">
+      <!-- <div class="row cl" v-if="isCustom">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文件上传:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <div class="uploader-thum-container">
@@ -279,7 +272,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
           </div>
           <span class="totalSize" :style="{'color':overSize?'red':'#333'}">大小不超过10M</span>
         </div>
-      </div>
+      </div> -->
       <div class="row cl">
         <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
           <button v-on:click="layer_submit_add" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交增加</button>
@@ -287,6 +280,14 @@ document.getElementsByTagName("head")[0].appendChild(style);
         </div>
       </div>
     </form>
+  </div>
+  <!-- 富文本编辑器 -->
+  <div id="open-rich-text">
+    <div id="editor" style="height:400px;max-height:500px;"></div>
+    <div class="btn-rich-text">
+      <button id="submit_edit" class="btn btn-primary radius" type="button" v-on:click="submit"><i class="Hui-iconfont">&#xe632;</i> 提交</button>
+      <button id="submit_close" v-on:click="close" class="btn btn-default radius" type="button">取消</button>
+    </div>
   </div>
   <!-- 查看简介 -->
   <div id="lookIntro" :style="{'text-align': isIndent?'left':'center'}">
