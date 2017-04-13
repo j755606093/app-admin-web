@@ -319,6 +319,7 @@ var Vue_App = new Vue({
           _this.isHide = true;
         }).catch(function(err) {
           console.log(err)
+          _this.isHide = true;
           layer.msg('服务器错误，请稍后再试', { icon: 2, time: 3000 });
         })
       }
@@ -467,9 +468,9 @@ var Vue_App = new Vue({
             _this.nick = "";
             layer.msg('新增成功', { icon: 1, time: 2000 });
           } else {
-            _this.isHide = true;
             layer.msg(res.body.Message, { icon: 2, time: 2000 });
           }
+          _this.isHide = true;
         }).catch(function(err) {
           _this.isHide = true;
           console.log(err)
