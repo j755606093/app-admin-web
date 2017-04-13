@@ -237,14 +237,18 @@ var Vue_App = new Vue({
     },
     edit(index, id) {
       this.editItem = this.items[index];
-      var imgItem = this.editItem.Img;
-      var img = "";
-      //循环替换
-      for (var i = 0; i < imgItem.length; i++) {
-        img = "<img src=" + imgItem[i].Src + ">";
-        this.editItem.Content = this.editItem.Content.replace(imgItem[i].PositionName, img);
+      if (!this.editItem.Source) {
+        var imgItem = this.editItem.Img;
+        var img = "";
+        //循环替换
+        for (var i = 0; i < imgItem.length; i++) {
+          img = "<img src=" + imgItem[i].Src + ">";
+          this.editItem.Content = this.editItem.Content.replace(imgItem[i].PositionName, img);
+        }
+        editor.$txt.html(this.editItem.Content);
+      } else {
+        editor.$txt.html(this.editItem.Source);
       }
-      editor.$txt.html(this.editItem.Content);
       this.nick = this.editItem.UsrName;
       this.isEdit = true;
       this.layer = layer.open({
