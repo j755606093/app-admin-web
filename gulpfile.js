@@ -29,3 +29,77 @@ gulp.task('cssauto', function() {
 })
 
 gulp.task('default', ['cssmin', 'cssauto']);
+
+var modules = {
+  loaders: [{
+    //这是处理es6文件
+    test: /\.js$/,
+    loader: 'babel-loader',
+    exclude: /node_modules/,
+    query: {
+      presets: ['es2015'],
+      plugins: ['transform-runtime']
+    }
+  }, {
+    //这是处理scss文件
+    test: /\.scss$/,
+    loader: 'style!css!sass'
+  }, {
+    test: /\.vue$/,
+    loader: "vue"
+  }, {
+    // 这是处理css文件
+    test: /\.css$/,
+    loaders: ["style", "css"]
+  }, {
+    test: /\.(png|jpg|gif)$/,
+    loader: 'url',
+    query: {
+      // inline files smaller then 10kb as base64 dataURL
+      limit: 10000,
+      // fallback to file-loader with this naming scheme
+      name: '[name].[ext]?[hash]'
+    }
+  }]
+}
+
+gulp.task('test', function() {
+  return gulp.src('test.js')
+    .pipe(webpack({
+      watch: true,
+      output: {
+        filename: 'bundle-test.js'
+      },
+      module: modules,
+      resolve: {
+        extensions: ['', '.js', '.jsx'],
+        alias: {
+          'vue$': 'vue/dist/vue.js'
+        }
+      },
+      plugins: [new HtmlWebpackPlugin({
+          title: "导航",
+          filename: "sharecar.html",
+          hash: true,
+          template: "!!ejs!html/default.ejs",
+          inject: true
+        }),
+        // new wp.DefinePlugin({
+        //  'process.env': {
+        //    NODE_ENV: '"production"'
+        //  }
+        // }),
+        // new wp.optimize.UglifyJsPlugin({
+        //  compress: {
+        //    warnings: false
+        //  }
+        // })
+      ]
+    }))
+    // .pipe(uglify())//生产的时候再启用压缩
+    // .pipe(rev())
+    .pipe(gulp.dest('html/dist/'))
+    // .pipe(rev.manifest())
+    // .pipe(gulp.dest('html/dist/'))
+    .pipe(notify("<%= file.relative %> 成功生成!"));
+});
