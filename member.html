@@ -79,28 +79,36 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th>邮箱</th>
             <th>手机</th>
             <th>地址</th>
-            <!-- <th>登录时间</th> -->
+            <th>主播</th>
             <th>创建时间</th>
             <th>状态</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
           <tr class="text-c" v-for="item in items">
             <td>{{item.Id}}</td>
             <td>{{item.Nick}}</td>
-            <td v-if="item.Sex == 1">男</td>
+            <td v-if="item.Gender == 1">男</td>
             <td v-else>女</td>
             <td>{{item.Birth.replace("T"," ").slice(0,10)}}</td>
             <td><a href="{{item.Avatar}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
             <td>{{item.Mail}}</td>
             <td>{{item.Mobile}}</td>
             <td>{{item.Address}}</td>
-            <!-- <td>{{item.LoginTime.replace("T"," ").slice(0,19)}}</td> -->
+            <td v-if="item.IsAnchor == 1" style="color:green">是</td>
+            <td v-else style="color:red">否</td>
             <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
             <td>
               <a v-if="item.Status == 1" style="background-color:#00B271" class="ml-5 manage-btn enable-btn" id="id{{item.Id}}" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" href="javascript:;" v-on:click="edit(item.Id, item.Status)">已启用
               </a>
               <a v-else style="background-color:#707070" id="id{{item.Id}}" class="ml-5 manage-btn disable-btn" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" v-on:click="edit(item.Id, item.Status)" href="javascript:;">已禁用
+              </a>
+            </td>
+            <td>
+              <a v-if="item.IsAnchor == 0" style="background-color:#00B271" class="set-btn" v-on:click="setAnchor(item.Id)">设为主播
+              </a>
+              <a v-else style="background-color:#707070" class="set-btn" v-on:click="isAnchor">已为主播
               </a>
             </td>
           </tr>

@@ -51,6 +51,7 @@ var Vue_App = new Vue({
           this.items = res.body.Data.Content;
           this.displayCount = this.items.length;
           this.TotalCount = res.body.Data.TotalCount;
+          // console.log(this.items)
         } else if (res.body.Code == 204) {
           this.items = [];
           this.displayCount = 0;
@@ -242,6 +243,44 @@ var Vue_App = new Vue({
     changeType() {
       this.searchKey = "";
     },
+    //设为主播
+    setAnchor(id, status) {
+      var _this = this;
+      var confirm = layer.confirm("确定要设为主播吗？", {
+        btn: ["确定", "取消"]
+      }, function() {
+        _this.isHide = false; //加载中
+        var data = {
+          "UsrId": id,
+          "Status": 1
+        };
+        data = JSON.stringify(data);
+        _this.$http.post(_this.ip + "/api/QCloud/SetAnchor", data, {
+          headers: {
+            "Authorization": _this.token
+          }
+        }).then(function(res) {
+          if (res.body.Code === 200) {
+            _this.setPage();
+            layer.msg("设置成功", { icon: 1, time: 2500 });
+            layer.close(confirm);
+          } else {
+            layer.msg(res.body.Message, { icon: 2, time: 3000 });
+          }
+          _this.isHide = true;
+        }).catch(function(err) {
+          console.log(err);
+          _this.isHide = true;
+          layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 2500 });
+        });
+      }, function() {
+        layer.close(confirm);
+      });
+    },
+    //已为主播
+    isAnchor() {
+      layer.msg("该用户已经被设为主播了")
+    },
     edit(id, status) {
       var _this = this;
       var tipMsg = "";
@@ -271,7 +310,7 @@ var Vue_App = new Vue({
           headers: {
             "Authorization": _this.token
           }
-        }).then((res) => {
+        }).then(function(res) {
           if (res.body.Code === 200) {
             _this.setPage();
             layer.msg(successMsg, { icon: 1, time: 2000 });
@@ -280,7 +319,7 @@ var Vue_App = new Vue({
             layer.msg(res.body.Message, { icon: 2, time: 3000 });
           }
           _this.isHide = true;
-        }).catch(err => {
+        }).catch(function(err) {
           console.log(err);
           _this.isHide = true;
           layer.msg('服务器错误，请稍后再试!', { icon: 2, time: 2500 });
