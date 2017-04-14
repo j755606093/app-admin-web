@@ -107,7 +107,8 @@ var Vue_App = new Vue({
         if (res.data.Code === 200) {
           _this.UsrItem = res.data.Data;
         } else {
-          layer.msg(res.body.Message, { icon: 2, time: 3000 });
+          console.log(res.body.Message)
+          _this.UsrItem = [];
         }
       }).catch(function(error) {
         _this.isHide = true;
