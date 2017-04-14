@@ -7,9 +7,7 @@
   <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
   <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
   <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
-  <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
   <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/blue/skin.css" id="skin" />
-  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
   <link rel="stylesheet" type="text/css" href="dist/css/index.css" />
   <title>admin</title>
   <style>
@@ -129,6 +127,14 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <dd>
           <ul>
             <li v-for="item in childVideoModule"><a _href="{{item.Value | addHash }}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
+          </ul>
+        </dd>
+      </dl>
+      <dl id="menu-comment" v-show="childQcloudModule.length !== 0">
+        <dt><i class="Hui-iconfont">&#xe650;</i> 直播<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+          <ul>
+            <li v-for="item in childQcloudModule"><a _href="{{item.Value | addHash }}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
           </ul>
         </dd>
       </dl>

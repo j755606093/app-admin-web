@@ -22,6 +22,7 @@ var VM = new Vue({
     commentModule: false, //评论模块
     childCommentModule: [], //评论管理模块的子项
     childMemberModule: [], //用户管理模块的子项
+    childQcloudModule: [],
     carpoolModule: false, //评论模块
     isHide: false, //“加载中”
     isShowOld: false, //是否显示验证失败的信息
@@ -114,6 +115,9 @@ var VM = new Vue({
             }
             if (name == "视频") {
               _this.childVideoModule = modules;
+            }
+            if (name == "直播") {
+              _this.childQcloudModule = modules;
             }
           }
           _this.isHide = true;
