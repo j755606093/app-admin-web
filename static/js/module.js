@@ -244,10 +244,8 @@ var Vue_App = new Vue({
     },
     clearData() {
       document.getElementById("add_name").value = "";
-      document.getElementById("add_remark").value = "";
       document.getElementById("add_value").value = "";
       document.getElementById("add_pid").value = "";
-      document.getElementById("add_icon").value = "";
       this.addItem.Value = "";
       this.addItem.Sort = "";
     },
