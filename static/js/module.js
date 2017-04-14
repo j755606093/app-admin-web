@@ -6,7 +6,7 @@ var Vue_App = new Vue({
     items: {},
     editItem: {}, //要编辑的items中的数据
     layer: null, //弹出框,
-    addItem: { PId: "", IsParent: "" }, //增加模块
+    addItem: { PId: "", IsParent: "", Value: "", Sort: "", Name: "" }, //增加模块
     addValid: true,
     editValid: true,
     parentItem: [], //当前用户所拥有的父级模块
@@ -243,9 +243,7 @@ var Vue_App = new Vue({
       }
     },
     clearData() {
-      document.getElementById("add_name").value = "";
-      document.getElementById("add_value").value = "";
-      document.getElementById("add_pid").value = "";
+      this.addItem.Name = "";
       this.addItem.Value = "";
       this.addItem.Sort = "";
     },

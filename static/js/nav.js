@@ -14,7 +14,7 @@ var Vue_App = new Vue({
     editValid: true,
     overSize: false, //图片超过限制大小
     isHide: false, //隐藏“加载”图标
-    firstLoad: false,
+    firstLoad: true,
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
     ip: "", //用于服务器
