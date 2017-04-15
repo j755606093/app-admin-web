@@ -195,33 +195,27 @@ var Vue_App = new Vue({
             jump: function(obj) {
               // _this.isHide = false;
               //跳到下一页时清空上一页的数据
-              _this.newsItem = [];
+              // _this.newsItem = [];
               //记录当前页码
               _this.currNewsPage = obj.curr;
               //获取当前页或指定页的数据
               // 当不是搜索数据 && Vue_App.searchItem.searchList != "ViewType" BUG
-              if ($.trim(_this.searchKeyWord) == "" || _this.searchKeyWord == null) {
-                _this.getNewsList(obj.curr, _this.searchKeyList, _this.searchKeyWord);
-              } else {
-                if (_this.isSearchNews) {
-                  obj.curr = 1; //在进行搜索时，防止在当前页码不是1而导致获取不到数据
-                }
-                _this.getNewsList(obj.curr, _this.searchKeyList, _this.searchKeyWord);
-                _this.isSearchNews = false; //页码设置完1后，将其重新设为false，防止其影响翻页
-              }
+              // if ($.trim(_this.searchKeyWord) == "" || _this.searchKeyWord == null) {
+              //   _this.getNewsList(obj.curr, _this.searchKeyList, _this.searchKeyWord);
+              // } else {
+              //   if (_this.isSearchNews) {
+              //     obj.curr = 1; //在进行搜索时，防止在当前页码不是1而导致获取不到数据
+              //   }
+              //   _this.getNewsList(obj.curr, _this.searchKeyList, _this.searchKeyWord);
+              //   _this.isSearchNews = false; //页码设置完1后，将其重新设为false，防止其影响翻页
+              // }
+              _this.getNewsList(obj.curr, _this.searchKeyList, _this.searchKeyWord);
             },
           });
         }
         //不足10条数据
         else {
-          // 当不是搜索数据
-          if (_this.searchKeyWord == "" || _this.searchKeyWord == null) {
-            _this.getNewsList(1, _this.searchKeyList, _this.searchKeyWord);
-          } else {
-            _this.getNewsList(1, _this.searchKeyList, _this.searchKeyWord);
-            //不构成分页时，把之前的分页去掉
-            document.getElementById("newsPage").innerHTML = "";
-          }
+          document.getElementById("newsPage").innerHTML = "";
         }
       })
     },
