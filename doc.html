@@ -42,6 +42,15 @@ document.getElementsByTagName("head")[0].appendChild(style);
       <span class="l">
        <!--  <a class="btn btn-primary radius" v-on:click="add()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加文章</a> -->
       </span>
+      <span>
+        <select id="searchType" v-model="searchType" class="input-text">
+          <option value="Title">标题</option>
+          <option value="Author">作者</option>
+        </select>
+      </span>
+      <span>         
+        <input id="searchKey" v-model="searchKey" @keyup.enter="search" class="input-text" type="search" autofocus><a id="searchBtn" class="btn btn-success radius" @click="search" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
+      </span>
       <span class="r lh">本页数据:
         <select v-model="displayCount" @change="getData($event)">
           <option value="{{displayCount}}">{{displayCount}}</option>

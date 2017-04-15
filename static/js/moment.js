@@ -22,6 +22,8 @@ var Vue_App = new Vue({
     count: 200, //还能输入的内容字数
     UserId: "",
     showItem: false,
+    searchKey: "",
+    searchType: "Nick",
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id 
     UsrItem: [],
@@ -33,15 +35,24 @@ var Vue_App = new Vue({
     if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
-      this.getList(1, 15);
+      this.getList(1, 15, "", "");
     }
   },
   methods: {
-    getList(index, size) {
+    getList(index, size, type, key) {
       var data = {
         "Index": index,
         "Size": size
       };
+      if (type === "Nick") {
+        data.Nick = key;
+      }
+      if (type === "Topic") {
+        data.Topic = key;
+      }
+      if (type === "AliasId") {
+        data.AliasId = key;
+      }
       this.$http.post(this.ip + "/api/Moment/List", data, {
         headers: {
           "Authorization": this.token
@@ -90,7 +101,7 @@ var Vue_App = new Vue({
                 _this.currPage = obj.curr;
                 //获取当前页或指定页的数据
                 // console.log(obj.curr);
-                _this.getList(obj.curr, _this.currCount);
+                _this.getList(obj.curr, _this.currCount, _this.searchType, _this.searchKey);
               }
               _this.firstLoad = false;
             },
@@ -105,7 +116,12 @@ var Vue_App = new Vue({
       this.currCount = event.target.value;
       this.currPage = 1; //防止获取不到数据
       this.firstLoad = true;
-      this.getList(1, this.currCount);
+      this.getList(1, this.currCount, this.searchType, this.searchKey);
+    },
+    search() {
+      this.isHide = false;
+      this.firstLoad = true;
+      this.getList(1, this.currCount, this.searchType, this.searchKey);
     },
     //获取用户Id
     getUsrid() {
@@ -315,7 +331,7 @@ var Vue_App = new Vue({
           success: function(res) {
             if (res.Code === 200) {
               _this.firstLoad = true;
-              _this.getList(1, _this.currCount);
+              _this.getList(1, _this.currCount, _this.searchType, _this.searchKey);
               _this.nick = "";
               document.getElementById("addfile").value = "";
               document.getElementById("add_content").value = "";

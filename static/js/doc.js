@@ -25,6 +25,8 @@ var Vue_App = new Vue({
     firstLoad: true,
     isEdit: true,
     layer_text: "",
+    searchType: "Title",
+    searchKey: "",
     ip: "", //用于服务器
     // ip: "http://192.168.31.82", //用于测试
   },
@@ -32,7 +34,7 @@ var Vue_App = new Vue({
     if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
-      this.getList(1, 15);
+      this.getList(1, 15, "", "");
       //富文本编辑器初始化
       window.editor = new wangEditor('editor');
       editor.config.uploadImgUrl = this.ip + '/api/Default/UploadImg';
@@ -46,9 +48,15 @@ var Vue_App = new Vue({
     }
   },
   methods: {
-    getList(index, size) {
+    getList(index, size, type, key) {
       var _this = this;
       var data = { "Index": index, "Size": size };
+      if (type == "Title") {
+        data.Title = key;
+      }
+      if (type == "Author") {
+        data.Author = key;
+      }
       this.$http.post(this.ip + "/api/HDoc/List", data, {
         headers: {
           "Authorization": this.token
@@ -94,7 +102,7 @@ var Vue_App = new Vue({
                 _this.currPage = obj.curr;
                 //获取当前页或指定页的数据
                 // console.log(obj.curr);
-                _this.getList(obj.curr, _this.currCount);
+                _this.getList(obj.curr, _this.currCount, _this.searchType, _this.searchKey);
               }
               _this.firstLoad = false;
             },
@@ -109,7 +117,11 @@ var Vue_App = new Vue({
       this.currCount = event.target.value;
       this.currPage = 1; //防止获取不到数据
       this.firstLoad = true;
-      this.getList(1, this.currCount);
+      this.getList(1, this.currCount, this.searchType, this.searchKey);
+    },
+    search() {
+      this.firstLoad = true;
+      this.getList(1, this.currCount, this.searchType, this.searchKey);
     },
     edit(index) {
       this.isEdit = true;
@@ -314,7 +326,7 @@ var Vue_App = new Vue({
           success: function(res) {
             if (res.Code === 200) {
               _this.firstLoad = true;
-              _this.getList(1, _this.currCount);
+              _this.getList(1, _this.currCount, _this.searchType, _this.searchKey);
               _this.layer_close();
               layer.msg("添加成功", { icon: 1, time: 2000 });
               _this.clearData();
