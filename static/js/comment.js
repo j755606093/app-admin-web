@@ -124,7 +124,7 @@ var Vue_App = new Vue({
         }
       }).then(function(res) {
         if (res.data.Code === 200) {
-          _this.PostItem = res.data.Data[0];
+          _this.PostItem = res.data.Data;
           layer.open({
             type: 1,
             title: "帖子详情",
