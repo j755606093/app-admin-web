@@ -38,8 +38,16 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
   <div class="page-container" id="isget" style="visibility: hidden">
     <div class="cl pd-5 bg-1 bk-gray mt-20">
-      <span class="l">
-    </span>
+      <span>
+        <select id="searchType" v-model="searchType" @change="changeType" class="input-text">
+          <option value="Nick">昵 称</option>
+          <option value="DocId">帖子ID</option>
+          <option value="AliasId">用户ID</option>
+        </select>
+      </span>
+      <span>         
+        <input id="searchKey" v-model="searchKey" @keyup.enter="search" class="input-text" type="search" autofocus><a id="searchBtn" class="btn btn-success radius" @click="search" href="javascript:;"><i class="Hui-iconfont">&#xe665;</i> 搜 索</a>
+      </span>
       <span class="r lh">本页数据:
         <select v-model="displayCount" @change="getData($event)">
           <option value="{{displayCount}}">{{displayCount}}</option>
@@ -58,6 +66,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
           <tr class="text-c">
             <th>ID</th>
             <th>用户ID</th>
+            <th>昵称</th>
             <th>帖子ID</th>
             <th>内容</th>
             <th>回复楼层ID</th>
@@ -69,8 +78,8 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <tbody>
           <tr class="text-c" v-for="item in items">
             <td>{{item.Id}}</td>
-            <td>{{item.UsrId}}</td>
-            <!-- <td>{{item.DocId}}</td> -->
+            <td>{{item.AliasId}}</td>
+            <td>{{item.Nick}}</td>
             <td><a style="text-decoration:underline;" title="查看详情" class="ml-5" href="javascript:;" @click="postDetail(item.DocId)">{{item.DocId}}</a></td>
             <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
             <td>{{item.PId}}</td>

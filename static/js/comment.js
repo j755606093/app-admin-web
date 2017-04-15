@@ -15,6 +15,8 @@ var Vue_App = new Vue({
     isHide: false, //“加载中”
     PostItem: [], //帖子详情
     firstLoad: true,
+    searchKey: "",
+    searchType: "Nick",
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
     ip: "", //用于服务器
@@ -24,13 +26,27 @@ var Vue_App = new Vue({
     if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
-      this.getList(1, 15);
+      this.getList(1, 15, "", "");
     }
   },
   methods: {
-    getList(index, size) {
+    getList(index, size, type, key) {
       var _this = this;
-      this.$http.post(this.ip + "/api/Comment/List", { "Index": index, "Size": size }, {
+      var data = { "Index": index, "Size": size };
+      if (type === "Nick") {
+        data.Nick = key;
+      }
+      if (type === "DocId") {
+        if (key === "") {
+          data.DocId = -1;
+        } else {
+          data.DocId = key;
+        }
+      }
+      if (type === "AliasId") {
+        data.AliasId = key;
+      }
+      this.$http.post(this.ip + "/api/Comment/List", data, {
         headers: {
           "Authorization": this.token
         }
@@ -77,7 +93,7 @@ var Vue_App = new Vue({
                 _this.currPage = obj.curr;
                 //获取当前页或指定页的数据
                 // console.log(obj.curr);
-                _this.getList(obj.curr, _this.currCount);
+                _this.getList(obj.curr, _this.currCount, _this.searchType, _this.searchKey);
               }
               _this.firstLoad = false;
             },
@@ -91,7 +107,12 @@ var Vue_App = new Vue({
     getData(event) {
       this.currCount = event.target.value;
       this.firstLoad = true;
-      this.getList(1, this.currCount);
+      this.getList(1, this.currCount, this.searchType, this.searchKey);
+    },
+    search() {
+      this.isHide = false;
+      this.firstLoad = true;
+      this.getList(1, this.currCount, this.searchType, this.searchKey);
     },
     //查看帖子详情
     postDetail(id) {
