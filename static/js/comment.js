@@ -207,7 +207,7 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.setPage();
+            _this.getList(1, _this.currCount, _this.searchType, _this.searchKey);
             layer.msg(successMsg, { icon: 1, time: 2000 });
             _this.layer_close();
           } else {
