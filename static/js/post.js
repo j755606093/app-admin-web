@@ -236,6 +236,7 @@ var Vue_App = new Vue({
       });
     },
     edit(index, id) {
+      this.showItem = false;
       this.editItem = this.items[index];
       if (!this.editItem.Source) {
         var imgItem = this.editItem.Img;
