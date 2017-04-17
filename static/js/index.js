@@ -262,6 +262,12 @@ var VM = new Vue({
         nowdate = new Date(nowdate);
         this.seconds = Math.floor((nowdate - logindate) / (60 * 1000)); //分钟数
         this.days = Math.floor((nowdate - logindate) / (24 * 3600 * 1000)); //天数
+        if (this.seconds < 1) {
+          this.seconds = 0;
+        }
+        if (this.days < 1) {
+          this.days = 0;
+        }
       }
     },
     //登录剩余时长
