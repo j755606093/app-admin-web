@@ -111,7 +111,6 @@ var Vue_App = new Vue({
         if (res.data.Code === 200) {
           _this.UsrItem = res.data.Data;
         } else {
-          console.log(res.body.Message)
           _this.UsrItem = [];
         }
       }).catch(function(error) {
