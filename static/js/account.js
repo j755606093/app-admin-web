@@ -28,10 +28,14 @@ var Vue_App = new Vue({
     editMailValid: false,
     editMobileValid: false,
     firstLoad: false,
-    ip: "", //用于服务器
-    // ip: "http://192.168.31.82", //用于测试
+    ip: "",
   },
   created: function() {
+    //判断是本地测试还是线上生产环环境
+    var ishttp = 'http:' == document.location.protocol ? true : false;
+    if (ishttp) {
+      this.ip = "http://192.168.31.82"; //测试环境
+    }
     if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
@@ -43,28 +47,29 @@ var Vue_App = new Vue({
     getList(index, size) {
       var _this = this;
       this.$http.post(this.ip + "/api/Account/List", { "AccountId": this.usrId, "Index": index, "Size": size }, {
-        headers: {
-          "Authorization": this.token
-        }
-      }).then(function(res) {
-        if (res.body.Code == 200) {
-          _this.items = res.body.Data.Content;
-          _this.displayCount = _this.items.length;
-          _this.TotalCount = res.body.Data.TotalCount;
-        } else if (res.body.Code == 204) {
-          _this.items = [];
-          _this.displayCount = 0;
-          _this.TotalCount = 0;
-          document.getElementById("page").innerHTML = "";
-        } else {
-          layer.msg(res.body.Message, { icon: 0, time: 3000 });
-        }
-        _this.isHide = true;
-      }).catch(function(error) {
-        _this.isHide = true;
-        console.log(error);
-        layer.msg("服务器错误，请稍后再试", { icon: 0, time: 2500 });
-      })
+          headers: {
+            "Authorization": this.token
+          }
+        }).then(function(res) {
+          if (res.body.Code == 200) {
+            _this.items = res.body.Data.Content;
+            _this.displayCount = _this.items.length;
+            _this.TotalCount = res.body.Data.TotalCount;
+          } else if (res.body.Code == 204) {
+            _this.items = [];
+            _this.displayCount = 0;
+            _this.TotalCount = 0;
+            document.getElementById("page").innerHTML = "";
+          } else {
+            layer.msg(res.body.Message, { icon: 0, time: 3000 });
+          }
+          _this.isHide = true;
+        }).catch(function(error) {
+          _this.isHide = true;
+          console.log(error);
+          layer.msg("服务器错误，请稍后再试", { icon: 0, time: 2500 });
+        })
+        //页面加载完成之后显示网页主体内容
       document.getElementById("isget").style.visibility = "visible";
     },
     //设置分页
@@ -80,6 +85,7 @@ var Vue_App = new Vue({
             skin: '#148cf1', //自定义选中色值
             skip: true, //开启跳页
             jump: function(obj) {
+              //防止第一次加载时分页插件的首页再次获取数据
               if (!_this.firstLoad) {
                 _this.isHide = false;
                 //记录当前页码
@@ -104,7 +110,7 @@ var Vue_App = new Vue({
     },
     //获取管理角色
     getAdminGroup() {
-      this.$http.get(this.ip + "/api/Group/GetGroupEnum/" + this.usrId, {
+      return this.$http.get(this.ip + "/api/Group/GetGroupEnum/" + this.usrId, {
         headers: {
           "Authorization": this.token
         }
@@ -146,7 +152,7 @@ var Vue_App = new Vue({
       var mailRule = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
       if (obj === "add") {
         mail = this.addItem.Mail;
-        if (!mailRule.test(mail) && mail !== "") {
+        if (!mailRule.test(mail) && mail !== "" && mail !== null) {
           this.addValid = false;
           this.addMailValid = true;
         } else {
@@ -154,7 +160,7 @@ var Vue_App = new Vue({
         }
       } else {
         mail = this.editItem.Mail;
-        if (!mailRule.test(mail) && mail !== null && mail !== "") {
+        if (!mailRule.test(mail) && mail !== "" && mail !== null) {
           this.editValid = false;
           this.editMailValid = true;
         } else {
@@ -186,8 +192,7 @@ var Vue_App = new Vue({
     },
     //验证密码
     checkPwd() {
-      var pwd = "";
-      pwd = this.addItem.Pwd;
+      var pwd = this.addItem.Pwd;
       if (pwd.length < 6 || pwd.length > 12) {
         this.addValid = false;
         this.addPwdValid = true;
@@ -204,18 +209,46 @@ var Vue_App = new Vue({
       }
     },
     edit(index) {
-      // 编辑内容
+      var _this = this;
       this.editItem = this.items[index];
-      this.layer = layer.open({
-        type: 1,
-        title: "编辑管理员",
-        content: $("#editaccount"),
-        area: "600px",
-        skin: 'layui-layer-demo', //样式类名
-        anim: 2,
-        shadeClose: true, //开启遮罩关闭
+      this.getAdminGroup().then(function() {
+        if (this.GroupItem.length !== 0) {
+          var arr = [];
+          var group = this.editItem.GroupId;
+          //只有一个
+          if (group.indexOf(",") === -1) {
+            arr.push(group);
+          } else {
+            arr = group.split(",");
+          }
+          //重置为未选中状态
+          var group = document.getElementsByName("editGroup");
+          for (var item of group) {
+            item.checked = false;
+          }
+          for (var a of arr) {
+            for (var item of this.GroupItem) {
+              if (a === item.Value.toString()) {
+                document.getElementById("edit" + a).checked = true;
+              }
+            }
+          }
+          this.layer = layer.open({
+            type: 1,
+            title: "编辑管理员",
+            content: $("#editaccount"),
+            area: "600px",
+            skin: 'layui-layer-demo', //样式类名
+            anim: 2,
+            shadeClose: true, //开启遮罩关闭
+            end: function() {
+              _this.editNickValid = false;
+              _this.editMobileValid = false;
+              _this.editMailValid = false;
+            }
+          });
+        }
       });
-      // this.getComm();
     },
     layer_close() {
       layer.close(this.layer);
@@ -226,10 +259,21 @@ var Vue_App = new Vue({
       this.checkNick('edit');
       this.checkMail('edit');
       this.checkMobile('edit');
+      var arr = [];
+      var group = document.getElementsByName("editGroup");
+      for (var item of group) {
+        if (item.checked) {
+          arr.push(item.value);
+        }
+      }
+      if (arr.length === 0) {
+        this.editValid = false;
+        layer.msg("请选择角色", { icon: 0, time: 2500 });
+      }
       if (this.editValid) {
         this.isHide = false; //加载中
-        var data = JSON.parse(JSON.stringify(this.editItem));
-        this.$http.post(this.ip + "/api/Account/Update", data, {
+        this.editItem.GroupId = arr.toString();
+        this.$http.post(this.ip + "/api/Account/Update", this.editItem, {
           headers: {
             "Authorization": this.token
           }
@@ -258,7 +302,6 @@ var Vue_App = new Vue({
       } else {
         this.addItem.GroupId = this.GroupItem[1].Value;
       }
-      this.getAdminGroup();
       this.layer = layer.open({
         type: 1,
         title: "新增管理员",
@@ -275,6 +318,7 @@ var Vue_App = new Vue({
           _this.addConfirmPwdValid = false;
         }
       });
+      this.getAdminGroup();
     },
     layer_submit_add() {
       var _this = this;
@@ -284,12 +328,24 @@ var Vue_App = new Vue({
       this.checkMobile('add');
       this.checkPwd();
       this.checkConfirmPwd();
+      this.addItem.GroupId = [];
+      var group = document.getElementsByName("addGroup");
+      for (var item of group) {
+        if (item.checked) {
+          this.addItem.GroupId.push(item.value);
+        }
+      }
+      if (this.addItem.GroupId.length === 0) {
+        this.addValid = false;
+        layer.msg("请选择角色", { icon: 0, time: 2500 });
+      }
       if (this.addValid) {
         this.isHide = false; //加载中
         var pwd = this.addItem.Pwd;
+        //密码加密
         this.addItem.Password = this.encodePwd(pwd);
-        var data = JSON.parse(JSON.stringify(this.addItem));
-        this.$http.post(this.ip + "/api/Account/Add", data, {
+        this.addItem.GroupId = this.addItem.GroupId.toString();
+        this.$http.post(this.ip + "/api/Account/Add", this.addItem, {
           headers: {
             "Authorization": this.token
           }
@@ -300,7 +356,7 @@ var Vue_App = new Vue({
             _this.layer_close();
             layer.msg('新增成功', { icon: 1, time: 2000 });
             _this.clearAddItem();
-          } else if (res.body.Message !== "") {
+          } else if (res.body.Message) {
             layer.msg(res.body.Message, { icon: 0, time: 3000 });
           } else {
             layer.msg('服务器错误，请稍后再试', { icon: 0, time: 3000 });
@@ -320,6 +376,7 @@ var Vue_App = new Vue({
       this.addItem.Mobile = "";
       this.addItem.Pwd = "";
       this.addItem.Password = "";
+      this.addItem.ConfirmPwd = "";
       this.addItem.Remark = "";
       this.addItem.Status = 1;
     },
@@ -341,5 +398,14 @@ var Vue_App = new Vue({
     currCount: function(val) {
       this.setPage();
     },
+  },
+  filters: {
+    //截取角色名称作为ID
+    cutAddId: function(value) {
+      return "add" + value;
+    },
+    cutEditId: function(value) {
+      return "edit" + value;
+    }
   }
 });
