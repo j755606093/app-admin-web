@@ -4,11 +4,11 @@
 <head>
   <meta charset="utf-8">
   <link href="lib/favicon.ico" rel="shortcut icon">
-  <link rel="stylesheet" href="static/h-ui/css/H-ui.min.css" />
-  <link rel="stylesheet" href="static/h-ui.admin/css/H-ui.admin.css" />
-  <link rel="stylesheet" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
-  <link rel="stylesheet" href="static/h-ui.admin/skin/blue/skin.css" id="skin" />
-  <title>admin</title>
+  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/blue/skin.css" id="skin" />
   <style>
   #loading {
     width: 32px;
@@ -23,11 +23,12 @@
     display: none;
   }
   </style>
+  <title>admin</title>
 </head>
 <script>
 var style = document.createElement("link");
 style.setAttribute("rel", "stylesheet");
-style.setAttribute("href", "static/css/index.css?hash=" + Date.now());
+style.setAttribute("href", "dist/css/index.css?hash=" + Date.now());
 document.getElementsByTagName("head")[0].appendChild(style);
 </script>
 
