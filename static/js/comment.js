@@ -19,10 +19,14 @@ var Vue_App = new Vue({
     searchType: "Nick",
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
-    ip: "", //用于服务器
-    // ip: "http://192.168.31.82", //用于测试
+    ip: "",
   },
   created: function() {
+    //判断是本地测试还是线上生产环环境
+    var isTest = window.location.href.indexOf("192.168") > -1 ? true : false;
+    if (isTest) {
+      this.ip = "http://192.168.31.82"; //测试环境
+    }
     if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
@@ -170,6 +174,7 @@ var Vue_App = new Vue({
         anim: 2,
         shadeClose: false, //开启遮罩关闭
       });
+      //内容超过30个字符时，添加缩进
       if (intro.length > 30) {
         this.isIndent = true;
       } else {
@@ -228,6 +233,7 @@ var Vue_App = new Vue({
     },
   },
   filters: {
+    //内容过长时，中间加入省略
     subContent: function(val) {
       if (!val) {
         return "";

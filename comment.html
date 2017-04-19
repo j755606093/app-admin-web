@@ -3,11 +3,10 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
-  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
-  <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
-  <link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css" />
-  <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+  <link rel="stylesheet" href="static/h-ui/css/H-ui.min.css" />
+  <link rel="stylesheet" href="static/h-ui.admin/css/H-ui.admin.css" />
+  <link rel="stylesheet" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+  <link rel="stylesheet" href="lib/layui/css/layui.css" />
   <style>
   #loading {
     width: 32px;
@@ -39,7 +38,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <div class="page-container" id="isget" style="visibility: hidden">
     <div class="cl pd-5 bg-1 bk-gray mt-20">
       <span>
-        <select id="searchType" v-model="searchType" @change="changeType" class="input-text">
+        <select id="searchType" v-model="searchType" class="input-text">
           <option value="Nick">昵 称</option>
           <option value="DocId">帖子ID</option>
           <option value="AliasId">用户ID</option>
