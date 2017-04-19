@@ -14,10 +14,14 @@ var Vue_App = new Vue({
     feedbackId: "",
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id     
-    ip: "", //用于服务器
-    // ip: "http://192.168.31.82", //用于测试      
+    ip: "",
   },
   created: function() {
+    //判断是本地测试还是线上生产环环境
+    var isTest = window.location.href.indexOf("192.168") > -1 ? true : false;
+    if (isTest) {
+      this.ip = "http://192.168.31.82"; //测试环境
+    }
     if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
@@ -116,8 +120,8 @@ var Vue_App = new Vue({
       var _this = this;
       var msg = "举报无效";
       var status = -1;
-      var pass = document.getElementById("pass");
-      if (pass.checked) {
+      var valid = document.getElementById("valid");
+      if (valid.checked) {
         status = 1;
         msg = "举报有效";
       }
@@ -132,7 +136,12 @@ var Vue_App = new Vue({
           }
         }).then(function(res) {
           if (res.body.Code === 200) {
-            _this.setPage();
+            _this.getFeedback(status);
+            if (status === 1) {
+              document.getElementById("pass").checked = true;
+            } else {
+              document.getElementById("failure").checked = true;
+            }
             layer.msg("操作成功", { icon: 1, time: 2500 });
             layer.close(confirm);
             layer.close(_this.layer);

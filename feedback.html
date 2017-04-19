@@ -20,12 +20,12 @@
   margin-bottom: 10px;
 }
 
-#handlerFeedBack span.pass {
+#handlerFeedBack span.valid {
   margin-left: 20px;
   float: left;
 }
 
-#handlerFeedBack span.failure {
+#handlerFeedBack span.novalid {
   margin-right: 20px;
   float: right;
 }
@@ -138,13 +138,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <div id="loading" v-bind:class="{ hide: isHide }"><img src="lib/layer/2.1/skin/default/loading-2.gif"></div>
     <!-- 处理举报 -->
     <div id="handlerFeedBack">
-      <span class="pass">
-      <input id="pass" type="radio" v-on:click="handlerFeedBack" name="feedback">
-      <label for="pass">举报有效</label>
+      <span class="valid">
+      <input id="valid" type="radio" v-on:click="handlerFeedBack" name="feedback">
+      <label for="valid">举报有效</label>
     </span>
-      <span class="failure">
-      <input id="failure" type="radio" v-on:click="handlerFeedBack" name="feedback">
-      <label for="failure">举报无效</label>
+      <span class="novalid">
+      <input id="novalid" type="radio" v-on:click="handlerFeedBack" name="feedback">
+      <label for="novalid">举报无效</label>
     </span>
     </div>
     <script src="lib/jquery/1.9.1/jquery.min.js"></script>
