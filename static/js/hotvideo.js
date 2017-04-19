@@ -19,10 +19,14 @@ var Vue_App = new Vue({
     usrId: window.localStorage.usrId, //用户Id   
     ClassifyItem: [],
     firstLoad: true,
-    ip: "", //用于服务器
-    // ip: "http://192.168.31.82", //用于测试
+    ip: "",
   },
   created: function() {
+    //判断是本地测试还是线上生产环环境
+    var isTest = window.location.href.indexOf("192.168") > -1 ? true : false;
+    if (isTest) {
+      this.ip = "http://192.168.31.82"; //测试环境
+    }
     if (!this.usrId) {
       parent.location.href = "login.html";
     } else {

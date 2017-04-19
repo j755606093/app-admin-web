@@ -44,10 +44,14 @@ var VM = new Vue({
     stayOrder: window.localStorage.stayHandleOrder,
     layer: "",
     childVideoModule: [],
-    ip: "", //用于服务器
-    // ip: "http://192.168.31.82", //用于测试
+    ip: "",
   },
   created: function() {
+    //判断是本地测试还是线上生产环环境
+    var isTest = window.location.href.indexOf("192.168") > -1 ? true : false;
+    if (isTest) {
+      this.ip = "http://192.168.31.82"; //测试环境
+    }
     if (!this.usrId) {
       this.isHide = true;
       layer.alert('会话已过期，请重新登录', {
@@ -64,10 +68,10 @@ var VM = new Vue({
       this.isLogin = true;
       var i = parseInt(this.isRemember);
       if (i === 0) {
-        //未选择“两周内免登录”
-        this.Type = "分钟";
-        this.Duration = 60 * 12 - this.seconds; //120分钟
-        this.Cycle = 60 * 1000; //1分钟
+        //未选择“一周内免登录”，只能在线登录12个小时
+        this.Type = "小时";
+        this.Duration = 12 - this.hours;
+        this.Cycle = 3600 * 1000; //1小时
       } else {
         this.Type = "天";
         this.Duration = 7 - this.days; //7天
@@ -92,6 +96,7 @@ var VM = new Vue({
           for (var i = 0; i < leng; i++) {
             var name = _this.items[i].Name;
             var modules = _this.items[i].SubModules;
+            //选择不直接遍历插入是因为在侧边栏的菜单选项卡中会打不开
             if (name == "首页") {
               _this.childHomeModule = modules;
             }
@@ -260,13 +265,14 @@ var VM = new Vue({
         var nowdate = Date.now(); //当前日期
         logindate = new Date(logindate);
         nowdate = new Date(nowdate);
-        this.seconds = Math.floor((nowdate - logindate) / (60 * 1000)); //分钟数
+        this.hours = Math.floor((nowdate - logindate) / (3600 * 1000)); //小时数
         this.days = Math.floor((nowdate - logindate) / (24 * 3600 * 1000)); //天数
-        if (this.seconds < 1) {
-          this.seconds = 0;
+        //防止计算登录时长时出现负数
+        if (this.hours > 12) {
+          this.hours = 12;
         }
-        if (this.days < 1) {
-          this.days = 0;
+        if (this.days > 7) {
+          this.days = 7;
         }
       }
     },

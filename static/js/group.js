@@ -45,10 +45,14 @@ var Vue_App = new Vue({
     editValid: true,
     moduleCount: 0, //模块没有被选中的数量，用来判断有无模块被选中  
     firstLoad: true,
-    ip: "", //用于服务器
-    // ip: "http://192.168.31.82", //用于测试
+    ip: "",
   },
   created: function() {
+    //判断是本地测试还是线上生产环环境
+    var isTest = window.location.href.indexOf("192.168") > -1 ? true : false;
+    if (isTest) {
+      this.ip = "http://192.168.31.82"; //测试环境
+    }
     if (!this.usrId) {
       parent.location.href = "login.html";
     } else {

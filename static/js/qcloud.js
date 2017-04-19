@@ -19,10 +19,14 @@ var Vue_App = new Vue({
     AnchorInfor: {},
     token: "Bearer " + window.localStorage.token,
     usrId: window.localStorage.usrId, //用户Id   
-    ip: "", //用于服务器
-    // ip: "http://192.168.31.82", //用于测试
+    ip: "",
   },
   created: function() {
+    //判断是本地测试还是线上生产环环境
+    var isTest = window.location.href.indexOf("192.168") > -1 ? true : false;
+    if (isTest) {
+      this.ip = "http://192.168.31.82"; //测试环境
+    }
     if (!this.usrId) {
       parent.location.href = "login.html";
     } else {
@@ -253,6 +257,19 @@ var Vue_App = new Vue({
         });
       }
     },
+    copyId(id) {
+      id = "#id" + id; //要复制的元素Id
+      var clipboard = new Clipboard(id);
+      clipboard.on('success', function(e) {
+        layer.tips("已复制", id, {
+          tips: [1, '#00B271'],
+          time: 3000
+        });
+      });
+      clipboard.on('error', function(e) {
+        console.log(e);
+      });
+    },
     formatData(data) {
       return JSON.parse(JSON.stringify(data));
     },
@@ -309,7 +326,7 @@ var Vue_App = new Vue({
         return "";
       } else {
         var leng = val.length;
-        return val.slice(0, 5) + "..." + val.slice(leng - 5, leng);
+        return val.slice(0, 3) + "..." + val.slice(leng - 3, leng);
       }
     },
   }

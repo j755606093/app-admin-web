@@ -16,9 +16,13 @@ var Vue_App = new Vue({
     isLoading: true,
     isHide: true,
     ip: "",
-    // ip: "http://192.168.31.82", //APP
   },
   created: function() {
+    //判断是本地测试还是线上生产环环境
+    var isTest = window.location.href.indexOf("192.168") > -1 ? true : false;
+    if (isTest) {
+      this.ip = "http://192.168.31.82"; //测试环境
+    }
     this.getCheckCode();
   },
   methods: {

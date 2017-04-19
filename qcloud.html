@@ -58,9 +58,9 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <th>房间编码</th>
             <th>房间封面</th>
             <th>观看数</th>
-            <!-- <th>推流url</th> -->
             <th>离线次数</th>
             <th>直播状态</th>
+            <th>app跳转url</th>
             <th>创建时间</th>
             <th>操作</th>
           </tr>
@@ -74,11 +74,11 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td v-if="!item.CoverUrl">{{item.CoverUrl}}</td>
             <td v-else><a href="{{item.CoverUrl}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
             <td>{{item.ReadCount}}</td>
-            <!-- <td>{{item.PushUrl | subStr}}</td> -->
             <td>{{item.Count}}</td>
             <td v-if="item.Status == 0">已结束</td>
             <td v-if="item.Status == 1">直播中</td>
             <td v-if="item.Status == -1">已禁播</td>
+            <td>{{item.AppUsage | subStr}} <a style="text-decoration: none;" class="ml-5" href="javascript:;"><i class="Hui-iconfont" data-clipboard-text="{{item.AppUsage}}" @click="copyId(item.Id)" id="id{{item.Id}}">&#xe6ea;</i></a></td>
             <td>{{item.MTime.replace("T"," ").slice(0,19)}}</td>
             <td class="td-manage">
               <a href="javascript:;" v-on:click="edit($index)"> 编辑
@@ -204,6 +204,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <script src="//ok82gyrdp.qnssl.com/js/admin/vue-1.0.28.js"></script>
   <script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.min.js"></script>
   <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  <script src="lib/clipboard.min.js"></script>
   <div id="js"></div>
   <script>
   var script = document.createElement("script");
