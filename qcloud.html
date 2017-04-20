@@ -75,9 +75,10 @@ document.getElementsByTagName("head")[0].appendChild(style);
             <td v-else><a href="{{item.CoverUrl}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
             <td>{{item.ReadCount}}</td>
             <td>{{item.Count}}</td>
-            <td v-if="item.Status == 0">已结束</td>
+            <td v-if="item.Status == 0">待直播</td>
             <td v-if="item.Status == 1">直播中</td>
             <td v-if="item.Status == -1">已禁播</td>
+            <td v-if="item.Status == 2">已结束</td>
             <td>{{item.AppUsage | subStr}} <a style="text-decoration: none;" class="ml-5" href="javascript:;"><i class="Hui-iconfont" data-clipboard-text="{{item.AppUsage}}" @click="copyId(item.Id)" id="id{{item.Id}}">&#xe6ea;</i></a></td>
             <td>{{item.MTime.replace("T"," ").slice(0,19)}}</td>
             <td class="td-manage">
@@ -139,8 +140,9 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <label class="form-label col-xs-4 col-sm-2">状态:</label>
         <div class="formControls col-xs-8 col-sm-9">
           <select name="Status" v-model="editItem.Status" class="input-text">
+            <option value="2">已结束</option>
             <option value="1">直播中</option>
-            <option value="0">已结束</option>
+            <option value="0">待直播</option>
             <option value="-1">已禁播</option>
           </select>
         </div>
