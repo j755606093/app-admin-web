@@ -328,5 +328,13 @@ var Vue_App = new Vue({
         return val.slice(0, 3) + "..." + val.slice(leng - 3, leng);
       }
     },
+    //数值类型转换为字符串
+    toStrings: function(val) {
+      if (!val) {
+        return "";
+      } else {
+        return val.toString();
+      }
+    }
   }
 });
