@@ -7,6 +7,7 @@
 ##项目地址
 
 本地: /Users/yemou/app-admin-web
+
 git: https://github.com/j755606093/app-admin-web
 
 ##启动服务
@@ -55,6 +56,30 @@ git: https://github.com/j755606093/app-admin-web
 
 ##注意事项
 
-- 如果要新增一个父级管理模块，比如首页，那么首先需要在**权限**中打开模块管理添加一个父级模块
+- 如果要新增一个父级管理模块，比如首页，那么首先需要在**权限**中打开模块管理添加一个父级模块，之后在`index.html`中**aside**标签下增加如下代码：
 
-  
+``` html
+<dl id="menu-default" v-show="childHomeModule.length !== 0">
+  <dt><i class="Hui-iconfont">&#xe625;</i> 首页<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+  <dd>
+    <ul>
+      <li v-for="item in childHomeModule"><a _href="{{item.Value | addHash}}" data-title="{{item.Name}}" href="javascript:;"> {{item.Name}}</a></li>
+    </ul>
+  </dd>
+</dl>
+```
+
+然后再到`index.js`中定义**childHomeModule**，并在**getAdminModule(username)**方法下增加如下代码：
+
+``` javascript 
+if (name == "首页") {
+  _this.childHomeModule = modules;
+}
+```
+
+最后，代码修改完提交到线上之后，还得在**权限**中打开模块管理添加一个同样的父级模块
+
+- 如果要新增一个子级管理模块，比如新闻管理，那么也需要在**权限**中打开模块管理并在所属模块下添加子级模块。代码提交之后，也同样在线上进行相同的操作。
+
+- 如果修改了样式文件，记得要打开终端运行`gulp`命令
+
