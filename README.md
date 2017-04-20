@@ -1,3 +1,50 @@
-# app-admin
+## APP管理后台
 
-**App的管理后台**
+##声明
+由于本人技术能力有限，在项目开始时，在网上找了一个后台管理模板，然后根据需求做相应的改动。因为模板中打开每个管理模块时都是嵌套在iframe标签中的，所以也就很难利用模块化开发的思想将每个管理模块中的公共部分写成组件，也就造成了将vue当做jQuery来用的尴尬。另外，项目的目录也存在着不合理的地方。所以，维护起来可能会比较麻烦，还请见谅！
+
+##项目地址
+本地: /Users/yemou/app-admin-web
+git: https://github.com/j755606093/app-admin-web
+
+###启动服务
+在项目的根目录下找到同级的***serverApp.js***文件，打开终端，输入`node serverApp.js`
+启动之后再打开一个终端，进入到项目文件夹app-admin-web，并输入`gulp`
+
+###项目目录
+app-admin-web
+  dist                 存放压缩后的css文件
+  editor               引用的富文本编辑器
+  lib                  一些静态资源文件
+  node_modules         项目依赖
+  static
+    css                每个管理模块的css文件
+    h-ui               后台模板文件
+    h-ui.admin         后台模板文件
+    js                 每个管理模块的js文件
+  account.html         管理员管理
+  comment.html         评论管理
+  community.html       社区管理
+  doc.html             首页文章管理
+  essay.html           微信文章管理
+  feedback.html        举报管理
+  company.html         运输公司管理
+  group.html           角色管理
+  index.html           首页
+  hotvideo.html        热门视频
+  member.html          用户管理
+  login.html           登录页
+  module.html          模块管理
+  moment.html          动态管理
+  nav.html             导航管理
+  news.html            新闻管理
+  notify.html          推送管理
+  pictrue.html         轮播图管理
+  post.html            帖子管理
+  qcloud.html          直播管理
+  service.html         服务管理
+  topic.html           话题管理
+  video-classify.html  视频分类  
+  wechat.html          公众号管理
+
+  
