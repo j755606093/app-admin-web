@@ -17,31 +17,31 @@
     z-index: 20000000;
   }
   
-  #PostDetail,
   #lookIntro {
     display: none;
   }
   </style>
-  <title>评论列表</title>
+  <title>新闻评论列表</title>
 </head>
 <script>
 var style = document.createElement("link");
 style.setAttribute("rel", "stylesheet");
-style.setAttribute("href", "dist/css/comment.css?hash=" + Date.now());
+style.setAttribute("href", "dist/css/news-comment.css?hash=" + Date.now());
 document.getElementsByTagName("head")[0].appendChild(style);
 </script>
 
 <body id="app">
   <nav class="breadcrumb">
-    <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 评论管理
+    <i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 新闻评论管理
     <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
   <div class="page-container" id="isget" style="visibility: hidden">
     <div class="cl pd-5 bg-1 bk-gray mt-20">
       <span>
         <select id="searchType" v-model="searchType" class="input-text">
-          <option value="Nick">昵 称</option>
-          <option value="DocId">帖子ID</option>
-          <option value="AliasId">用户ID</option>
+          <option value="Nick">回复人昵称</option>
+          <option value="DocId">文章ID</option>
+          <option value="AliasId">回复人ID</option>
+          <option value="Title">标题</option>
         </select>
       </span>
       <span>         
@@ -64,12 +64,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <thead>
           <tr class="text-c">
             <th>ID</th>
-            <th>用户ID</th>
-            <th>昵称</th>
-            <th>帖子ID</th>
-            <th>内容</th>
-            <th>回复楼层ID</th>
-            <th>点赞数</th>
+            <th>文章ID</th>
+            <th>所属评论ID</th>
+            <th>标题</th>
+            <th>回复人ID</th>
+            <th>回复人昵称</th>
+            <th>被回复的内容ID</th>
+            <th>回复内容</th>
             <th>创建时间</th>
             <th>状态</th>
           </tr>
@@ -77,12 +78,13 @@ document.getElementsByTagName("head")[0].appendChild(style);
         <tbody>
           <tr class="text-c" v-for="item in items">
             <td>{{item.Id}}</td>
+            <td>{{item.DocId}}</td>
+            <td>{{item.CmtId}}</td>
+            <td>{{item.Title}}</td>
             <td>{{item.AliasId}}</td>
             <td>{{item.Nick}}</td>
-            <td><a style="text-decoration:underline;" title="查看详情" class="ml-5" href="javascript:;" @click="postDetail(item.DocId)">{{item.DocId}}</a></td>
+            <td>{{item.BeReplyId}}</td>
             <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
-            <td>{{item.PId}}</td>
-            <td>{{item.LikeCount}}</td>
             <td>{{item.CTime.replace("T"," ").slice(0,19)}}</td>
             <td>
               <a v-if="item.Status == 1" style="background-color:#00B271" class="ml-5 manage-btn enable-btn" id="id{{item.Id}}" v-on:mouseover="over(item.Id,item.Status)" v-on:mouseout="out(item.Id,item.Status)" href="javascript:;" v-on:click="edit(item.Id, item.Status)">已启用
@@ -100,46 +102,6 @@ document.getElementsByTagName("head")[0].appendChild(style);
     <!-- 分页 -->
     <div id="page"></div>
   </div>
-  <!-- 帖子详情 -->
-  <div id="PostDetail">
-    <table class="table table-border table-bordered table-bg table-hover table-sort">
-      <tbody>
-        <tr>
-          <td>发帖人</td>
-          <td>{{PostItem.UsrName}}</td>
-        </tr>
-        <tr>
-          <td>社区名称</td>
-          <td>{{PostItem.BoardName}}</td>
-        </tr>
-        <tr>
-          <td>标题</td>
-          <td>{{PostItem.Title}}</td>
-        </tr>
-        <tr>
-          <td>话题</td>
-          <td>{{PostItem.Topic}}</td>
-        </tr>
-        <tr>
-          <td>内容</td>
-          <td>{{PostItem.Content | subContent}}</td>
-        </tr>
-        <tr>
-          <td>点赞数</td>
-          <td>{{PostItem.LikeCount}}</td>
-        </tr>
-        <tr>
-          <td>管理员发帖</td>
-          <td v-if="PostItem.IsAdmin == 1">是</td>
-          <td v-else>否</td>
-        </tr>
-        <tr>
-          <td>发帖时间</td>
-          <td>{{PostItem.CTime.replace("T"," ").slice(0,19)}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
   <!-- 查看简介 -->
   <div id="lookIntro" :style="{'text-align': isIndent?'left':'center'}">
     <p :style="{'text-indent': isIndent?'2em':'0'}">{{Intro}}</p>
@@ -155,7 +117,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
   <div id="js"></div>
   <script>
   var script = document.createElement("script");
-  script.setAttribute("src", "static/js/comment.js?hash=" + Date.now());
+  script.setAttribute("src", "static/js/news-comment.js?hash=" + Date.now());
   document.getElementById("js").appendChild(script);
   </script>
 </body>

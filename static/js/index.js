@@ -96,7 +96,7 @@ var VM = new Vue({
           for (var i = 0; i < leng; i++) {
             var name = _this.items[i].Name;
             var modules = _this.items[i].SubModules;
-            //选择不直接遍历插入是因为在侧边栏的菜单选项卡中会打不开
+            //选择不直接遍历插入是因为在侧边栏的菜单选项卡中会打不开,原因是这个模板的缘故
             if (name == "首页") {
               _this.childHomeModule = modules;
             }

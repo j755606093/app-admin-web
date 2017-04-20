@@ -44,6 +44,7 @@ git: https://github.com/j755606093/app-admin-web
   - moment-comment       生活圈评论管理
   - nav.html             导航管理
   - news.html            新闻管理
+  - news-comment         新闻评论管理
   - notify.html          推送管理
   - pictrue.html         轮播图管理
   - post.html            帖子管理
