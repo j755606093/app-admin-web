@@ -48,6 +48,8 @@ var Vue_App = new Vue({
       editor.config.uploadHeaders = {
         'Accept': 'text/x-json'
       };
+      // 取消粘贴过滤
+      editor.config.pasteFilter = false;
       editor.create();
     }
   },
@@ -442,17 +444,23 @@ var Vue_App = new Vue({
         }
       });
     },
-    submit() {
+    //保存富文本编辑器的内容
+    saveRichText() {
       var html = editor.$txt.html();
       if (this.isEdit) {
         this.editItem.Content = html;
       } else {
         this.addItem.Content = html;
       }
-      this.close();
-    },
-    close() {
       layer.close(this.layer_text);
+    },
+    //关闭富文本编辑器
+    closeRichText() {
+      layer.close(this.layer_text);
+      //清空富文本编辑器的内容
+      if (!this.isEdit) {
+        editor.$txt.html('<p><br></p>');
+      }
     },
     //添加帖子
     layer_submit_add() {
@@ -506,7 +514,7 @@ var Vue_App = new Vue({
       document.getElementById("add_content").value = "";
       document.getElementById("add_readcount").value = "";
       document.getElementById("add_likecount").value = "";
-      // $("#add_topic").val("");
+      //清空富文本编辑器的内容
       editor.$txt.html('<p><br></p>');
     },
   },
