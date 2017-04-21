@@ -181,7 +181,7 @@ var Vue_App = new Vue({
         console.log(err)
       });
       // console.log(this.UsrItem)
-      this.showItem = true;
+      this.showItem = true; //显示选择用户列表
     },
     //选择昵称
     selectNick(name, val) {
@@ -191,7 +191,7 @@ var Vue_App = new Vue({
       } else {
         this.addItem.UsrId = val;
       }
-      this.showItem = false;
+      this.showItem = false; //隐藏选择用户列表
     },
     //复制Id
     clickCopy(id) {
@@ -239,36 +239,49 @@ var Vue_App = new Vue({
         console.log(e);
       });
     },
-    edit(index, id) {
-      this.showItem = false;
-      this.editItem = this.items[index];
-      if (!this.editItem.Source) {
-        var imgItem = this.editItem.Img;
-        var img = "";
-        //循环替换
-        for (var i = 0; i < imgItem.length; i++) {
-          img = "<img src=" + imgItem[i].Src + ">";
-          this.editItem.Content = this.editItem.Content.replace(imgItem[i].PositionName, img);
+    edit(index) {
+      //编辑时通过富文本编辑器打开帖子内容，帖子内容中可能是一个html文件，其包含的样式和脚本有可能
+      //对原来的内容造成影响，现在的解决办法是提示未知错误并重新刷新页面
+      try {
+        this.showItem = false;
+        this.editItem = this.items[index];
+        if (!this.editItem.Source) {
+          var imgItem = this.editItem.Img;
+          var img = "";
+          //循环替换
+          for (var i = 0; i < imgItem.length; i++) {
+            img = "<img src=" + imgItem[i].Src + ">";
+            this.editItem.Content = this.editItem.Content.replace(imgItem[i].PositionName, img);
+          }
+          editor.$txt.html(this.editItem.Content);
+        } else {
+          editor.$txt.html(this.editItem.Source);
         }
-        editor.$txt.html(this.editItem.Content);
-      } else {
-        editor.$txt.html(this.editItem.Source);
+        this.nick = this.editItem.UsrName;
+        this.isEdit = true;
+        this.layer = layer.open({
+          type: 1,
+          title: "编辑帖子",
+          content: $("#editpost"),
+          area: "600px",
+          skin: 'layui-layer-demo', //样式类名
+          anim: 2,
+          shadeClose: true, //开启遮罩关闭
+          scrollbar: false,
+          end: function() {
+            editor.$txt.html('<p><br></p>');
+          }
+        });
+      } catch (e) {
+        console.log(e);
+        layer.alert('编辑失败，帖子内容的html中可能包含错误的样式和脚本文件', {
+          closeBtn: 0,
+          icon: 0,
+        }, function() {
+          //防止帖子内容中html文件包含的样式影响原来的样式，故重新刷新页面
+          location.replace(location.href);
+        });
       }
-      this.nick = this.editItem.UsrName;
-      this.isEdit = true;
-      this.layer = layer.open({
-        type: 1,
-        title: "编辑帖子",
-        content: $("#editpost"),
-        area: "600px",
-        skin: 'layui-layer-demo', //样式类名
-        anim: 2,
-        shadeClose: true, //开启遮罩关闭
-        scrollbar: false,
-        end: function() {
-          editor.$txt.html('<p><br></p>');
-        }
-      });
     },
     //查看帖子内容
     lookIntro(intro) {
