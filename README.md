@@ -90,3 +90,4 @@ if (name == "首页") {
 
 - 帖子管理和微信文章管理页面引用了富文本编辑器[wangEditor](http://www.wangeditor.com/)
 
+- 每个页面的图标用的是这个管理后台模板的图标库(lib/Hui-iconfont/1.0.7/demo.html)，可以在浏览器中直接打开
