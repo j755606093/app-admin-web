@@ -226,6 +226,7 @@ var Vue_App = new Vue({
             skin: 'layui-layer-demo', //样式类名
             anim: 2,
             shadeClose: true, //开启遮罩关闭
+            //防止文章详情中html文件包含的样式影响原来的样式，故重新刷新页面
             cancel: function() {
               location.replace(location.href);
             },
@@ -456,6 +457,7 @@ var Vue_App = new Vue({
       layer.msg("此文章已推送", { icon: 0, time: 2500 });
     },
     updateTopicDetail() {
+      var _this = this;
       this.isHide = false; //加载中
       //获取纯文本内容
       var newDetail = editor.$txt.html();
@@ -473,10 +475,11 @@ var Vue_App = new Vue({
           if (res.Code === 200) {
             layer.msg("修改成功", { icon: 1, time: 2000 });
             setTimeout(function() {
+              //防止文章详情中html文件包含的样式影响原来的样式，故重新刷新页面
               location.replace(location.href);
             }, 2000);
           } else {
-            Vue_App.isHide = true;
+            _this.isHide = true;
             layer.msg(res.Message, { icon: 2, time: 2000 });
           }
         }

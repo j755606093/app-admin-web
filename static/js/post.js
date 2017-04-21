@@ -269,6 +269,7 @@ var Vue_App = new Vue({
           shadeClose: true, //开启遮罩关闭
           scrollbar: false,
           end: function() {
+            //富文本编辑器清空内容
             editor.$txt.html('<p><br></p>');
           }
         });

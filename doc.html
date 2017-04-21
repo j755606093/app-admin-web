@@ -182,16 +182,6 @@ document.getElementsByTagName("head")[0].appendChild(style);
           </select>
         </div>
       </div>
-      <!-- <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2">文件上传:</label>
-        <span class="multiple">(多文件)</span>
-        <div class="formControls col-xs-8 col-sm-9">
-          <div class="uploader-thum-container">
-            <input multiple type="file" @change="checkEditFile" name="File" id="editfile">
-          </div>
-          <span class="totalSize" :style="{'color':overSize?'red':'#333'}">大小不超过10M</span>
-        </div>
-      </div> -->
       <div class="row cl">
         <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
           <button v-on:click="layer_submit_edit" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交修改</button>
@@ -209,42 +199,6 @@ document.getElementsByTagName("head")[0].appendChild(style);
           <input type="text" @blur="checkAddItem('add_name')" @keyup.enter="layer_submit_add" class="input-text" id="add_name" name="Title" autofocus>
         </div>
       </div>
-      <!-- <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>来源类型:</label>
-        <div class="formControls col-xs-8 col-sm-9">
-          <select name="SourceType" class="input-text">
-            <option value="1">微信文章</option>
-            <option value="2">新闻</option>
-            <option value="3" selected>城市圈官微</option>
-            <option value="4">社区帖子</option>
-          </select>
-        </div>
-      </div> -->
-      <!-- <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>作者:</label>
-        <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @blur="checkAddItem('add_author')" @keyup.enter="layer_submit_add" class="input-text" id="add_author" name="Author">
-        </div>
-      </div> -->
-      <!-- <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2">Web专用:</label>
-        <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup.enter="layer_submit_add" placeholder="从新闻管理或微信文章管理中复制" class="input-text" id="add_url" name="Url">
-        </div>
-      </div>
-      <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2">App专用:</label>
-        <div class="formControls col-xs-8 col-sm-9">
-          <input type="text" @keyup.enter="layer_submit_add" class="input-text" placeholder="从新闻管理或微信文章管理中复制" id="add_originurl" name="OriginUrl">
-        </div>
-      </div> -->
-      <!-- <div class="row cl">
-        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
-        <div class="formControls col-xs-8 col-sm-9">
-          <textarea cols="61" rows="9" @blur="checkContent('add_content')" @keyup.enter="layer_submit_add" id="add_content" name="Content" placeholder="字数在5~200以内"></textarea>
-          <p>还能输入{{count}}个字</p>
-        </div>
-      </div> -->
       <div class="row cl">
         <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>内容:</label>
         <div class="formControls col-xs-8 col-sm-9">
@@ -273,15 +227,6 @@ document.getElementsByTagName("head")[0].appendChild(style);
           </select>
         </div>
       </div>
-      <!-- <div class="row cl" v-if="isCustom">
-        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文件上传:</label>
-        <div class="formControls col-xs-8 col-sm-9">
-          <div class="uploader-thum-container">
-            <input id="addfile" @change="checkAddFile" multiple type="file" name="File">
-          </div>
-          <span class="totalSize" :style="{'color':overSize?'red':'#333'}">大小不超过10M</span>
-        </div>
-      </div> -->
       <div class="row cl">
         <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
           <button v-on:click="layer_submit_add" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交增加</button>

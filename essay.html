@@ -94,21 +94,15 @@ document.getElementsByTagName("head")[0].appendChild(style);
         </thead>
         <tbody>
           <tr class="text-c" v-for="item in items">
-            <!-- <td data-clipboard-text="{{item.Id}}" v-on:click="clickCopy(item.Id)" id="id{{item.Id}}"><a style="text-decoration:underline" onmouseover="addTips({{item.Id}})" href="javascript:;">{{item.Id}}</a></td> -->
             <td>{{item.Id}}</td>
             <td id="title{{item.Id}}"><a onmouseover="lookTitle({{item.Id}},'title','{{item.Title}}')" href="javascript:;">{{item.Title | subTitle}}</a></td>
             <td>{{item.Author}}</td>
-            <!-- <td><a title="{{item.PUrl}}" href="{{item.PUrl}}" target="_blank">{{item.PUrl | subPurl}}</a></td> -->
-            <td v-if="item.ViewType == 2"><a title="{{item.PUrl}}" href="{{item.PUrl | dealAvatar}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
+            <td v-if="item.ViewType == 2 || item.ViewType == 5"><a title="{{item.PUrl}}" href="{{item.PUrl | dealAvatar}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
             <td v-if="item.ViewType == 3"><a title="{{item.PUrl}}" href="{{item.PUrl | subAvatar 0}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a>
               <a title="{{item.PUrl}}" href="{{item.PUrl | subAvatar 1}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a>
               <a title="{{item.PUrl}}" href="{{item.PUrl | subAvatar 2}}" target="_blank"><i class="Hui-iconfont">&#xe646;</i></a></td>
-            <td v-if="item.ViewType != 2 && item.ViewType != 3"><a title="{{item.PUrl}}" href="{{item.PUrl}}" target="_blank">{{item.PUrl | subPurl}}</a></td>
+            <td v-if="item.ViewType != 2 && item.ViewType != 3 && item.ViewType != 5"><a title="{{item.PUrl}}" href="{{item.PUrl}}" target="_blank">{{item.PUrl | subPurl}}</a></td>
             <td><a @click="lookIntro(item.Content)" href="javascript:;">{{item.Content | subContent}}</a></td>
-            <!-- <td data-clipboard-text="{{item.Url}}" id="url{{item.Id}}" @click="copyUrl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="urlTips({{item.Id}})">{{item.Url | subUrl}}</a></td> -->
-            <!-- <td data-clipboard-text="{{item.OriginUrl}}" id="ourl{{item.Id}}" @click="copyOurl(item.Id)"><a href="javascript:;" style="text-decoration:underline" onmouseover="ourlTips({{item.Id}})">{{item.OriginUrl | subUrl}}</a></td> -->
-            <!-- <td>{{item.ReadCount}}</td> -->
-            <!-- <td>{{item.WechatUrl}}</td> -->
             <td v-if="item.ViewType == 0"></td>
             <td v-if="item.ViewType == 1">无图</td>
             <td v-if="item.ViewType == 2">一张图</td>
@@ -132,7 +126,7 @@ document.getElementsByTagName("head")[0].appendChild(style);
             </td>
           </tr>
           <tr class="text-c" v-if="displayCount === 0">
-            <td colspan="11">抱歉，暂无相关数据 </td>
+            <td colspan="10">暂无数据</td>
           </tr>
         </tbody>
       </table>
