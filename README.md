@@ -10,6 +10,8 @@
 
 git: https://github.com/j755606093/app-admin-web
 
+api文档: http://192.168.31.82/swagger/ui/index.html
+
 ### 启动服务
 
 在项目的根目录下找到同级的**serverApp.js**文件，打开终端，输入`node serverApp.js`
@@ -57,7 +59,7 @@ git: https://github.com/j755606093/app-admin-web
 
 ### 注意事项
 
-- 如果要新增一个父级管理模块，比如首页，那么首先需要在**权限**中打开模块管理添加一个父级模块，之后在`index.html`中**aside**标签下增加如下代码：
+- 如果要新增一个父级管理模块，比如首页，那么首先需要在**权限**中打开**模块管理**添加一个父级模块，之后在`index.html`中**aside**标签下增加如下代码：
 
 ``` html
 <dl id="menu-default" v-show="childHomeModule.length !== 0">
@@ -83,4 +85,8 @@ if (name == "首页") {
 - 如果要新增一个子级管理模块，比如新闻管理，那么也需要在**权限**中打开模块管理并在所属模块下添加子级模块。代码提交之后，也同样在线上进行相同的操作。
 
 - 如果修改了样式文件，记得要打开终端运行`gulp`命令
+
+- 每个页面都引用[layui组件库](http://www.layui.com/doc/)，比如弹框、分页
+
+- 帖子管理和微信文章管理页面引用了富文本编辑器[wangEditor](http://www.wangeditor.com/)
 
